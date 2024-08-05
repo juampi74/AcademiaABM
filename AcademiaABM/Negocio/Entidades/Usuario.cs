@@ -11,6 +11,7 @@
             this.nombre_usuario = nombre_usuario;
             this.contrasenia_usuario = contrasenia_usuario;
         }
+
         public int Id
         {
             get { return id; }

@@ -19,7 +19,7 @@ namespace AcademiaABM
 
             if (login.ShowDialog() == DialogResult.OK)
             {
-                Application.Run(new Alumnos());
+                Application.Run(new Grilla());
             }
         }
     }

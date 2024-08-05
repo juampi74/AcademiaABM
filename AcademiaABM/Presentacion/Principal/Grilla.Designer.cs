@@ -1,6 +1,8 @@
-﻿namespace AcademiaABM.Presentacion.Principal
+﻿using System.Windows.Forms;
+
+namespace AcademiaABM.Presentacion.Principal
 {
-    partial class Alumnos
+    partial class Grilla
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,13 +30,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Alumnos));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Grilla));
             toolStripContainer1 = new ToolStripContainer();
-            tlAlumnos = new TableLayoutPanel();
-            dgvAlumnos = new DataGridView();
-            btnActualizar = new Button();
+            tlSysacad = new TableLayoutPanel();
+            dgvSysacad = new DataGridView();
+            btnMostrarAlumnos = new Button();
+            btnMostrarComisiones = new Button();
             btnSalir = new Button();
-            tsUsuarios = new ToolStrip();
+            btnActualizar = new Button();
+            btnMostrarCursos = new Button();
+            tsSysacad = new ToolStrip();
             tsbNuevo = new ToolStripButton();
             tsbEditar = new ToolStripButton();
             tsbEliminar = new ToolStripButton();
@@ -43,9 +48,9 @@
             toolStripContainer1.ContentPanel.SuspendLayout();
             toolStripContainer1.TopToolStripPanel.SuspendLayout();
             toolStripContainer1.SuspendLayout();
-            tlAlumnos.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvAlumnos).BeginInit();
-            tsUsuarios.SuspendLayout();
+            tlSysacad.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvSysacad).BeginInit();
+            tsSysacad.SuspendLayout();
             SuspendLayout();
             // 
             // toolStripContainer1
@@ -53,7 +58,7 @@
             // 
             // toolStripContainer1.ContentPanel
             // 
-            toolStripContainer1.ContentPanel.Controls.Add(tlAlumnos);
+            toolStripContainer1.ContentPanel.Controls.Add(tlSysacad);
             toolStripContainer1.ContentPanel.Size = new Size(800, 425);
             toolStripContainer1.Dock = DockStyle.Fill;
             toolStripContainer1.Location = new Point(0, 0);
@@ -64,65 +69,106 @@
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
-            toolStripContainer1.TopToolStripPanel.Controls.Add(tsUsuarios);
+            toolStripContainer1.TopToolStripPanel.Controls.Add(tsSysacad);
             // 
-            // tlAlumnos
+            // tlSysacad
             // 
-            tlAlumnos.ColumnCount = 2;
-            tlAlumnos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tlAlumnos.ColumnStyles.Add(new ColumnStyle());
-            tlAlumnos.Controls.Add(dgvAlumnos, 0, 0);
-            tlAlumnos.Controls.Add(btnActualizar, 0, 1);
-            tlAlumnos.Controls.Add(btnSalir, 1, 1);
-            tlAlumnos.Dock = DockStyle.Fill;
-            tlAlumnos.Location = new Point(0, 0);
-            tlAlumnos.Name = "tlAlumnos";
-            tlAlumnos.RowCount = 2;
-            tlAlumnos.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlAlumnos.RowStyles.Add(new RowStyle());
-            tlAlumnos.Size = new Size(800, 425);
-            tlAlumnos.TabIndex = 0;
+            tlSysacad.ColumnCount = 6;
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlSysacad.ColumnStyles.Add(new ColumnStyle());
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 87F));
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 365F));
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 86F));
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 89F));
+            tlSysacad.Controls.Add(dgvSysacad, 0, 0);
+            tlSysacad.Controls.Add(btnMostrarAlumnos, 0, 1);
+            tlSysacad.Controls.Add(btnMostrarComisiones, 1, 1);
+            tlSysacad.Controls.Add(btnSalir, 5, 1);
+            tlSysacad.Controls.Add(btnActualizar, 4, 1);
+            tlSysacad.Controls.Add(btnMostrarCursos, 2, 1);
+            tlSysacad.Dock = DockStyle.Fill;
+            tlSysacad.Location = new Point(0, 0);
+            tlSysacad.Name = "tlSysacad";
+            tlSysacad.RowCount = 2;
+            tlSysacad.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlSysacad.RowStyles.Add(new RowStyle());
+            tlSysacad.Size = new Size(800, 425);
+            tlSysacad.TabIndex = 0;
             // 
-            // dgvAlumnos
+            // dgvSysacad
             // 
-            dgvAlumnos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            tlAlumnos.SetColumnSpan(dgvAlumnos, 2);
-            dgvAlumnos.Dock = DockStyle.Fill;
-            dgvAlumnos.Location = new Point(3, 3);
-            dgvAlumnos.Name = "dgvAlumnos";
-            dgvAlumnos.Size = new Size(794, 390);
-            dgvAlumnos.TabIndex = 0;
-            dgvAlumnos.SelectionChanged += dgvAlumnos_SelectionChanged;
+            dgvSysacad.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvSysacad.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            tlSysacad.SetColumnSpan(dgvSysacad, 6);
+            dgvSysacad.Dock = DockStyle.Fill;
+            dgvSysacad.Location = new Point(3, 3);
+            dgvSysacad.Name = "dgvSysacad";
+            dgvSysacad.Size = new Size(794, 390);
+            dgvSysacad.TabIndex = 0;
+            dgvSysacad.SelectionChanged += dgvSysacad_SelectionChanged;
             // 
-            // btnActualizar
+            // btnMostrarAlumnos
             // 
-            btnActualizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnActualizar.Location = new Point(641, 399);
-            btnActualizar.Name = "btnActualizar";
-            btnActualizar.Size = new Size(75, 23);
-            btnActualizar.TabIndex = 1;
-            btnActualizar.Text = "Actualizar";
-            btnActualizar.UseVisualStyleBackColor = true;
-            btnActualizar.Click += btnActualizar_Click;
+            btnMostrarAlumnos.Location = new Point(3, 399);
+            btnMostrarAlumnos.Name = "btnMostrarAlumnos";
+            btnMostrarAlumnos.Size = new Size(80, 23);
+            btnMostrarAlumnos.TabIndex = 3;
+            btnMostrarAlumnos.Text = "Alumnos";
+            btnMostrarAlumnos.UseVisualStyleBackColor = true;
+            btnMostrarAlumnos.Click += btnMostrarAlumnos_Click;
+            // 
+            // btnMostrarComisiones
+            // 
+            btnMostrarComisiones.Anchor = AnchorStyles.Left;
+            btnMostrarComisiones.Location = new Point(90, 399);
+            btnMostrarComisiones.Name = "btnMostrarComisiones";
+            btnMostrarComisiones.Size = new Size(80, 23);
+            btnMostrarComisiones.TabIndex = 4;
+            btnMostrarComisiones.Text = "Comisiones";
+            btnMostrarComisiones.UseVisualStyleBackColor = true;
+            btnMostrarComisiones.Click += btnMostrarComisiones_Click;
             // 
             // btnSalir
             // 
-            btnSalir.Location = new Point(722, 399);
+            btnSalir.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnSalir.Location = new Point(717, 399);
             btnSalir.Name = "btnSalir";
-            btnSalir.Size = new Size(75, 23);
+            btnSalir.Size = new Size(80, 23);
             btnSalir.TabIndex = 2;
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = true;
             btnSalir.Click += btnSalir_Click;
             // 
-            // tsUsuarios
+            // btnActualizar
             // 
-            tsUsuarios.Dock = DockStyle.None;
-            tsUsuarios.Items.AddRange(new ToolStripItem[] { tsbNuevo, tsbEditar, tsbEliminar, tsbOrdenarAscendente, tsbOrdenarDescendente });
-            tsUsuarios.Location = new Point(3, 0);
-            tsUsuarios.Name = "tsUsuarios";
-            tsUsuarios.Size = new Size(158, 25);
-            tsUsuarios.TabIndex = 0;
+            btnActualizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnActualizar.Location = new Point(628, 399);
+            btnActualizar.Name = "btnActualizar";
+            btnActualizar.Size = new Size(80, 23);
+            btnActualizar.TabIndex = 1;
+            btnActualizar.Text = "Actualizar";
+            btnActualizar.UseVisualStyleBackColor = true;
+            btnActualizar.Click += btnActualizar_Click;
+            // 
+            // btnMostrarCursos
+            // 
+            btnMostrarCursos.Anchor = AnchorStyles.Left;
+            btnMostrarCursos.Location = new Point(176, 399);
+            btnMostrarCursos.Name = "btnMostrarCursos";
+            btnMostrarCursos.Size = new Size(80, 23);
+            btnMostrarCursos.TabIndex = 5;
+            btnMostrarCursos.Text = "Cursos";
+            btnMostrarCursos.UseVisualStyleBackColor = true;
+            btnMostrarCursos.Click += btnMostrarCursos_Click;
+            // 
+            // tsSysacad
+            // 
+            tsSysacad.Dock = DockStyle.None;
+            tsSysacad.Items.AddRange(new ToolStripItem[] { tsbNuevo, tsbEditar, tsbEliminar, tsbOrdenarAscendente, tsbOrdenarDescendente });
+            tsSysacad.Location = new Point(3, 0);
+            tsSysacad.Name = "tsSysacad";
+            tsSysacad.Size = new Size(127, 25);
+            tsSysacad.TabIndex = 0;
             // 
             // tsbNuevo
             // 
@@ -174,32 +220,32 @@
             tsbOrdenarDescendente.Text = "OrdenarDescendente";
             tsbOrdenarDescendente.Click += tsbOrdenarDescendente_Click;
             // 
-            // Alumnos
+            // Grilla
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(toolStripContainer1);
-            Name = "Alumnos";
-            Text = "Alumnos";
+            Name = "Grilla";
+            Text = "Grilla";
             toolStripContainer1.ContentPanel.ResumeLayout(false);
             toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
             toolStripContainer1.TopToolStripPanel.PerformLayout();
             toolStripContainer1.ResumeLayout(false);
             toolStripContainer1.PerformLayout();
-            tlAlumnos.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgvAlumnos).EndInit();
-            tsUsuarios.ResumeLayout(false);
-            tsUsuarios.PerformLayout();
+            tlSysacad.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvSysacad).EndInit();
+            tsSysacad.ResumeLayout(false);
+            tsSysacad.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
         private ToolStripContainer toolStripContainer1;
-        private ToolStrip tsUsuarios;
-        private TableLayoutPanel tlAlumnos;
-        private DataGridView dgvAlumnos;
+        private ToolStrip tsSysacad;
+        private TableLayoutPanel tlSysacad;
+        private DataGridView dgvSysacad;
         private Button btnActualizar;
         private Button btnSalir;
         private ToolStripButton tsbNuevo;
@@ -207,5 +253,8 @@
         private ToolStripButton tsbEliminar;
         private ToolStripButton tsbOrdenarAscendente;
         private ToolStripButton tsbOrdenarDescendente;
+        private Button btnMostrarAlumnos;
+        private Button btnMostrarComisiones;
+        private Button btnMostrarCursos;
     }
 }

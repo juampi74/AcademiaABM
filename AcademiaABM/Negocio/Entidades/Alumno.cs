@@ -17,6 +17,7 @@
             this.direccion = direccion;
             this.telefono = telefono;
         }
+
         public int Id
         {
             get { return id; }
