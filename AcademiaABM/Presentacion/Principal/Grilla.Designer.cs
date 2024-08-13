@@ -34,7 +34,7 @@ namespace AcademiaABM.Presentacion.Principal
             toolStripContainer1 = new ToolStripContainer();
             tlSysacad = new TableLayoutPanel();
             dgvSysacad = new DataGridView();
-            btnMostrarAlumnos = new Button();
+            btnMostrarPersonas = new Button();
             btnMostrarComisiones = new Button();
             btnSalir = new Button();
             btnActualizar = new Button();
@@ -81,7 +81,7 @@ namespace AcademiaABM.Presentacion.Principal
             tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 86F));
             tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 89F));
             tlSysacad.Controls.Add(dgvSysacad, 0, 0);
-            tlSysacad.Controls.Add(btnMostrarAlumnos, 0, 1);
+            tlSysacad.Controls.Add(btnMostrarPersonas, 0, 1);
             tlSysacad.Controls.Add(btnMostrarComisiones, 1, 1);
             tlSysacad.Controls.Add(btnSalir, 5, 1);
             tlSysacad.Controls.Add(btnActualizar, 4, 1);
@@ -107,15 +107,15 @@ namespace AcademiaABM.Presentacion.Principal
             dgvSysacad.TabIndex = 0;
             dgvSysacad.SelectionChanged += dgvSysacad_SelectionChanged;
             // 
-            // btnMostrarAlumnos
+            // btnMostrarPersonas
             // 
-            btnMostrarAlumnos.Location = new Point(3, 399);
-            btnMostrarAlumnos.Name = "btnMostrarAlumnos";
-            btnMostrarAlumnos.Size = new Size(80, 23);
-            btnMostrarAlumnos.TabIndex = 3;
-            btnMostrarAlumnos.Text = "Alumnos";
-            btnMostrarAlumnos.UseVisualStyleBackColor = true;
-            btnMostrarAlumnos.Click += btnMostrarAlumnos_Click;
+            btnMostrarPersonas.Location = new Point(3, 399);
+            btnMostrarPersonas.Name = "btnMostrarPersonas";
+            btnMostrarPersonas.Size = new Size(80, 23);
+            btnMostrarPersonas.TabIndex = 3;
+            btnMostrarPersonas.Text = "Personas";
+            btnMostrarPersonas.UseVisualStyleBackColor = true;
+            btnMostrarPersonas.Click += btnMostrarPersonas_Click;
             // 
             // btnMostrarComisiones
             // 
@@ -253,7 +253,7 @@ namespace AcademiaABM.Presentacion.Principal
         private ToolStripButton tsbEliminar;
         private ToolStripButton tsbOrdenarAscendente;
         private ToolStripButton tsbOrdenarDescendente;
-        private Button btnMostrarAlumnos;
+        private Button btnMostrarPersonas;
         private Button btnMostrarComisiones;
         private Button btnMostrarCursos;
     }

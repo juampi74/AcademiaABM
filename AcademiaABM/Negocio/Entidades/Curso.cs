@@ -1,49 +1,41 @@
 ﻿namespace AcademiaABM.Negocio.Entidades
 {
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations.Schema;
+    
     public class Curso
     {
-        private int id_curso;
-        // Agregar id_materia
-        private int anio_calendario;
-        private int cupo;
+        public int Id_curso { get; set; }
+        public int Anio_calendario { get; set; }
+        public int Cupo { get; set; }
 
-        // Clave foránea
-        public int id_comision;
-        
-        public Comision comision;
+        // Claves foráneas
+        public int Id_comision { get; set; }
+        public int Id_materia { get; set; }
 
-        public Curso(int id_curso, int anio_calendario, int cupo, int id_comision)
-        {
-            this.id_curso = id_curso;
-            this.anio_calendario = anio_calendario;
-            this.cupo = cupo;
-            this.id_comision = id_comision;
-        }
+        // Evita que se muestre una columna de este atributo con AutoGenerateColumns en la DataGridView
+        [Browsable(false)]
+        public Comision Comision { get; set; }
 
-        public int Id_curso
+        // Evita que se muestre una columna de este atributo con AutoGenerateColumns en la DataGridView
+        [Browsable(false)]
+        public Materia Materia { get; set; }
+
+        // Coleccion de Alumnos_Inscripciones para la Relacion N:M con Persona (Ver UniversidadContext.cs)
+        [NotMapped]
+        public List<Alumno_Inscripcion> Alumno_Inscripciones { get; set; }
+
+        // Coleccion de Docentes_Cursos para la Relacion N:M con Persona (Ver UniversidadContext.cs)
+        [NotMapped]
+        public List<Docente_Curso> Docente_Cursos { get; set; }
+
+        public Curso(int id_curso, int anio_calendario, int cupo, int id_comision, int id_materia)
         {
-            get { return id_curso; }
-            set { id_curso = value; }
-        }
-        public int Anio_calendario
-        {
-            get { return anio_calendario; }
-            set { anio_calendario = value; }
-        }
-        public int Cupo
-        {
-            get { return cupo; }
-            set { cupo = value; }
-        }
-        public int Id_comision
-        {
-            get { return id_comision; }
-            set { id_comision = value; }
-        }
-        public Comision Comision
-        {
-            get { return comision; }
-            set { comision = value; }
+            this.Id_curso = id_curso;
+            this.Anio_calendario = anio_calendario;
+            this.Cupo = cupo;
+            this.Id_comision = id_comision;
+            this.Id_materia = id_materia;
         }
     }
 }

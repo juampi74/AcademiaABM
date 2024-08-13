@@ -9,7 +9,7 @@ namespace AcademiaABM.Presentacion.Principal
 
     public partial class Grilla : Form
     {
-        private AlumnoService _alumnoService;
+        private PersonaService _personaService;
         private ComisionService _comisionService;
         private CursoService _cursoService;
 
@@ -18,7 +18,7 @@ namespace AcademiaABM.Presentacion.Principal
         public Grilla()
         {
             InitializeComponent();
-            Listar<Alumno>();
+            Listar<Persona>();
         }
 
         public void Listar<T>()
@@ -27,9 +27,9 @@ namespace AcademiaABM.Presentacion.Principal
             InitializeService();
 
             List<T> listado = null;
-            if (typeof(T) == typeof(Alumno))
+            if (typeof(T) == typeof(Persona))
             {
-                listado = _alumnoService.ObtenerTodosLosAlumnos().Cast<T>().ToList();
+                listado = _personaService.ObtenerTodasLasPersonas().Cast<T>().ToList();
                 dgvSysacad.AutoGenerateColumns = true;
                 dgvSysacad.DataSource = listado;
             }
@@ -86,9 +86,9 @@ namespace AcademiaABM.Presentacion.Principal
 
         private void InitializeService()
         {
-            if (_alumnoService == null)
+            if (_personaService == null)
             {
-                _alumnoService = new AlumnoService();
+                _personaService = new PersonaService();
             }
 
             if (_comisionService == null)
@@ -110,39 +110,39 @@ namespace AcademiaABM.Presentacion.Principal
             }
         }
 
-        private Alumno LeerAlumno(int id)
+        private Persona LeerPersona(int id)
         {
-            return _alumnoService.ObtenerAlumnoPorId(id);
+            return _personaService.ObtenerPersonaPorId(id);
         }
 
-        private void CrearAlumno(Alumno alumnoAGuardar)
+        private void CrearPersona(Persona personaAGuardar)
         {
-            _alumnoService.CrearAlumno(alumnoAGuardar);
-            Listar<Alumno>();
+            _personaService.CrearPersona(personaAGuardar);
+            Listar<Persona>();
         }
 
-        private void ActualizarAlumno(Alumno alumnoAGuardar)
+        private void ActualizarPersona(Persona personaAGuardar)
         {
-            _alumnoService.ActualizarAlumno(alumnoAGuardar);
-            Listar<Alumno>();
+            _personaService.ActualizarPersona(personaAGuardar);
+            Listar<Persona>();
         }
 
-        private void EliminarAlumno(int id)
+        private void EliminarPersona(int id)
         {
-            _alumnoService.EliminarAlumno(id);
-            Listar<Alumno>();
+            _personaService.EliminarPersona(id);
+            Listar<Persona>();
         }
 
-        private void OrdenarAlumnosAscendente()
+        private void OrdenarPersonasAscendente()
         {
-            var alumnosOrdenadosAscendente = _alumnoService.OrdenarAlumnosAscendente();
-            dgvSysacad.DataSource = alumnosOrdenadosAscendente;
+            var personasOrdenadosAscendente = _personaService.OrdenarPersonasAscendente();
+            dgvSysacad.DataSource = personasOrdenadosAscendente;
         }
 
-        private void OrdenarAlumnosDescendente()
+        private void OrdenarPersonasDescendente()
         {
-            var alumnosOrdenadosDescendente = _alumnoService.OrdenarAlumnosDescendente();
-            dgvSysacad.DataSource = alumnosOrdenadosDescendente;
+            var personasOrdenadosDescendente = _personaService.OrdenarPersonasDescendente();
+            dgvSysacad.DataSource = personasOrdenadosDescendente;
         }
 
         private void dgvSysacad_SelectionChanged(object sender, EventArgs e)
@@ -151,13 +151,15 @@ namespace AcademiaABM.Presentacion.Principal
             {
                 DataGridViewRow row = dgvSysacad.SelectedRows[0];
                 string id = row.Cells[0].Value.ToString();
-                
+
                 // Con la Consulta SQL hecha a mano, te devuelve la última fila
                 // con el asterisco como "número" de fila y todos los campos
                 // vacíos. Para que no falle el programa, hago un trycatch.
-                try { 
+                try
+                {
                     idActual = Int32.Parse(id);
-                } catch
+                }
+                catch
                 {
                     MessageBox.Show("Seleccione otra fila!");
                 }
@@ -167,14 +169,14 @@ namespace AcademiaABM.Presentacion.Principal
 
         private void tsbNuevo_Click(object sender, EventArgs e)
         {
-            NuevoAlumno nuevoAlumno = new NuevoAlumno();
-            if (nuevoAlumno.ShowDialog(this) == DialogResult.OK)
+            NuevaPersona nuevaPersona = new NuevaPersona();
+            if (nuevaPersona.ShowDialog(this) == DialogResult.OK)
             {
-                Alumno alumnoAGuardar = nuevoAlumno.Alumno;
+                Persona personaAGuardar = nuevaPersona.Persona;
                 ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
                 if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
                 {
-                    CrearAlumno(alumnoAGuardar);
+                    CrearPersona(personaAGuardar);
                     OperacionExitosa operacionExitosa = new OperacionExitosa();
                     operacionExitosa.ShowDialog(this);
                 }
@@ -183,15 +185,15 @@ namespace AcademiaABM.Presentacion.Principal
 
         private void tsbEditar_Click(object sender, EventArgs e)
         {
-            Alumno alumnoAEditar = LeerAlumno(idActual);
-            EditarAlumno editarAlumno = new EditarAlumno(alumnoAEditar);
-            if (editarAlumno.ShowDialog(this) == DialogResult.OK)
+            Persona personaAEditar = LeerPersona(idActual);
+            EditarPersona editarPersona = new EditarPersona(personaAEditar);
+            if (editarPersona.ShowDialog(this) == DialogResult.OK)
             {
-                Alumno alumnoAGuardar = editarAlumno.AlumnoAEditar;
+                Persona personaAGuardar = editarPersona.PersonaAEditar;
                 ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
                 if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
                 {
-                    ActualizarAlumno(alumnoAGuardar);
+                    ActualizarPersona(personaAGuardar);
                     OperacionExitosa operacionExitosa = new OperacionExitosa();
                     operacionExitosa.ShowDialog(this);
                 }
@@ -203,7 +205,7 @@ namespace AcademiaABM.Presentacion.Principal
             ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
             if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
             {
-                EliminarAlumno(idActual);
+                EliminarPersona(idActual);
                 OperacionExitosa operacionExitosa = new OperacionExitosa();
                 operacionExitosa.ShowDialog(this);
             }
@@ -211,17 +213,17 @@ namespace AcademiaABM.Presentacion.Principal
 
         private void tsbOrdenarAscendente_Click(object sender, EventArgs e)
         {
-            OrdenarAlumnosAscendente();
+            OrdenarPersonasAscendente();
         }
 
         private void tsbOrdenarDescendente_Click(object sender, EventArgs e)
         {
-            OrdenarAlumnosDescendente();
+            OrdenarPersonasDescendente();
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
-            Listar<Alumno>();
+            Listar<Persona>();
         }
 
         private void btnSalir_Click(object sender, EventArgs e)
@@ -229,9 +231,9 @@ namespace AcademiaABM.Presentacion.Principal
             this.Close();
         }
 
-        private void btnMostrarAlumnos_Click(object sender, EventArgs e)
+        private void btnMostrarPersonas_Click(object sender, EventArgs e)
         {
-            Listar<Alumno>();
+            Listar<Persona>();
         }
 
         private void btnMostrarComisiones_Click(object sender, EventArgs e)

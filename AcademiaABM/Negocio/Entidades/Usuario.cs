@@ -1,31 +1,30 @@
 ﻿namespace AcademiaABM.Negocio.Entidades
 {
+    using System.ComponentModel;
+
     public class Usuario
     {
-        private int id;
-        private string nombre_usuario;
-        private string contrasenia_usuario;
+        public int Id_usuario { get; set; }
+        public string Nombre_usuario { get; set; }
+        public string Clave { get; set; }
+        public int Habilitado { get; set; }
+        public int Cambia_clave { get; set; }
 
-        public Usuario(string nombre_usuario, string contrasenia_usuario)
-        {
-            this.nombre_usuario = nombre_usuario;
-            this.contrasenia_usuario = contrasenia_usuario;
-        }
+        // Clave foránea
+        public int Id_persona { get; set; }
 
-        public int Id
+        // Evita que se muestre una columna de este atributo con AutoGenerateColumns en la DataGridView
+        [Browsable(false)]
+        public Persona Persona { get; set; }
+
+        public Usuario(string nombre_usuario, string clave, int habilitado, int cambia_clave, int id_persona)
         {
-            get { return id; }
-            set { id = value; }
-        }
-        public string Nombre_usuario
-        {
-            get { return nombre_usuario; }
-            set { nombre_usuario = value; }
-        }
-        public string Contrasenia_usuario
-        {
-            get { return contrasenia_usuario; }
-            set { contrasenia_usuario = value; }
+            this.Nombre_usuario = nombre_usuario;
+            this.Clave = clave;
+            this.Habilitado = habilitado;
+            this.Cambia_clave = cambia_clave;
+            this.Id_persona = id_persona;
+
         }
     }
 }

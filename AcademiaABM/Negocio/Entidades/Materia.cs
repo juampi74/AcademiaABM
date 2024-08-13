@@ -3,11 +3,12 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public class Comision
+    public class Materia
     {
-        public int Id_comision { get; set; }
-        public string Desc_comision { get; set; }
-        public int Anio_especialidad { get; set; }
+        public int Id_materia { get; set; }
+        public string Desc_materia { get; set; }
+        public int Hs_semanales { get; set; }
+        public int Hs_totales { get; set; }
 
         // Clave foránea
         public int Id_plan { get; set; }
@@ -20,11 +21,11 @@
         [NotMapped]
         public List<Curso> Cursos { get; set; }
 
-        public Comision(int id_comision, string desc_comision, int anio_especialidad, int id_plan)
+        public Materia(string desc_materia, int hs_semanales, int hs_totales, int id_plan)
         {
-            this.Id_comision = id_comision;
-            this.Desc_comision = desc_comision;
-            this.Anio_especialidad = anio_especialidad;
+            this.Desc_materia = desc_materia;
+            this.Hs_semanales = hs_semanales;
+            this.Hs_totales = hs_totales;
             this.Id_plan = id_plan;
         }
     }

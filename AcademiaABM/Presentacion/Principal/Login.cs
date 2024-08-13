@@ -9,7 +9,7 @@
         private UsuarioService _usuarioService;
 
         private int cantidadDeIntentosErroneos = 0;
-     
+
         public Login()
         {
             InitializeComponent();
@@ -51,7 +51,7 @@
             }
 
             return true;
-        
+
         }
 
         private void EstablecerConexion()
@@ -83,7 +83,7 @@
 
                 if (e.Result != null)
                 {
-                    List<Usuario> listadoUsuarios = (List<Usuario>) e.Result;
+                    List<Usuario> listadoUsuarios = (List<Usuario>)e.Result;
                     ComprobarUsuarioIngresado(listadoUsuarios);
                 }
             };
@@ -107,7 +107,7 @@
 
         private void ComprobarUsuarioIngresado(List<Usuario> listadoUsuarios)
         {
-            bool usuarioEncontrado = _usuarioService.ComprobarUsuarioIngresado(listadoUsuarios, NombreDeUsuarioTextBox.Text, ContraseniaTextBox.Text);
+            bool usuarioEncontrado = _usuarioService.ComprobarUsuarioIngresado(listadoUsuarios, NombreDeUsuarioTextBox.Text, ClaveTextBox.Text);
 
             if (usuarioEncontrado)
             {
@@ -117,7 +117,7 @@
             {
                 cantidadDeIntentosErroneos++;
 
-                MessageBox.Show($"Usuario y/o contraseña incorrectos. Le queda(n) {3 - cantidadDeIntentosErroneos} intento(s).", "Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Usuario y/o clave incorrectos. Le queda(n) {3 - cantidadDeIntentosErroneos} intento(s).", "Login", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 if (cantidadDeIntentosErroneos == 3)
                 {

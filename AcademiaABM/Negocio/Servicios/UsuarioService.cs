@@ -17,11 +17,11 @@
             return _usuarioRepository.ObtenerTodosLosUsuarios();
         }
 
-        public bool ComprobarUsuarioIngresado(List<Usuario> listadoUsuarios, string nombreUsuario, string contrasenia)
+        public bool ComprobarUsuarioIngresado(List<Usuario> listadoUsuarios, string nombreUsuario, string clave)
         {
             foreach (var usuario in listadoUsuarios)
             {
-                if (usuario.Nombre_usuario == nombreUsuario && usuario.Contrasenia_usuario == contrasenia)
+                if (usuario.Nombre_usuario == nombreUsuario && usuario.Clave == clave)
                 {
                     return true;
                 }

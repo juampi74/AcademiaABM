@@ -30,9 +30,9 @@
         {
             BievenidaLabel = new Label();
             NombreDeUsuarioLabel = new Label();
-            ContraseniaLabel = new Label();
+            ClaveLabel = new Label();
             NombreDeUsuarioTextBox = new TextBox();
-            ContraseniaTextBox = new TextBox();
+            ClaveTextBox = new TextBox();
             btnIngresar = new Button();
             IngresarInformacionLabel = new Label();
             SuspendLayout();
@@ -57,14 +57,14 @@
             NombreDeUsuarioLabel.TabIndex = 5;
             NombreDeUsuarioLabel.Text = "Nombre de Usuario:";
             // 
-            // ContraseniaLabel
+            // ClaveLabel
             // 
-            ContraseniaLabel.AutoSize = true;
-            ContraseniaLabel.Location = new Point(56, 115);
-            ContraseniaLabel.Name = "ContraseniaLabel";
-            ContraseniaLabel.Size = new Size(70, 15);
-            ContraseniaLabel.TabIndex = 4;
-            ContraseniaLabel.Text = "Contraseña:";
+            ClaveLabel.AutoSize = true;
+            ClaveLabel.Location = new Point(86, 116);
+            ClaveLabel.Name = "ClaveLabel";
+            ClaveLabel.Size = new Size(39, 15);
+            ClaveLabel.TabIndex = 4;
+            ClaveLabel.Text = "Clave:";
             // 
             // NombreDeUsuarioTextBox
             // 
@@ -73,13 +73,13 @@
             NombreDeUsuarioTextBox.Size = new Size(100, 23);
             NombreDeUsuarioTextBox.TabIndex = 0;
             // 
-            // ContraseniaTextBox
+            // ClaveTextBox
             // 
-            ContraseniaTextBox.Location = new Point(132, 112);
-            ContraseniaTextBox.Name = "ContraseniaTextBox";
-            ContraseniaTextBox.PasswordChar = '*';
-            ContraseniaTextBox.Size = new Size(100, 23);
-            ContraseniaTextBox.TabIndex = 1;
+            ClaveTextBox.Location = new Point(132, 112);
+            ClaveTextBox.Name = "ClaveTextBox";
+            ClaveTextBox.PasswordChar = '*';
+            ClaveTextBox.Size = new Size(100, 23);
+            ClaveTextBox.TabIndex = 1;
             // 
             // btnIngresar
             // 
@@ -109,9 +109,9 @@
             ClientSize = new Size(256, 184);
             Controls.Add(IngresarInformacionLabel);
             Controls.Add(btnIngresar);
-            Controls.Add(ContraseniaTextBox);
+            Controls.Add(ClaveTextBox);
             Controls.Add(NombreDeUsuarioTextBox);
-            Controls.Add(ContraseniaLabel);
+            Controls.Add(ClaveLabel);
             Controls.Add(NombreDeUsuarioLabel);
             Controls.Add(BievenidaLabel);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
@@ -127,9 +127,9 @@
 
         private Label BievenidaLabel;
         private Label NombreDeUsuarioLabel;
-        private Label ContraseniaLabel;
+        private Label ClaveLabel;
         private TextBox NombreDeUsuarioTextBox;
-        private TextBox ContraseniaTextBox;
+        private TextBox ClaveTextBox;
         private Button btnIngresar;
         private Label IngresarInformacionLabel;
     }

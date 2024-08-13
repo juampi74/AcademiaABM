@@ -1,6 +1,6 @@
 ﻿namespace AcademiaABM.Presentacion
 {
-    partial class NuevoAlumno
+    partial class NuevaPersona
     {
         /// <summary>
         /// Required designer variable.
@@ -41,13 +41,21 @@
             GuardarButton = new Button();
             TelefonoLabel = new Label();
             TelefonoTextBox = new TextBox();
+            EmailLabel = new Label();
+            EmailTextBox = new TextBox();
+            FechaNacimientoLabel = new Label();
+            FechaNacimientoTextBox = new TextBox();
+            IdPlanLabel = new Label();
+            IdPlanTextBox = new TextBox();
+            TipoPersonaLabel = new Label();
+            TipoPersonaTextBox = new TextBox();
             SuspendLayout();
             // 
             // ApellidoTextBox
             // 
             ApellidoTextBox.BackColor = SystemColors.ControlDarkDark;
             ApellidoTextBox.ForeColor = SystemColors.Menu;
-            ApellidoTextBox.Location = new Point(86, 59);
+            ApellidoTextBox.Location = new Point(140, 100);
             ApellidoTextBox.Name = "ApellidoTextBox";
             ApellidoTextBox.Size = new Size(100, 23);
             ApellidoTextBox.TabIndex = 0;
@@ -55,7 +63,7 @@
             // ApellidoLabel
             // 
             ApellidoLabel.AutoSize = true;
-            ApellidoLabel.Location = new Point(26, 62);
+            ApellidoLabel.Location = new Point(75, 103);
             ApellidoLabel.Name = "ApellidoLabel";
             ApellidoLabel.Size = new Size(54, 15);
             ApellidoLabel.TabIndex = 11;
@@ -64,7 +72,7 @@
             // NombreLabel
             // 
             NombreLabel.AutoSize = true;
-            NombreLabel.Location = new Point(26, 101);
+            NombreLabel.Location = new Point(75, 66);
             NombreLabel.Name = "NombreLabel";
             NombreLabel.Size = new Size(54, 15);
             NombreLabel.TabIndex = 10;
@@ -74,7 +82,7 @@
             // 
             NombreTextBox.BackColor = SystemColors.ControlDarkDark;
             NombreTextBox.ForeColor = SystemColors.Menu;
-            NombreTextBox.Location = new Point(86, 98);
+            NombreTextBox.Location = new Point(140, 63);
             NombreTextBox.Name = "NombreTextBox";
             NombreTextBox.Size = new Size(100, 23);
             NombreTextBox.TabIndex = 1;
@@ -82,7 +90,7 @@
             // LegajoLabel
             // 
             LegajoLabel.AutoSize = true;
-            LegajoLabel.Location = new Point(35, 139);
+            LegajoLabel.Location = new Point(84, 288);
             LegajoLabel.Name = "LegajoLabel";
             LegajoLabel.Size = new Size(45, 15);
             LegajoLabel.TabIndex = 9;
@@ -92,7 +100,7 @@
             // 
             LegajoTextBox.BackColor = SystemColors.ControlDarkDark;
             LegajoTextBox.ForeColor = SystemColors.Menu;
-            LegajoTextBox.Location = new Point(86, 136);
+            LegajoTextBox.Location = new Point(140, 285);
             LegajoTextBox.Name = "LegajoTextBox";
             LegajoTextBox.Size = new Size(100, 23);
             LegajoTextBox.TabIndex = 2;
@@ -100,7 +108,7 @@
             // DireccionLabel
             // 
             DireccionLabel.AutoSize = true;
-            DireccionLabel.Location = new Point(20, 178);
+            DireccionLabel.Location = new Point(69, 141);
             DireccionLabel.Name = "DireccionLabel";
             DireccionLabel.Size = new Size(60, 15);
             DireccionLabel.TabIndex = 8;
@@ -110,7 +118,7 @@
             // 
             DireccionTextBox.BackColor = SystemColors.ControlDarkDark;
             DireccionTextBox.ForeColor = SystemColors.Menu;
-            DireccionTextBox.Location = new Point(86, 175);
+            DireccionTextBox.Location = new Point(140, 138);
             DireccionTextBox.Name = "DireccionTextBox";
             DireccionTextBox.Size = new Size(100, 23);
             DireccionTextBox.TabIndex = 3;
@@ -119,7 +127,7 @@
             // 
             NuevoUsuarioLabel.AutoSize = true;
             NuevoUsuarioLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            NuevoUsuarioLabel.Location = new Point(12, 9);
+            NuevoUsuarioLabel.Location = new Point(33, 9);
             NuevoUsuarioLabel.Name = "NuevoUsuarioLabel";
             NuevoUsuarioLabel.Size = new Size(193, 37);
             NuevoUsuarioLabel.TabIndex = 12;
@@ -129,7 +137,7 @@
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(26, 254);
+            CancelarButton.Location = new Point(21, 405);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
             CancelarButton.TabIndex = 6;
@@ -141,7 +149,7 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(111, 254);
+            GuardarButton.Location = new Point(163, 405);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
             GuardarButton.TabIndex = 5;
@@ -152,7 +160,7 @@
             // TelefonoLabel
             // 
             TelefonoLabel.AutoSize = true;
-            TelefonoLabel.Location = new Point(25, 217);
+            TelefonoLabel.Location = new Point(74, 217);
             TelefonoLabel.Name = "TelefonoLabel";
             TelefonoLabel.Size = new Size(55, 15);
             TelefonoLabel.TabIndex = 7;
@@ -162,17 +170,97 @@
             // 
             TelefonoTextBox.BackColor = SystemColors.ControlDarkDark;
             TelefonoTextBox.ForeColor = SystemColors.Menu;
-            TelefonoTextBox.Location = new Point(86, 213);
+            TelefonoTextBox.Location = new Point(140, 213);
             TelefonoTextBox.Name = "TelefonoTextBox";
             TelefonoTextBox.Size = new Size(100, 23);
             TelefonoTextBox.TabIndex = 4;
             // 
-            // NuevoAlumno
+            // EmailLabel
+            // 
+            EmailLabel.AutoSize = true;
+            EmailLabel.Location = new Point(89, 180);
+            EmailLabel.Name = "EmailLabel";
+            EmailLabel.Size = new Size(39, 15);
+            EmailLabel.TabIndex = 14;
+            EmailLabel.Text = "Email:";
+            // 
+            // EmailTextBox
+            // 
+            EmailTextBox.BackColor = SystemColors.ControlDarkDark;
+            EmailTextBox.ForeColor = SystemColors.Menu;
+            EmailTextBox.Location = new Point(140, 176);
+            EmailTextBox.Name = "EmailTextBox";
+            EmailTextBox.Size = new Size(100, 23);
+            EmailTextBox.TabIndex = 13;
+            // 
+            // FechaNacimientoLabel
+            // 
+            FechaNacimientoLabel.AutoSize = true;
+            FechaNacimientoLabel.Location = new Point(9, 253);
+            FechaNacimientoLabel.Name = "FechaNacimientoLabel";
+            FechaNacimientoLabel.Size = new Size(122, 15);
+            FechaNacimientoLabel.TabIndex = 16;
+            FechaNacimientoLabel.Text = "Fecha de Nacimiento:";
+            // 
+            // FechaNacimientoTextBox
+            // 
+            FechaNacimientoTextBox.BackColor = SystemColors.ControlDarkDark;
+            FechaNacimientoTextBox.ForeColor = SystemColors.Menu;
+            FechaNacimientoTextBox.Location = new Point(139, 250);
+            FechaNacimientoTextBox.Name = "FechaNacimientoTextBox";
+            FechaNacimientoTextBox.Size = new Size(100, 23);
+            FechaNacimientoTextBox.TabIndex = 15;
+            // 
+            // IdPlanLabel
+            // 
+            IdPlanLabel.AutoSize = true;
+            IdPlanLabel.Location = new Point(90, 368);
+            IdPlanLabel.Name = "IdPlanLabel";
+            IdPlanLabel.Size = new Size(33, 15);
+            IdPlanLabel.TabIndex = 18;
+            IdPlanLabel.Text = "Plan:";
+            // 
+            // IdPlanTextBox
+            // 
+            IdPlanTextBox.BackColor = SystemColors.ControlDarkDark;
+            IdPlanTextBox.ForeColor = SystemColors.Menu;
+            IdPlanTextBox.Location = new Point(140, 365);
+            IdPlanTextBox.Name = "IdPlanTextBox";
+            IdPlanTextBox.Size = new Size(100, 23);
+            IdPlanTextBox.TabIndex = 17;
+            // 
+            // TipoPersonaLabel
+            // 
+            TipoPersonaLabel.AutoSize = true;
+            TipoPersonaLabel.Location = new Point(91, 329);
+            TipoPersonaLabel.Name = "TipoPersonaLabel";
+            TipoPersonaLabel.Size = new Size(33, 15);
+            TipoPersonaLabel.TabIndex = 20;
+            TipoPersonaLabel.Text = "Tipo:";
+            // 
+            // TipoPersonaTextBox
+            // 
+            TipoPersonaTextBox.BackColor = SystemColors.ControlDarkDark;
+            TipoPersonaTextBox.ForeColor = SystemColors.Menu;
+            TipoPersonaTextBox.Location = new Point(140, 325);
+            TipoPersonaTextBox.Name = "TipoPersonaTextBox";
+            TipoPersonaTextBox.Size = new Size(100, 23);
+            TipoPersonaTextBox.TabIndex = 19;
+            // 
+            // NuevaPersona
             // 
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(215, 293);
+            ClientSize = new Size(262, 436);
+            Controls.Add(TipoPersonaLabel);
+            Controls.Add(TipoPersonaTextBox);
+            Controls.Add(IdPlanLabel);
+            Controls.Add(IdPlanTextBox);
+            Controls.Add(FechaNacimientoLabel);
+            Controls.Add(FechaNacimientoTextBox);
+            Controls.Add(EmailLabel);
+            Controls.Add(EmailTextBox);
             Controls.Add(TelefonoLabel);
             Controls.Add(TelefonoTextBox);
             Controls.Add(GuardarButton);
@@ -187,7 +275,7 @@
             Controls.Add(ApellidoLabel);
             Controls.Add(ApellidoTextBox);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
-            Name = "NuevoAlumno";
+            Name = "NuevaPersona";
             StartPosition = FormStartPosition.CenterParent;
             TopMost = true;
             ResumeLayout(false);
@@ -209,5 +297,13 @@
         private Button GuardarButton;
         private Label TelefonoLabel;
         private TextBox TelefonoTextBox;
+        private Label EmailLabel;
+        private TextBox EmailTextBox;
+        private Label FechaNacimientoLabel;
+        private TextBox FechaNacimientoTextBox;
+        private Label IdPlanLabel;
+        private TextBox IdPlanTextBox;
+        private Label TipoPersonaLabel;
+        private TextBox TipoPersonaTextBox;
     }
 }
