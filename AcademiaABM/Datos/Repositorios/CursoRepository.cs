@@ -14,10 +14,8 @@
 
         public List<Curso> ObtenerTodosLosCursos()
         {
-            return _context.Cursos
-                .Join(_context.Comisiones, c => c.Id_comision, com => com.Id_comision, (c, com) => new { Curso = c, Comision = com })
-                .Select(x => x.Curso)
-                .ToList();
+            return _context.Cursos.ToList();
+
         }
 
         public Curso ObtenerCursoPorId(int id)

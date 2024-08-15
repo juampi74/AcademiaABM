@@ -12,8 +12,10 @@ namespace AcademiaABM.Presentacion.Principal
         private PersonaService _personaService;
         private ComisionService _comisionService;
         private CursoService _cursoService;
+        private MateriaService _materiaService;
+        private PlanService _planService;
 
-        private String entidadListada;
+        private string entidadListada;
         private int idActual;
 
         public Grilla()
@@ -50,7 +52,7 @@ namespace AcademiaABM.Presentacion.Principal
                 //dgvSysacad.AutoGenerateColumns = true;
                 //dgvSysacad.DataSource = listado;
 
-                // Prueba SQL Nativo - JOIN Cursos y Comisiones
+                // Prueba SQL Nativo - JOIN Cursos, Comisiones y Materias
                 // Habría que sacarlo de la vista después
 
                 // Conectar a la base de datos
@@ -61,16 +63,20 @@ namespace AcademiaABM.Presentacion.Principal
                 // Crear la consulta SQL
                 string query = @"
                 SELECT 
-                    cu.Id_curso, 
-                    cu.Anio_calendario, 
-                    cu.Cupo, 
-                    co.Desc_comision AS Comision
+                    cur.Id_curso, 
+                    cur.Anio_calendario, 
+                    cur.Cupo, 
+                    com.Desc_comision AS Comision,
+                    mat.Desc_materia AS Materia
                 FROM 
-                    Cursos cu
+                    Cursos cur
                 JOIN 
-                    Comisiones co ON cu.Id_comision = co.Id_comision
+                    Comisiones com ON cur.Id_comision = com.Id_comision
+                JOIN 
+                    Materias mat ON cur.Id_materia = mat.Id_materia
                 WHERE
-                    cu.Id_curso IS NOT NULL
+                    cur.Id_curso IS NOT NULL AND
+                    mat.Id_materia IS NOT NULL; 
                 ";
 
                 // Crear un adaptador de datos
@@ -87,6 +93,14 @@ namespace AcademiaABM.Presentacion.Principal
                 
 
                 entidadListada = "Curso";
+            }
+            else if (typeof(T) == typeof(Materia))
+            {
+                listado = _materiaService.ObtenerTodasLasMaterias().Cast<T>().ToList();
+                dgvSysacad.AutoGenerateColumns = true;
+                dgvSysacad.DataSource = listado;
+
+                entidadListada = "Materia";
             }
 
             SeleccionarPrimeraFila();
@@ -108,6 +122,16 @@ namespace AcademiaABM.Presentacion.Principal
             {
                 _cursoService = new CursoService();
             }
+
+            if (_materiaService == null)
+            {
+                _materiaService = new MateriaService();
+            }
+
+            if (_planService == null)
+            {
+                _planService = new PlanService();
+            }
         }
 
         private void SeleccionarPrimeraFila()
@@ -118,24 +142,38 @@ namespace AcademiaABM.Presentacion.Principal
             }
         }
 
+        private List<T> LeerEntidades<T>()
+        {
+            List<T> listado = null;
+
+            if (typeof(T) == typeof(Persona))
+            {
+                listado = _personaService.ObtenerTodasLasPersonas().Cast<T>().ToList();
+            }
+            else if (typeof(T) == typeof(Comision))
+            {
+                listado = _comisionService.ObtenerTodasLasComisiones().Cast<T>().ToList();
+            }
+            else if (typeof(T) == typeof(Curso))
+            {
+                listado = _cursoService.ObtenerTodosLosCursos().Cast<T>().ToList();
+            }
+            else if (typeof(T) == typeof(Materia))
+            {
+                listado = _materiaService.ObtenerTodasLasMaterias().Cast<T>().ToList();
+            }
+            else if (typeof(T) == typeof(Plan))
+            {
+                listado = _planService.ObtenerTodosLosPlanes().Cast<T>().ToList();
+            }
+
+            return listado;
+        }
+
         private Persona LeerPersona(int id)
         {
             return _personaService.ObtenerPersonaPorId(id);
         }
-        
-        /*
-        private void CrearPersona(Persona personaAGuardar)
-        {
-            _personaService.CrearPersona(personaAGuardar);
-            Listar<Persona>();
-        }
-
-        private void CrearComision(Comision comisionAGuardar)
-        {
-            _comisionService.CrearComision(comisionAGuardar);
-            Listar<Comision>();
-        }
-        */
 
         private void CrearEntidad<T>(T entidadAGuardar)
         {
@@ -151,8 +189,17 @@ namespace AcademiaABM.Presentacion.Principal
             {
                 _cursoService.CrearCurso(entidadAGuardar as Curso);
             }
+            else if (typeof(T) == typeof(Materia))
+            {
+                _materiaService.CrearMateria(entidadAGuardar as Materia);
+            }
+            else if (typeof(T) == typeof(Plan))
+            {
+                _planService.CrearPlan(entidadAGuardar as Plan);
+            }
             Listar<T>();
         }
+
         private void ActualizarPersona(Persona personaAGuardar)
         {
             _personaService.ActualizarPersona(personaAGuardar);
@@ -203,9 +250,14 @@ namespace AcademiaABM.Presentacion.Principal
         {
             if (entidadListada == "Persona")
             {
-                NuevaPersona nuevaPersona = new NuevaPersona();
+                List<Plan> planes = LeerEntidades<Plan>().Cast<Plan>().ToList();
+                
+                List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan)).ToList();
+                
+                NuevaPersona nuevaPersona = new NuevaPersona(opcionesPlan);
                 if (nuevaPersona.ShowDialog(this) == DialogResult.OK)
                 {
+
                     Persona personaAGuardar = nuevaPersona.Persona;
                     ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
                     if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
@@ -216,8 +268,12 @@ namespace AcademiaABM.Presentacion.Principal
                     }
                 }
             } else if (entidadListada == "Comision")
-            {                
-                NuevaComision nuevaComision = new NuevaComision();
+            {
+                List<Plan> planes = LeerEntidades<Plan>().Cast<Plan>().ToList();
+
+                List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan)).ToList();
+
+                NuevaComision nuevaComision = new NuevaComision(opcionesPlan);
                 if (nuevaComision.ShowDialog(this) == DialogResult.OK)
                 {
                     Comision comisionAGuardar = nuevaComision.Comision;
@@ -232,7 +288,13 @@ namespace AcademiaABM.Presentacion.Principal
 
             } else if (entidadListada == "Curso")
             {
-                NuevoCurso nuevoCurso = new NuevoCurso();
+                List<Comision> comisiones = LeerEntidades<Comision>().Cast<Comision>().ToList();
+                List<Materia> materias = LeerEntidades<Materia>().Cast<Materia>().ToList();
+
+                List<(int Id, string Descripcion)> opcionesComision = comisiones.Select(comision => (comision.Id_comision, comision.Desc_comision)).ToList();
+                List<(int Id, string Descripcion)> opcionesMateria = materias.Select(materia => (materia.Id_materia, materia.Desc_materia)).ToList();
+
+                NuevoCurso nuevoCurso = new NuevoCurso(opcionesComision, opcionesMateria);
                 if (nuevoCurso.ShowDialog(this) == DialogResult.OK)
                 {
                     Curso cursoAGuardar = nuevoCurso.Curso;

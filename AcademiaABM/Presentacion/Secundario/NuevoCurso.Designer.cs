@@ -33,10 +33,10 @@
             AnioCalendarioTextBox = new TextBox();
             CupoLabel = new Label();
             CupoTextBox = new TextBox();
-            IdComisionLabel = new Label();
-            IdComisionTextBox = new TextBox();
-            IdMateriaLabel = new Label();
-            IdMateriaTextBox = new TextBox();
+            ComisionLabel = new Label();
+            ComisionComboBox = new ComboBox();
+            MateriaLabel = new Label();
+            MateriaComboBox = new ComboBox();
             CancelarButton = new Button();
             GuardarButton = new Button();
             SuspendLayout();
@@ -48,80 +48,82 @@
             NuevoCursoLabel.Location = new Point(46, 9);
             NuevoCursoLabel.Name = "NuevoCursoLabel";
             NuevoCursoLabel.Size = new Size(170, 37);
-            NuevoCursoLabel.TabIndex = 12;
+            NuevoCursoLabel.TabIndex = 10;
             NuevoCursoLabel.Text = "Nuevo Curso";
             // 
             // AnioCalendarioLabel
             // 
             AnioCalendarioLabel.AutoSize = true;
-            AnioCalendarioLabel.Location = new Point(44, 67);
+            AnioCalendarioLabel.Location = new Point(12, 67);
             AnioCalendarioLabel.Name = "AnioCalendarioLabel";
             AnioCalendarioLabel.Size = new Size(92, 15);
-            AnioCalendarioLabel.TabIndex = 10;
+            AnioCalendarioLabel.TabIndex = 9;
             AnioCalendarioLabel.Text = "Año Calendario:";
             // 
             // AnioCalendarioTextBox
             // 
             AnioCalendarioTextBox.BackColor = SystemColors.ControlDarkDark;
             AnioCalendarioTextBox.ForeColor = SystemColors.Menu;
-            AnioCalendarioTextBox.Location = new Point(140, 63);
+            AnioCalendarioTextBox.Location = new Point(110, 63);
             AnioCalendarioTextBox.Name = "AnioCalendarioTextBox";
-            AnioCalendarioTextBox.Size = new Size(100, 23);
-            AnioCalendarioTextBox.TabIndex = 1;
+            AnioCalendarioTextBox.Size = new Size(130, 23);
+            AnioCalendarioTextBox.TabIndex = 0;
             // 
             // CupoLabel
             // 
             CupoLabel.AutoSize = true;
-            CupoLabel.Location = new Point(96, 104);
+            CupoLabel.Location = new Point(64, 104);
             CupoLabel.Name = "CupoLabel";
             CupoLabel.Size = new Size(39, 15);
-            CupoLabel.TabIndex = 11;
+            CupoLabel.TabIndex = 8;
             CupoLabel.Text = "Cupo:";
             // 
             // CupoTextBox
             // 
             CupoTextBox.BackColor = SystemColors.ControlDarkDark;
             CupoTextBox.ForeColor = SystemColors.Menu;
-            CupoTextBox.Location = new Point(140, 100);
+            CupoTextBox.Location = new Point(110, 100);
             CupoTextBox.Name = "CupoTextBox";
-            CupoTextBox.Size = new Size(100, 23);
-            CupoTextBox.TabIndex = 0;
+            CupoTextBox.Size = new Size(130, 23);
+            CupoTextBox.TabIndex = 1;
             // 
-            // IdComisionLabel
+            // ComisionLabel
             // 
-            IdComisionLabel.AutoSize = true;
-            IdComisionLabel.Location = new Point(77, 143);
-            IdComisionLabel.Name = "IdComisionLabel";
-            IdComisionLabel.Size = new Size(61, 15);
-            IdComisionLabel.TabIndex = 18;
-            IdComisionLabel.Text = "Comision:";
+            ComisionLabel.AutoSize = true;
+            ComisionLabel.Location = new Point(45, 143);
+            ComisionLabel.Name = "ComisionLabel";
+            ComisionLabel.Size = new Size(61, 15);
+            ComisionLabel.TabIndex = 7;
+            ComisionLabel.Text = "Comision:";
             // 
-            // IdComisionTextBox
+            // ComisionComboBox
             // 
-            IdComisionTextBox.BackColor = SystemColors.ControlDarkDark;
-            IdComisionTextBox.ForeColor = SystemColors.Menu;
-            IdComisionTextBox.Location = new Point(140, 139);
-            IdComisionTextBox.Name = "IdComisionTextBox";
-            IdComisionTextBox.Size = new Size(100, 23);
-            IdComisionTextBox.TabIndex = 17;
+            ComisionComboBox.BackColor = SystemColors.GrayText;
+            ComisionComboBox.ForeColor = SystemColors.Window;
+            ComisionComboBox.FormattingEnabled = true;
+            ComisionComboBox.Location = new Point(112, 140);
+            ComisionComboBox.Name = "ComisionComboBox";
+            ComisionComboBox.Size = new Size(127, 23);
+            ComisionComboBox.TabIndex = 2;
             // 
-            // IdMateriaLabel
+            // MateriaLabel
             // 
-            IdMateriaLabel.AutoSize = true;
-            IdMateriaLabel.Location = new Point(87, 183);
-            IdMateriaLabel.Name = "IdMateriaLabel";
-            IdMateriaLabel.Size = new Size(50, 15);
-            IdMateriaLabel.TabIndex = 18;
-            IdMateriaLabel.Text = "Materia:";
+            MateriaLabel.AutoSize = true;
+            MateriaLabel.Location = new Point(55, 183);
+            MateriaLabel.Name = "MateriaLabel";
+            MateriaLabel.Size = new Size(50, 15);
+            MateriaLabel.TabIndex = 6;
+            MateriaLabel.Text = "Materia:";
             // 
-            // IdMateriaTextBox
+            // MateriaComboBox
             // 
-            IdMateriaTextBox.BackColor = SystemColors.ControlDarkDark;
-            IdMateriaTextBox.ForeColor = SystemColors.Menu;
-            IdMateriaTextBox.Location = new Point(140, 180);
-            IdMateriaTextBox.Name = "IdMateriaTextBox";
-            IdMateriaTextBox.Size = new Size(100, 23);
-            IdMateriaTextBox.TabIndex = 17;
+            MateriaComboBox.BackColor = SystemColors.GrayText;
+            MateriaComboBox.ForeColor = SystemColors.Window;
+            MateriaComboBox.FormattingEnabled = true;
+            MateriaComboBox.Location = new Point(112, 180);
+            MateriaComboBox.Name = "MateriaComboBox";
+            MateriaComboBox.Size = new Size(128, 23);
+            MateriaComboBox.TabIndex = 3;
             // 
             // CancelarButton
             // 
@@ -130,7 +132,7 @@
             CancelarButton.Location = new Point(22, 221);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
-            CancelarButton.TabIndex = 6;
+            CancelarButton.TabIndex = 5;
             CancelarButton.Text = "Cancelar";
             CancelarButton.UseVisualStyleBackColor = false;
             CancelarButton.Click += CancelarButton_Click;
@@ -142,7 +144,7 @@
             GuardarButton.Location = new Point(164, 221);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
-            GuardarButton.TabIndex = 5;
+            GuardarButton.TabIndex = 4;
             GuardarButton.Text = "Guardar";
             GuardarButton.UseVisualStyleBackColor = false;
             GuardarButton.Click += GuardarButton_Click;
@@ -158,10 +160,10 @@
             Controls.Add(AnioCalendarioTextBox);
             Controls.Add(CupoLabel);
             Controls.Add(CupoTextBox);
-            Controls.Add(IdComisionLabel);
-            Controls.Add(IdComisionTextBox);
-            Controls.Add(IdMateriaLabel);
-            Controls.Add(IdMateriaTextBox);
+            Controls.Add(ComisionLabel);
+            Controls.Add(ComisionComboBox);
+            Controls.Add(MateriaLabel);
+            Controls.Add(MateriaComboBox);
             Controls.Add(CancelarButton);
             Controls.Add(GuardarButton);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
@@ -179,12 +181,11 @@
         private TextBox AnioCalendarioTextBox;
         private Label CupoLabel;
         private TextBox CupoTextBox;
-        private Label IdComisionLabel;
-        private TextBox IdComisionTextBox;
-        private Label IdMateriaLabel;
-        private TextBox IdMateriaTextBox;
+        private Label ComisionLabel;
+        private ComboBox ComisionComboBox;
+        private Label MateriaLabel;
+        private ComboBox MateriaComboBox;
         private Button CancelarButton;
         private Button GuardarButton;
-
     }
 }

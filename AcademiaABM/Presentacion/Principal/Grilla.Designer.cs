@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace AcademiaABM.Presentacion.Principal
+﻿namespace AcademiaABM.Presentacion.Principal
 {
     partial class Grilla
     {
@@ -34,10 +32,11 @@ namespace AcademiaABM.Presentacion.Principal
             toolStripContainer1 = new ToolStripContainer();
             tlSysacad = new TableLayoutPanel();
             dgvSysacad = new DataGridView();
-            btnMostrarPersonas = new Button();
-            btnMostrarComisiones = new Button();
             btnSalir = new Button();
             btnActualizar = new Button();
+            fLPBotonesOpciones = new FlowLayoutPanel();
+            btnMostrarPersonas = new Button();
+            btnMostrarComisiones = new Button();
             btnMostrarCursos = new Button();
             tsSysacad = new ToolStrip();
             tsbNuevo = new ToolStripButton();
@@ -45,12 +44,15 @@ namespace AcademiaABM.Presentacion.Principal
             tsbEliminar = new ToolStripButton();
             tsbOrdenarAscendente = new ToolStripButton();
             tsbOrdenarDescendente = new ToolStripButton();
+            flowLayoutPanel1 = new FlowLayoutPanel();
             toolStripContainer1.ContentPanel.SuspendLayout();
             toolStripContainer1.TopToolStripPanel.SuspendLayout();
             toolStripContainer1.SuspendLayout();
             tlSysacad.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvSysacad).BeginInit();
+            fLPBotonesOpciones.SuspendLayout();
             tsSysacad.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // toolStripContainer1
@@ -76,22 +78,20 @@ namespace AcademiaABM.Presentacion.Principal
             tlSysacad.ColumnCount = 6;
             tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlSysacad.ColumnStyles.Add(new ColumnStyle());
-            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 87F));
-            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 365F));
-            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 86F));
-            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 89F));
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 9F));
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 178F));
             tlSysacad.Controls.Add(dgvSysacad, 0, 0);
-            tlSysacad.Controls.Add(btnMostrarPersonas, 0, 1);
-            tlSysacad.Controls.Add(btnMostrarComisiones, 1, 1);
-            tlSysacad.Controls.Add(btnSalir, 5, 1);
-            tlSysacad.Controls.Add(btnActualizar, 4, 1);
-            tlSysacad.Controls.Add(btnMostrarCursos, 2, 1);
+            tlSysacad.Controls.Add(fLPBotonesOpciones, 0, 1);
+            tlSysacad.Controls.Add(flowLayoutPanel1, 5, 1);
             tlSysacad.Dock = DockStyle.Fill;
             tlSysacad.Location = new Point(0, 0);
             tlSysacad.Name = "tlSysacad";
             tlSysacad.RowCount = 2;
             tlSysacad.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tlSysacad.RowStyles.Add(new RowStyle());
+            tlSysacad.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tlSysacad.Size = new Size(800, 425);
             tlSysacad.TabIndex = 0;
             // 
@@ -103,38 +103,17 @@ namespace AcademiaABM.Presentacion.Principal
             dgvSysacad.Dock = DockStyle.Fill;
             dgvSysacad.Location = new Point(3, 3);
             dgvSysacad.Name = "dgvSysacad";
-            dgvSysacad.Size = new Size(794, 390);
+            dgvSysacad.Size = new Size(794, 383);
             dgvSysacad.TabIndex = 0;
             dgvSysacad.SelectionChanged += dgvSysacad_SelectionChanged;
-            // 
-            // btnMostrarPersonas
-            // 
-            btnMostrarPersonas.Location = new Point(3, 399);
-            btnMostrarPersonas.Name = "btnMostrarPersonas";
-            btnMostrarPersonas.Size = new Size(80, 23);
-            btnMostrarPersonas.TabIndex = 3;
-            btnMostrarPersonas.Text = "Personas";
-            btnMostrarPersonas.UseVisualStyleBackColor = true;
-            btnMostrarPersonas.Click += btnMostrarPersonas_Click;
-            // 
-            // btnMostrarComisiones
-            // 
-            btnMostrarComisiones.Anchor = AnchorStyles.Left;
-            btnMostrarComisiones.Location = new Point(90, 399);
-            btnMostrarComisiones.Name = "btnMostrarComisiones";
-            btnMostrarComisiones.Size = new Size(80, 23);
-            btnMostrarComisiones.TabIndex = 4;
-            btnMostrarComisiones.Text = "Comisiones";
-            btnMostrarComisiones.UseVisualStyleBackColor = true;
-            btnMostrarComisiones.Click += btnMostrarComisiones_Click;
             // 
             // btnSalir
             // 
             btnSalir.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnSalir.Location = new Point(717, 399);
+            btnSalir.Location = new Point(89, 3);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(80, 23);
-            btnSalir.TabIndex = 2;
+            btnSalir.TabIndex = 4;
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = true;
             btnSalir.Click += btnSalir_Click;
@@ -142,21 +121,51 @@ namespace AcademiaABM.Presentacion.Principal
             // btnActualizar
             // 
             btnActualizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnActualizar.Location = new Point(628, 399);
+            btnActualizar.Location = new Point(3, 3);
             btnActualizar.Name = "btnActualizar";
             btnActualizar.Size = new Size(80, 23);
-            btnActualizar.TabIndex = 1;
+            btnActualizar.TabIndex = 3;
             btnActualizar.Text = "Actualizar";
             btnActualizar.UseVisualStyleBackColor = true;
             btnActualizar.Click += btnActualizar_Click;
             // 
+            // fLPBotonesOpciones
+            // 
+            fLPBotonesOpciones.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            fLPBotonesOpciones.Controls.Add(btnMostrarPersonas);
+            fLPBotonesOpciones.Controls.Add(btnMostrarComisiones);
+            fLPBotonesOpciones.Controls.Add(btnMostrarCursos);
+            fLPBotonesOpciones.Location = new Point(3, 393);
+            fLPBotonesOpciones.Name = "fLPBotonesOpciones";
+            fLPBotonesOpciones.Size = new Size(258, 29);
+            fLPBotonesOpciones.TabIndex = 5;
+            // 
+            // btnMostrarPersonas
+            // 
+            btnMostrarPersonas.Location = new Point(3, 3);
+            btnMostrarPersonas.Name = "btnMostrarPersonas";
+            btnMostrarPersonas.Size = new Size(80, 23);
+            btnMostrarPersonas.TabIndex = 0;
+            btnMostrarPersonas.Text = "Personas";
+            btnMostrarPersonas.UseVisualStyleBackColor = true;
+            btnMostrarPersonas.Click += btnMostrarPersonas_Click;
+            // 
+            // btnMostrarComisiones
+            // 
+            btnMostrarComisiones.Location = new Point(89, 3);
+            btnMostrarComisiones.Name = "btnMostrarComisiones";
+            btnMostrarComisiones.Size = new Size(80, 23);
+            btnMostrarComisiones.TabIndex = 1;
+            btnMostrarComisiones.Text = "Comisiones";
+            btnMostrarComisiones.UseVisualStyleBackColor = true;
+            btnMostrarComisiones.Click += btnMostrarComisiones_Click;
+            // 
             // btnMostrarCursos
             // 
-            btnMostrarCursos.Anchor = AnchorStyles.Left;
-            btnMostrarCursos.Location = new Point(176, 399);
+            btnMostrarCursos.Location = new Point(175, 3);
             btnMostrarCursos.Name = "btnMostrarCursos";
             btnMostrarCursos.Size = new Size(80, 23);
-            btnMostrarCursos.TabIndex = 5;
+            btnMostrarCursos.TabIndex = 2;
             btnMostrarCursos.Text = "Cursos";
             btnMostrarCursos.UseVisualStyleBackColor = true;
             btnMostrarCursos.Click += btnMostrarCursos_Click;
@@ -220,6 +229,16 @@ namespace AcademiaABM.Presentacion.Principal
             tsbOrdenarDescendente.Text = "OrdenarDescendente";
             tsbOrdenarDescendente.Click += tsbOrdenarDescendente_Click;
             // 
+            // flowLayoutPanel1
+            // 
+            flowLayoutPanel1.Controls.Add(btnActualizar);
+            flowLayoutPanel1.Controls.Add(btnSalir);
+            flowLayoutPanel1.Dock = DockStyle.Bottom;
+            flowLayoutPanel1.Location = new Point(625, 392);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(172, 30);
+            flowLayoutPanel1.TabIndex = 6;
+            // 
             // Grilla
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -235,8 +254,10 @@ namespace AcademiaABM.Presentacion.Principal
             toolStripContainer1.PerformLayout();
             tlSysacad.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvSysacad).EndInit();
+            fLPBotonesOpciones.ResumeLayout(false);
             tsSysacad.ResumeLayout(false);
             tsSysacad.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -247,7 +268,6 @@ namespace AcademiaABM.Presentacion.Principal
         private TableLayoutPanel tlSysacad;
         private DataGridView dgvSysacad;
         private Button btnActualizar;
-        private Button btnSalir;
         private ToolStripButton tsbNuevo;
         private ToolStripButton tsbEditar;
         private ToolStripButton tsbEliminar;
@@ -256,5 +276,8 @@ namespace AcademiaABM.Presentacion.Principal
         private Button btnMostrarPersonas;
         private Button btnMostrarComisiones;
         private Button btnMostrarCursos;
+        private Button btnSalir;
+        private FlowLayoutPanel fLPBotonesOpciones;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }
