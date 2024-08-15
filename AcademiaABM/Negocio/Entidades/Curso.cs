@@ -29,9 +29,8 @@
         [NotMapped]
         public List<Docente_Curso> Docente_Cursos { get; set; }
 
-        public Curso(int id_curso, int anio_calendario, int cupo, int id_comision, int id_materia)
+        public Curso(int anio_calendario, int cupo, int id_comision, int id_materia)
         {
-            this.Id_curso = id_curso;
             this.Anio_calendario = anio_calendario;
             this.Cupo = cupo;
             this.Id_comision = id_comision;

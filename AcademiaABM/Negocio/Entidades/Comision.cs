@@ -20,9 +20,8 @@
         [NotMapped]
         public List<Curso> Cursos { get; set; }
 
-        public Comision(int id_comision, string desc_comision, int anio_especialidad, int id_plan)
+        public Comision(string desc_comision, int anio_especialidad, int id_plan)
         {
-            this.Id_comision = id_comision;
             this.Desc_comision = desc_comision;
             this.Anio_especialidad = anio_especialidad;
             this.Id_plan = id_plan;

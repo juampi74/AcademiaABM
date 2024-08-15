@@ -13,6 +13,7 @@ namespace AcademiaABM.Presentacion.Principal
         private ComisionService _comisionService;
         private CursoService _cursoService;
 
+        private String entidadListada;
         private int idActual;
 
         public Grilla()
@@ -32,22 +33,28 @@ namespace AcademiaABM.Presentacion.Principal
                 listado = _personaService.ObtenerTodasLasPersonas().Cast<T>().ToList();
                 dgvSysacad.AutoGenerateColumns = true;
                 dgvSysacad.DataSource = listado;
+
+                entidadListada = "Persona";
             }
             else if (typeof(T) == typeof(Comision))
             {
                 listado = _comisionService.ObtenerTodasLasComisiones().Cast<T>().ToList();
                 dgvSysacad.AutoGenerateColumns = true;
                 dgvSysacad.DataSource = listado;
+
+                entidadListada = "Comision";
             }
             else if (typeof(T) == typeof(Curso))
             {
-                // List<Curso> listadoCursos = _cursoService.ObtenerTodosLosCursos().ToList();
-                
-                
+                //listado = _cursoService.ObtenerTodosLosCursos().Cast<T>().ToList();
+                //dgvSysacad.AutoGenerateColumns = true;
+                //dgvSysacad.DataSource = listado;
+
                 // Prueba SQL Nativo - JOIN Cursos y Comisiones
                 // Habría que sacarlo de la vista después
-                
+
                 // Conectar a la base de datos
+                
                 string connectionString = @"Server=DESKTOP-I6LRHO6\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5";
                 SqlConnection connection = new SqlConnection(connectionString);
 
@@ -77,10 +84,11 @@ namespace AcademiaABM.Presentacion.Principal
 
                 // Asignar el conjunto de datos al DataGridView
                 dgvSysacad.DataSource = dataSet.Tables[0];
+                
+
+                entidadListada = "Curso";
             }
 
-            // dgvSysacad.AutoGenerateColumns = true;
-            // dgvSysacad.DataSource = listado;
             SeleccionarPrimeraFila();
         }
 
@@ -114,13 +122,37 @@ namespace AcademiaABM.Presentacion.Principal
         {
             return _personaService.ObtenerPersonaPorId(id);
         }
-
+        
+        /*
         private void CrearPersona(Persona personaAGuardar)
         {
             _personaService.CrearPersona(personaAGuardar);
             Listar<Persona>();
         }
 
+        private void CrearComision(Comision comisionAGuardar)
+        {
+            _comisionService.CrearComision(comisionAGuardar);
+            Listar<Comision>();
+        }
+        */
+
+        private void CrearEntidad<T>(T entidadAGuardar)
+        {
+            if (typeof(T) == typeof(Persona))
+            {
+                _personaService.CrearPersona(entidadAGuardar as Persona);
+            }
+            else if (typeof(T) == typeof(Comision))
+            {
+                _comisionService.CrearComision(entidadAGuardar as Comision);
+            }
+            else if (typeof(T) == typeof(Curso))
+            {
+                _cursoService.CrearCurso(entidadAGuardar as Curso);
+            }
+            Listar<T>();
+        }
         private void ActualizarPersona(Persona personaAGuardar)
         {
             _personaService.ActualizarPersona(personaAGuardar);
@@ -169,16 +201,48 @@ namespace AcademiaABM.Presentacion.Principal
 
         private void tsbNuevo_Click(object sender, EventArgs e)
         {
-            NuevaPersona nuevaPersona = new NuevaPersona();
-            if (nuevaPersona.ShowDialog(this) == DialogResult.OK)
+            if (entidadListada == "Persona")
             {
-                Persona personaAGuardar = nuevaPersona.Persona;
-                ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
-                if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                NuevaPersona nuevaPersona = new NuevaPersona();
+                if (nuevaPersona.ShowDialog(this) == DialogResult.OK)
                 {
-                    CrearPersona(personaAGuardar);
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    Persona personaAGuardar = nuevaPersona.Persona;
+                    ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                    if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                    {
+                        CrearEntidad<Persona>(personaAGuardar);
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                }
+            } else if (entidadListada == "Comision")
+            {                
+                NuevaComision nuevaComision = new NuevaComision();
+                if (nuevaComision.ShowDialog(this) == DialogResult.OK)
+                {
+                    Comision comisionAGuardar = nuevaComision.Comision;
+                    ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                    if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                    {
+                        CrearEntidad<Comision>(comisionAGuardar);
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                }
+
+            } else if (entidadListada == "Curso")
+            {
+                NuevoCurso nuevoCurso = new NuevoCurso();
+                if (nuevoCurso.ShowDialog(this) == DialogResult.OK)
+                {
+                    Curso cursoAGuardar = nuevoCurso.Curso;
+                    ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                    if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                    {
+                        CrearEntidad<Curso>(cursoAGuardar);
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
                 }
             }
         }

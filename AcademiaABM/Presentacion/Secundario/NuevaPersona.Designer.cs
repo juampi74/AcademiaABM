@@ -36,7 +36,7 @@
             LegajoTextBox = new TextBox();
             DireccionLabel = new Label();
             DireccionTextBox = new TextBox();
-            NuevoUsuarioLabel = new Label();
+            NuevaPersonaLabel = new Label();
             CancelarButton = new Button();
             GuardarButton = new Button();
             TelefonoLabel = new Label();
@@ -123,15 +123,15 @@
             DireccionTextBox.Size = new Size(100, 23);
             DireccionTextBox.TabIndex = 3;
             // 
-            // NuevoUsuarioLabel
+            // NuevaPersonaLabel
             // 
-            NuevoUsuarioLabel.AutoSize = true;
-            NuevoUsuarioLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            NuevoUsuarioLabel.Location = new Point(33, 9);
-            NuevoUsuarioLabel.Name = "NuevoUsuarioLabel";
-            NuevoUsuarioLabel.Size = new Size(193, 37);
-            NuevoUsuarioLabel.TabIndex = 12;
-            NuevoUsuarioLabel.Text = "Nuevo Usuario";
+            NuevaPersonaLabel.AutoSize = true;
+            NuevaPersonaLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NuevaPersonaLabel.Location = new Point(33, 9);
+            NuevaPersonaLabel.Name = "NuevaPersonaLabel";
+            NuevaPersonaLabel.Size = new Size(193, 37);
+            NuevaPersonaLabel.TabIndex = 12;
+            NuevaPersonaLabel.Text = "Nueva Persona";
             // 
             // CancelarButton
             // 
@@ -265,7 +265,7 @@
             Controls.Add(TelefonoTextBox);
             Controls.Add(GuardarButton);
             Controls.Add(CancelarButton);
-            Controls.Add(NuevoUsuarioLabel);
+            Controls.Add(NuevaPersonaLabel);
             Controls.Add(DireccionLabel);
             Controls.Add(DireccionTextBox);
             Controls.Add(LegajoLabel);
@@ -292,7 +292,7 @@
         private TextBox LegajoTextBox;
         private Label DireccionLabel;
         private TextBox DireccionTextBox;
-        private Label NuevoUsuarioLabel;
+        private Label NuevaPersonaLabel;
         private Button CancelarButton;
         private Button GuardarButton;
         private Label TelefonoLabel;
