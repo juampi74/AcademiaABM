@@ -9,9 +9,9 @@
         public EditarPersona(Persona personaAEditar)
         {
             InitializeComponent();
-            
+
             this.PersonaAEditar = personaAEditar;
-            
+
             EstablecerValoresIniciales();
         }
 

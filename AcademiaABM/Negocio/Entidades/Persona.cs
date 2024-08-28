@@ -2,7 +2,7 @@
 {
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations.Schema;
-    
+
     public class Persona
     {
         public int Id_persona { get; set; }

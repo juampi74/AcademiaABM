@@ -56,7 +56,7 @@ namespace AcademiaABM.Presentacion.Principal
                 // Habría que sacarlo de la vista después
 
                 // Conectar a la base de datos
-                
+
                 string connectionString = @"Server=DESKTOP-I6LRHO6\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5";
                 SqlConnection connection = new SqlConnection(connectionString);
 
@@ -90,7 +90,7 @@ namespace AcademiaABM.Presentacion.Principal
 
                 // Asignar el conjunto de datos al DataGridView
                 dgvSysacad.DataSource = dataSet.Tables[0];
-                
+
 
                 entidadListada = "Curso";
             }
@@ -251,9 +251,9 @@ namespace AcademiaABM.Presentacion.Principal
             if (entidadListada == "Persona")
             {
                 List<Plan> planes = LeerEntidades<Plan>().Cast<Plan>().ToList();
-                
+
                 List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan)).ToList();
-                
+
                 NuevaPersona nuevaPersona = new NuevaPersona(opcionesPlan);
                 if (nuevaPersona.ShowDialog(this) == DialogResult.OK)
                 {
@@ -267,7 +267,8 @@ namespace AcademiaABM.Presentacion.Principal
                         operacionExitosa.ShowDialog(this);
                     }
                 }
-            } else if (entidadListada == "Comision")
+            }
+            else if (entidadListada == "Comision")
             {
                 List<Plan> planes = LeerEntidades<Plan>().Cast<Plan>().ToList();
 
@@ -286,7 +287,8 @@ namespace AcademiaABM.Presentacion.Principal
                     }
                 }
 
-            } else if (entidadListada == "Curso")
+            }
+            else if (entidadListada == "Curso")
             {
                 List<Comision> comisiones = LeerEntidades<Comision>().Cast<Comision>().ToList();
                 List<Materia> materias = LeerEntidades<Materia>().Cast<Materia>().ToList();

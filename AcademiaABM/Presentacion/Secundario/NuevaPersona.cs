@@ -24,7 +24,7 @@
             PlanComboBox.DataSource = listadoNombresPlanes;
 
             // Dar opciones para el ComboBox de TipoPersona
-            TipoPersonaComboBox.DataSource = new List<string>() {"Alumno", "Docente"};
+            TipoPersonaComboBox.DataSource = new List<string>() { "Alumno", "Docente" };
         }
 
         private void GuardarButton_Click(object sender, EventArgs e)
@@ -78,7 +78,8 @@
             if (TipoPersonaComboBox.SelectedValue.ToString() == "Alumno")
             {
                 numeroTipoPersona = 0;
-            } else
+            }
+            else
             {
                 numeroTipoPersona = 1;
             }

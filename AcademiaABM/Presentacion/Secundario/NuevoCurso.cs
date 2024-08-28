@@ -72,7 +72,7 @@
             // Buscar el Id de la Comision que coincida con la Descripcion seleccionada
             foreach (var comision in this.Comisiones)
             {
-                if(comision.Descripcion == ComisionComboBox.SelectedValue.ToString())
+                if (comision.Descripcion == ComisionComboBox.SelectedValue.ToString())
                 {
                     idComisionSeleccionada = comision.Id;
                 }
@@ -96,4 +96,3 @@
         }
     }
 }
-

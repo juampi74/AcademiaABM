@@ -2,7 +2,7 @@
 {
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations.Schema;
-    
+
     public class Curso
     {
         public int Id_curso { get; set; }
@@ -38,4 +38,3 @@
         }
     }
 }
-
