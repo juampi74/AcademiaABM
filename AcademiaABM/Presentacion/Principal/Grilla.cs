@@ -16,11 +16,15 @@ public partial class Grilla : Form
     private CursoService _cursoService;
     private MateriaService _materiaService;
     private PlanService _planService;
+    private EspecialidadService _especialidadService;
 
     private string entidadListada;
     private int idPersonaActual;
     private int idComisionActual;
     private int idCursoActual;
+    private int idEspecialidadActual;
+    private int idPlanActual;
+
 
     public Grilla()
     {
@@ -61,8 +65,8 @@ public partial class Grilla : Form
 
             // Conectar a la base de datos
 
-            string connectionString = @"Server=DESKTOP-I6LRHO6\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5"; // Juan Pablo
-            // string connectionString = @"Server=DESKTOP-7MNA3TJ\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5"; // Nahuel
+            // string connectionString = @"Server=DESKTOP-I6LRHO6\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5"; // Juan Pablo
+            string connectionString = @"Server=DESKTOP-7MNA3TJ\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5"; // Nahuel
             SqlConnection connection = new SqlConnection(connectionString);
 
             // Crear la consulta SQL
@@ -107,8 +111,24 @@ public partial class Grilla : Form
 
             entidadListada = "Materia";
         }
+        else if (typeof(T) == typeof(Especialidad))
+        {
+            listado = _especialidadService.ObtenerTodasLasEspecialidades().Cast<T>().ToList();
+            dgvSysacad.AutoGenerateColumns = true;
+            dgvSysacad.DataSource = listado;
 
-        SeleccionarPrimeraFila();
+            entidadListada = "Especialidad";
+        }
+        else if (typeof(T) == typeof(Plan))
+        {
+            listado = _planService.ObtenerTodosLosPlanes().Cast<T>().ToList();
+            dgvSysacad.AutoGenerateColumns = true;
+            dgvSysacad.DataSource = listado;
+
+            entidadListada = "Plan";
+        }
+
+            SeleccionarPrimeraFila();
     }
 
     private void InitializeService()
@@ -136,6 +156,11 @@ public partial class Grilla : Form
         if (_planService == null)
         {
             _planService = new PlanService();
+        }
+
+        if (_especialidadService == null)
+        {
+            _especialidadService = new EspecialidadService();
         }
     }
 
@@ -171,6 +196,10 @@ public partial class Grilla : Form
         {
             listado = _planService.ObtenerTodosLosPlanes().Cast<T>().ToList();
         }
+        else if (typeof(T) == typeof(Especialidad))
+        {
+            listado = _especialidadService.ObtenerTodasLasEspecialidades().Cast<T>().ToList();
+        }
 
         return listado;
     }
@@ -199,7 +228,10 @@ public partial class Grilla : Form
         {
             entidadADevolver = _planService.ObtenerPlanPorId(id);
         }
-
+        else if (typeof(T) == typeof(Especialidad))
+        {
+            entidadADevolver = _especialidadService.ObtenerEspecialidadPorId(id);
+        }
 
         return (T)entidadADevolver;
     }
@@ -226,6 +258,10 @@ public partial class Grilla : Form
         {
             _planService.CrearPlan(entidadAGuardar as Plan);
         }
+        else if (typeof(T) == typeof(Especialidad))
+        {
+            _especialidadService.CrearEspecialidad(entidadAGuardar as Especialidad);
+        }
         Listar<T>();
     }
 
@@ -251,14 +287,47 @@ public partial class Grilla : Form
         {
             _planService.ActualizarPlan(entidadAActualizar as Plan);
         }
+        else if (typeof(T) == typeof(Especialidad))
+        {
+            _especialidadService.ActualizarEspecialidad(entidadAActualizar as Especialidad);
+        }
         Listar<T>();
     }
 
-    private void EliminarPersona(int id)
+
+    private void EliminarEntidad<T>(int id)
     {
-        _personaService.EliminarPersona(id);
-        Listar<Persona>();
+        if (typeof(T) == typeof(Persona))
+        {
+            _personaService.EliminarPersona(id);
+        }
+        else if (typeof(T) == typeof(Comision))
+        {
+            _comisionService.EliminarComision(id);
+        }
+        else if (typeof(T) == typeof(Curso))
+        {
+            _cursoService.EliminarCurso(id);
+        }
+        else if (typeof(T) == typeof(Materia))
+        {
+            _materiaService.EliminarMateria(id);
+        }
+        else if (typeof(T) == typeof(Plan))
+        {
+            _planService.EliminarPlan(id);
+        }
+        else if (typeof(T) == typeof(Especialidad))
+        {
+            _especialidadService.EliminarEspecialidad(id);
+        }
+        Listar<T>();
     }
+
+
+
+
+
 
     private void OrdenarPersonasAscendente()
     {
@@ -296,7 +365,15 @@ public partial class Grilla : Form
                 {
                     idCursoActual = Int32.Parse(id);
                 }
-            }
+                else if (entidadListada == "Especialidad")
+                {
+                    idEspecialidadActual = Int32.Parse(id);
+                }
+                else if (entidadListada == "Plan")
+                {
+                    idPlanActual = Int32.Parse(id);
+                }
+                }
             catch
             {
                 MessageBox.Show("Seleccione otra fila!");
@@ -368,25 +445,41 @@ public partial class Grilla : Form
                 }
             }
         }
-    }
-
-    /*private void tsbEditar_Click(object sender, EventArgs e)
-    {
-        Persona personaAEditar = LeerPersona(idActual);
-        EditarPersona editarPersona = new EditarPersona(personaAEditar);
-        if (editarPersona.ShowDialog(this) == DialogResult.OK)
+        else if (entidadListada == "Especialidad")
         {
-            Persona personaAGuardar = editarPersona.PersonaAEditar;
-            ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
-            if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+
+            NuevaEspecialidad nuevaEspecialidad = new NuevaEspecialidad();
+            if (nuevaEspecialidad.ShowDialog(this) == DialogResult.OK)
             {
-                ActualizarPersona(personaAGuardar);
-                OperacionExitosa operacionExitosa = new OperacionExitosa();
-                operacionExitosa.ShowDialog(this);
+                Especialidad especialidadAGuardar = nuevaEspecialidad.Especialidad;
+                ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                {
+                    CrearEntidad<Especialidad>(especialidadAGuardar);
+                    OperacionExitosa operacionExitosa = new OperacionExitosa();
+                    operacionExitosa.ShowDialog(this);
+                }
             }
         }
+        else if (entidadListada == "Plan")
+        {
+
+            NuevoPlan nuevoPlan = new NuevoPlan();
+            if (nuevoPlan.ShowDialog(this) == DialogResult.OK)
+            {
+                Plan planAGuardar = nuevoPlan.Plan;
+                ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                {
+                    CrearEntidad<Plan>(planAGuardar);
+                    OperacionExitosa operacionExitosa = new OperacionExitosa();
+                    operacionExitosa.ShowDialog(this);
+                }
+            }
+        }
+
     }
-    */
+
 
     private void tsbEditar_Click(object sender, EventArgs e)
     {
@@ -446,18 +539,109 @@ public partial class Grilla : Form
                 }
             }
         }
+        else if (entidadListada == "Especialidad")
+        {
+
+            Especialidad especialidadAEditar = LeerEntidad<Especialidad>(idEspecialidadActual);
+
+            EditarEspecialidad editarEspecialidad = new EditarEspecialidad(especialidadAEditar);
+
+            if (editarEspecialidad.ShowDialog(this) == DialogResult.OK)
+            {
+                Especialidad especialidadAActualizar = editarEspecialidad.EspecialidadAEditar;
+                ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                {
+                    ActualizarEntidad(especialidadAActualizar);
+                    OperacionExitosa operacionExitosa = new OperacionExitosa();
+                    operacionExitosa.ShowDialog(this);
+                }
+            }
+
+        }
+        else if (entidadListada == "Plan")
+        {
+
+            Plan planAEditar = LeerEntidad<Plan>(idPlanActual);
+
+            EditarPlan editarPlan = new EditarPlan(planAEditar);
+
+            if (editarPlan.ShowDialog(this) == DialogResult.OK)
+            {
+                Plan planAActualizar = editarPlan.PlanAEditar;
+                ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                {
+                    ActualizarEntidad(planAActualizar);
+                    OperacionExitosa operacionExitosa = new OperacionExitosa();
+                    operacionExitosa.ShowDialog(this);
+                }
+            }
+
+        }
     }
 
     private void tsbEliminar_Click(object sender, EventArgs e)
     {
-        ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
-        if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
-        {
-            //EliminarPersona(idActual);
-            OperacionExitosa operacionExitosa = new OperacionExitosa();
-            operacionExitosa.ShowDialog(this);
+        
+
+            if (entidadListada == "Persona")
+            {
+                ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                {
+                    EliminarEntidad<Persona>(idPersonaActual);
+                    OperacionExitosa operacionExitosa = new OperacionExitosa();
+                    operacionExitosa.ShowDialog(this);
+                }
+            }
+            else if (entidadListada == "Comision")
+            {
+
+                ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                {
+                    EliminarEntidad<Comision>(idComisionActual);
+                    OperacionExitosa operacionExitosa = new OperacionExitosa();
+                    operacionExitosa.ShowDialog(this);
+                }
+
+            }
+            else if (entidadListada == "Curso")
+            {
+                ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                {
+                    EliminarEntidad<Curso>(idCursoActual);
+                    OperacionExitosa operacionExitosa = new OperacionExitosa();
+                    operacionExitosa.ShowDialog(this);
+                }
+            }
+            else if (entidadListada == "Especialidad")
+            {
+
+                ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                {
+                    EliminarEntidad<Especialidad>(idEspecialidadActual);
+                    OperacionExitosa operacionExitosa = new OperacionExitosa();
+                    operacionExitosa.ShowDialog(this);
+                }
+
+            }
+            else if (entidadListada == "Plan")
+            {
+
+                ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                {
+                    EliminarEntidad<Plan>(idPlanActual);
+                    OperacionExitosa operacionExitosa = new OperacionExitosa();
+                    operacionExitosa.ShowDialog(this);
+                }
+
+            }
         }
-    }
 
     private void tsbOrdenarAscendente_Click(object sender, EventArgs e)
     {
@@ -493,5 +677,14 @@ public partial class Grilla : Form
     {
         Listar<Curso>();
     }
+    private void btnMostrarEspecialidades_Click(object sender, EventArgs e)
+    {
+        Listar<Especialidad>();
+    }
+    private void btnMostrarPlanes_Click(object sender, EventArgs e)
+    {
+        Listar<Plan>();
+    }
+
 }
 }

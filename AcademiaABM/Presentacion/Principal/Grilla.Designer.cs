@@ -36,6 +36,8 @@
             btnMostrarPersonas = new Button();
             btnMostrarComisiones = new Button();
             btnMostrarCursos = new Button();
+            btnMostrarEspecialidades = new Button();
+            btnMostrarPlanes = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
             btnActualizar = new Button();
             btnSalir = new Button();
@@ -77,12 +79,12 @@
             // 
             // tlSysacad
             // 
-            tlSysacad.ColumnCount = 6;
+            tlSysacad.ColumnCount = 2;
             tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlSysacad.ColumnStyles.Add(new ColumnStyle());
-            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 8F));
-            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 11F));
-            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 11F));
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 623F));
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 237F));
+            tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 203F));
             tlSysacad.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 203F));
             tlSysacad.Controls.Add(dgvSysacad, 0, 0);
             tlSysacad.Controls.Add(fLPBotonesOpciones, 0, 1);
@@ -114,14 +116,15 @@
             // 
             // fLPBotonesOpciones
             // 
-            fLPBotonesOpciones.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             fLPBotonesOpciones.Controls.Add(btnMostrarPersonas);
             fLPBotonesOpciones.Controls.Add(btnMostrarComisiones);
             fLPBotonesOpciones.Controls.Add(btnMostrarCursos);
-            fLPBotonesOpciones.Location = new Point(3, 530);
+            fLPBotonesOpciones.Controls.Add(btnMostrarEspecialidades);
+            fLPBotonesOpciones.Controls.Add(btnMostrarPlanes);
+            fLPBotonesOpciones.Location = new Point(3, 529);
             fLPBotonesOpciones.Margin = new Padding(3, 4, 3, 4);
             fLPBotonesOpciones.Name = "fLPBotonesOpciones";
-            fLPBotonesOpciones.Size = new Size(295, 39);
+            fLPBotonesOpciones.Size = new Size(507, 39);
             fLPBotonesOpciones.TabIndex = 5;
             // 
             // btnMostrarPersonas
@@ -157,11 +160,33 @@
             btnMostrarCursos.UseVisualStyleBackColor = true;
             btnMostrarCursos.Click += btnMostrarCursos_Click;
             // 
+            // btnMostrarEspecialidades
+            // 
+            btnMostrarEspecialidades.Location = new Point(288, 4);
+            btnMostrarEspecialidades.Margin = new Padding(3, 4, 3, 4);
+            btnMostrarEspecialidades.Name = "btnMostrarEspecialidades";
+            btnMostrarEspecialidades.Size = new Size(130, 31);
+            btnMostrarEspecialidades.TabIndex = 3;
+            btnMostrarEspecialidades.Text = "Especialidades";
+            btnMostrarEspecialidades.UseVisualStyleBackColor = true;
+            btnMostrarEspecialidades.Click += btnMostrarEspecialidades_Click;
+            // 
+            // btnMostrarPlanes
+            // 
+            btnMostrarPlanes.Location = new Point(424, 4);
+            btnMostrarPlanes.Margin = new Padding(3, 4, 3, 4);
+            btnMostrarPlanes.Name = "btnMostrarPlanes";
+            btnMostrarPlanes.Size = new Size(80, 31);
+            btnMostrarPlanes.TabIndex = 4;
+            btnMostrarPlanes.Text = "Planes";
+            btnMostrarPlanes.UseVisualStyleBackColor = true;
+            btnMostrarPlanes.Click += btnMostrarPlanes_Click;
+            // 
             // flowLayoutPanel1
             // 
+            flowLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             flowLayoutPanel1.Controls.Add(btnActualizar);
             flowLayoutPanel1.Controls.Add(btnSalir);
-            flowLayoutPanel1.Dock = DockStyle.Bottom;
             flowLayoutPanel1.Location = new Point(714, 529);
             flowLayoutPanel1.Margin = new Padding(3, 4, 3, 4);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -290,6 +315,8 @@
         private Button btnMostrarPersonas;
         private Button btnMostrarComisiones;
         private Button btnMostrarCursos;
+        private Button btnMostrarEspecialidades;
+        private Button btnMostrarPlanes;
         private Button btnSalir;
         private FlowLayoutPanel fLPBotonesOpciones;
         private FlowLayoutPanel flowLayoutPanel1;
