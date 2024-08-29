@@ -37,9 +37,9 @@
             // 
             ConfirmarOperacionLabel.AutoSize = true;
             ConfirmarOperacionLabel.Font = new Font("Segoe UI", 15F);
-            ConfirmarOperacionLabel.Location = new Point(12, 9);
+            ConfirmarOperacionLabel.Location = new Point(14, 12);
             ConfirmarOperacionLabel.Name = "ConfirmarOperacionLabel";
-            ConfirmarOperacionLabel.Size = new Size(430, 28);
+            ConfirmarOperacionLabel.Size = new Size(552, 35);
             ConfirmarOperacionLabel.TabIndex = 2;
             ConfirmarOperacionLabel.Text = "¿Está seguro que quiere confirmar la operación?";
             // 
@@ -47,9 +47,10 @@
             // 
             ConfirmarButton.BackColor = Color.SteelBlue;
             ConfirmarButton.ForeColor = Color.Cornsilk;
-            ConfirmarButton.Location = new Point(358, 55);
+            ConfirmarButton.Location = new Point(483, 73);
+            ConfirmarButton.Margin = new Padding(3, 4, 3, 4);
             ConfirmarButton.Name = "ConfirmarButton";
-            ConfirmarButton.Size = new Size(75, 23);
+            ConfirmarButton.Size = new Size(86, 31);
             ConfirmarButton.TabIndex = 0;
             ConfirmarButton.Text = "Confirmar";
             ConfirmarButton.UseVisualStyleBackColor = false;
@@ -59,9 +60,10 @@
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(273, 55);
+            CancelarButton.Location = new Point(391, 73);
+            CancelarButton.Margin = new Padding(3, 4, 3, 4);
             CancelarButton.Name = "CancelarButton";
-            CancelarButton.Size = new Size(75, 23);
+            CancelarButton.Size = new Size(86, 31);
             CancelarButton.TabIndex = 1;
             CancelarButton.Text = "Cancelar";
             CancelarButton.UseVisualStyleBackColor = false;
@@ -69,13 +71,14 @@
             // 
             // ConfirmarOperacion
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(448, 91);
+            ClientSize = new Size(581, 121);
             Controls.Add(ConfirmarButton);
             Controls.Add(CancelarButton);
             Controls.Add(ConfirmarOperacionLabel);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            Margin = new Padding(3, 4, 3, 4);
             Name = "ConfirmarOperacion";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Confirmación";

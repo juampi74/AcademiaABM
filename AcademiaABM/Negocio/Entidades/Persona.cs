@@ -5,18 +5,18 @@
 
     public class Persona
     {
-        public int Id_persona { get; set; }
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public string Direccion { get; set; }
-        public string Email { get; set; }
-        public string Telefono { get; set; }
-        public DateTime Fecha_nac { get; set; }
-        public int Legajo { get; set; }
-        public int Tipo_persona { get; set; }
+        private int id_persona;
+        private string nombre;
+        private string apellido;
+        private string direccion;
+        private string email;
+        private string telefono;
+        private DateTime fecha_nac;
+        private int legajo;
+        private int tipo_persona;
 
         // Clave foránea
-        public int Id_plan { get; set; }
+        private int id_plan;
 
         // Evita que se muestre una columna de este atributo con AutoGenerateColumns en la DataGridView
         [Browsable(false)]
@@ -46,5 +46,66 @@
             this.Tipo_persona = tipo_persona;
             this.Id_plan = id_plan;
         }
+
+        public int Id_persona
+        {
+            get { return id_persona; }
+            set { id_persona = value; }
+        }
+
+        public string Nombre
+        {
+            get { return nombre; }
+            set { nombre = value; }
+        }
+
+        public string Apellido
+        {
+            get { return apellido; }
+            set { apellido = value; }
+        }
+
+        public string Direccion
+        {
+            get { return direccion; }
+            set { direccion = value; }
+        }
+
+        public string Email
+        {
+            get { return email; }
+            set { email = value; }
+        }
+
+        public string Telefono
+        {
+            get { return telefono; }
+            set { telefono = value; }
+        }
+
+        public DateTime Fecha_nac
+        {
+            get { return fecha_nac; }
+            set { fecha_nac = value; }
+        }
+
+        public int Legajo
+        {
+            get { return legajo; }
+            set { legajo = value; }
+        }
+
+        public int Tipo_persona
+        {
+            get { return tipo_persona; }
+            set { tipo_persona = value; }
+        }
+
+        public int Id_plan
+        {
+            get { return id_plan; }
+            set { id_plan = value; }
+        }
+
     }
 }
