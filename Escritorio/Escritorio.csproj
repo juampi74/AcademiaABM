@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Entidades\Entidades.csproj" />
+    <ProjectReference Include="..\Negocio\Negocio.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Principal\Grilla.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principal\Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\Especifico\InscripcionUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\Especifico\DictadoUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\Especifico\UsuarioUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\Especifico\MateriaUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\General\CampoRequerido.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\General\Cargando.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\General\ConfirmarOperacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\Especifico\ComisionUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\Especifico\EspecialidadUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\Especifico\PersonaUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\Especifico\CursoUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\Especifico\PlanUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\General\OperacionExitosa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>
