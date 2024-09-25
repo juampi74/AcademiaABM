@@ -19,7 +19,9 @@
         [HttpGet(Name = "GetPersona")]
         public ActionResult<IEnumerable<Persona>> GetAll()
         {
-            return _context.Personas.ToList();
+            return _context.Personas
+                .Include(per => per.Plan)
+                .ToList();
         }
 
         [HttpGet("{id}")]

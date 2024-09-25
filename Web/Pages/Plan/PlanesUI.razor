@@ -1,0 +1,87 @@
+﻿@page "/planes"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2;
+
+@inject SweetAlertService Swal;
+
+
+<div class="d-flex align-items-center justify-content-between mt-3">
+    <h2>Planes</h2>
+    <a href="plan">
+        <img src="./css/add.png" style="width: 65px; height: 65px" />
+    </a>
+</div>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Descripcion</th>
+            <th>Especialidad</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (planes == null)
+        {
+            <tr>
+                <td colspan="3" align="center">
+                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var plan in planes)
+            {
+                <tr>
+                    <td style="vertical-align: middle;">@plan.Desc_plan</td>
+                    <td style="vertical-align: middle;">@plan.Especialidad.Desc_especialidad</td>
+                    <td class="d-flex justify-content-end">
+                        <a class="btn btn-primary btn-sm" href="plan/@plan.Id_plan">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </a>
+                        <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarPlan(plan))">
+                            <i class="bi bi-trash-fill fs-5"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+
+@code {
+
+    IEnumerable<Plan> planes = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        planes = await PlanNegocio.GetAll();
+    }
+
+    private async Task EliminarPlan(Plan plan)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "¿Está seguro?",
+            Text = "Esta acción no se puede revertir",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            CancelButtonText = "Cancelar",
+            ConfirmButtonText = "Confirmar"
+        });
+
+        if (result.IsConfirmed)
+        {
+            await PlanNegocio.Delete(plan);
+            await Swal.FireAsync("Plan eliminado", "El plan ha sido eliminado correctamente", SweetAlertIcon.Success);
+            planes = await PlanNegocio.GetAll();
+        }
+    }
+
+}

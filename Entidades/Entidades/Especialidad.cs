@@ -1,12 +1,13 @@
 ﻿namespace Entidades
 {
-    using System.ComponentModel.DataAnnotations.Schema;
+    using System.ComponentModel.DataAnnotations;
 
     public class Especialidad
     {
 
         public int Id_especialidad { get; set; }
 
+        [Required(ErrorMessage = "El campo Descripcion es obligatorio.")]
         public string Desc_especialidad { get; set; }
 
         /*
@@ -19,5 +20,7 @@
         {
             this.Desc_especialidad = desc_especialidad;
         }
+
+        public Especialidad() {}
     }
 }

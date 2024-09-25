@@ -1,0 +1,163 @@
+﻿@page "/persona"
+@page "/persona/{idPersona:int}"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2
+
+@inject SweetAlertService Swal;
+@inject NavigationManager navegacion;
+
+<h2 class="mt-3">@titulo</h2>
+
+<EditForm Model="persona" OnValidSubmit="GuardarPersona">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Nombre</label>
+        <InputText class="form-control" @bind-Value="persona.Nombre"></InputText>
+        <ValidationMessage For="@(() => persona.Nombre)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Apellido</label>
+        <InputText class="form-control" @bind-Value="persona.Apellido"></InputText>
+        <ValidationMessage For="@(() => persona.Apellido)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Direccion</label>
+        <InputText class="form-control" @bind-Value="persona.Direccion"></InputText>
+        <ValidationMessage For="@(() => persona.Direccion)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Email</label>
+        <InputText class="form-control" @bind-Value="persona.Email"></InputText>
+        <ValidationMessage For="@(() => persona.Email)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Telefono</label>
+        <InputText class="form-control" @bind-Value="persona.Telefono"></InputText>
+        <ValidationMessage For="@(() => persona.Telefono)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Fecha de Nacimiento</label>
+        <InputDate class="form-control" @bind-Value="persona.Fecha_nac"></InputDate>
+        <ValidationMessage For="@(() => persona.Fecha_nac)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Legajo</label>
+        <InputNumber class="form-control" @bind-Value="persona.Legajo"></InputNumber>
+        <ValidationMessage For="@(() => persona.Legajo)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Tipo</label>
+        <InputSelect class="form-select" @bind-Value="persona.Tipo_persona">
+            <option value="0">Alumno</option>
+            <option value="1">Docente</option>
+        </InputSelect>
+        <ValidationMessage For="@(() => persona.Tipo_persona)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Plan</label>
+        <InputSelect class="form-select" @bind-Value="persona.Id_plan">
+            @foreach (var plan in planes)
+            {
+                <option value="@plan.Id_plan">@plan.Desc_plan</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => persona.Id_plan)"></ValidationMessage>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-end my-3">
+        <a class="btn btn-warning" href="personas">Volver</a>
+
+        <button class="btn btn-primary ms-2" type="submit">
+            @btnTexto
+        </button>
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int idPersona { get; set; } = 0;
+
+    string titulo = string.Empty;
+    string btnTexto = string.Empty;
+
+    Persona persona = new Persona();
+    List<Plan> planes = new List<Plan>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (idPersona != 0)
+        {
+            titulo = "Editar Persona";
+            btnTexto = "Actualizar";
+            persona = await PersonaNegocio.GetOne(idPersona);
+        }
+        else
+        {
+            titulo = "Nueva Persona";
+            btnTexto = "Guardar";
+        }
+        planes = (List<Plan>) await PlanNegocio.GetAll();
+    }
+
+    private async Task GuardarPersona()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¿Está seguro?",
+                Text = "Se guardaran los cambios realizados",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
+
+        if (result.IsConfirmed)
+        {
+            if (idPersona != 0)
+            {
+                PersonaDTO personaDTO = new PersonaDTO();
+                personaDTO.Nombre = persona.Nombre;
+                personaDTO.Apellido = persona.Apellido;
+                personaDTO.Direccion = persona.Direccion;
+                personaDTO.Email = persona.Email;
+                personaDTO.Telefono = persona.Telefono;
+                personaDTO.Fecha_nac = persona.Fecha_nac;
+                personaDTO.Legajo = persona.Legajo;
+                personaDTO.Tipo_persona = persona.Tipo_persona;
+                personaDTO.Id_plan = persona.Id_plan;
+
+                await PersonaNegocio.Update(idPersona, personaDTO);
+                await Swal.FireAsync("Persona actualizada", "La persona ha sido actualizada correctamente", SweetAlertIcon.Success);
+            }
+            else
+            {
+                if (persona.Tipo_persona != 0 && persona.Tipo_persona != 1)
+                {
+                    persona.Tipo_persona = 0;
+                }
+                if (persona.Id_plan == 0)
+                {
+                    persona.Id_plan = planes.First().Id_plan;
+                }
+                await PersonaNegocio.Add(persona);
+                await Swal.FireAsync("Persona creada", "La persona ha sido creada correctamente", SweetAlertIcon.Success);
+            }
+            navegacion.NavigateTo("/personas");
+        }
+
+    }
+
+}

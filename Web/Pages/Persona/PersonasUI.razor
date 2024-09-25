@@ -1,0 +1,95 @@
+﻿@page "/personas"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2;
+
+@inject SweetAlertService Swal;
+
+
+<div class="d-flex align-items-center justify-content-between mt-3">
+    <h2>Personas</h2>
+    <a href="persona">
+        <img src="./css/add.png" style="width: 65px; height: 65px" />
+    </a>
+</div>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Apellido y Nombre</th>
+            <th>Email</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Legajo</th>
+            <th>Tipo</th>
+            <th>Plan</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (personas == null)
+        {
+            <tr>
+                <td colspan="7" align="center">
+                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var persona in personas)
+            {
+                <tr>
+                    <td style="vertical-align: middle;">@persona.Apellido, @persona.Nombre</td>
+                    <td style="vertical-align: middle;">@persona.Email</td>
+                    <td style="vertical-align: middle;">@persona.Fecha_nac.ToString("dd/MM/yyyy")</td>
+                    <td style="vertical-align: middle;">@persona.Legajo</td>
+                    <td style="vertical-align: middle;">@(persona.Tipo_persona == 0 ? "Alumno" : "Docente")</td>
+                    <td style="vertical-align: middle;">@persona.Plan.Desc_plan</td>
+                    <td class="d-flex justify-content-end">
+                        <a class="btn btn-primary btn-sm" href="persona/@persona.Id_persona">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </a>
+                        <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarPersona(persona))">
+                            <i class="bi bi-trash-fill fs-5"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+
+@code {
+
+    IEnumerable<Persona> personas = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        personas = await PersonaNegocio.GetAll();
+    }
+
+    private async Task EliminarPersona(Persona persona)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "¿Está seguro?",
+            Text = "Esta acción no se puede revertir",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            CancelButtonText = "Cancelar",
+            ConfirmButtonText = "Confirmar"
+        });
+
+        if (result.IsConfirmed)
+        {
+            await PersonaNegocio.Delete(persona);
+            await Swal.FireAsync("Persona eliminada", "La persona ha sido eliminada correctamente", SweetAlertIcon.Success);
+            personas = await PersonaNegocio.GetAll();
+        }
+    }
+
+}

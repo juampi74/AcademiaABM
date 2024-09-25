@@ -1,22 +1,39 @@
 ﻿namespace Entidades
 {
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
     public class Persona
     {
         private int id_persona;
+
+        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
         private string nombre;
+
+        [Required(ErrorMessage = "El campo Apellido es obligatorio.")]
         private string apellido;
+
+        [Required(ErrorMessage = "El campo Direccion es obligatorio.")]
         private string direccion;
+
+        [Required(ErrorMessage = "El campo Email es obligatorio.")]
         private string email;
+
+        [Required(ErrorMessage = "El campo Telefono es obligatorio.")]
         private string telefono;
+
+        [Required(ErrorMessage = "El campo FechaNacimiento es obligatorio.")]
         private DateTime fecha_nac;
+
+        [Required(ErrorMessage = "El campo Legajo es obligatorio.")]
         private int legajo;
+
+        [Required(ErrorMessage = "El campo TipoPersona es obligatorio.")]
         private int tipo_persona;
 
         // Clave foránea
-        private int id_plan;
+        private int id_plan = 0;
 
         // Evita que se muestre una columna de este atributo con AutoGenerateColumns en la DataGridView
         [Browsable(false)]
@@ -48,6 +65,8 @@
             this.Tipo_persona = tipo_persona;
             this.Id_plan = id_plan;
         }
+
+        public Persona() {}
 
         public int Id_persona
         {

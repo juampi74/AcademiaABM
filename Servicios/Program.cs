@@ -9,7 +9,6 @@ namespace Servicios
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            /*
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
@@ -19,7 +18,6 @@ namespace Servicios
                           .AllowAnyMethod();   // Permitir cualquier método
                 });
             });
-            */
 
             builder.Services.AddControllers();
 
@@ -30,7 +28,7 @@ namespace Servicios
 
             var app = builder.Build();
 
-            // app.UseCors("AllowAll");
+            app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
             app.UseAuthorization();

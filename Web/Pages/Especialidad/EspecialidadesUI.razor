@@ -1,0 +1,85 @@
+﻿@page "/especialidades"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2;
+
+@inject SweetAlertService Swal;
+
+
+<div class="d-flex align-items-center justify-content-between mt-3">
+    <h2>Especialidades</h2>
+    <a href="especialidad">
+        <img src="./css/add.png" style="width: 65px; height: 65px" />
+    </a>
+</div>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Descripcion</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (especialidades == null)
+        {
+            <tr>
+                <td colspan="2" align="center">
+                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var especialidad in especialidades)
+            {
+                <tr>
+                    <td style="vertical-align: middle;">@especialidad.Desc_especialidad</td>
+                    <td class="d-flex justify-content-end">
+                        <a class="btn btn-primary btn-sm" href="especialidad/@especialidad.Id_especialidad">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </a>
+                        <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarEspecialidad(especialidad))">
+                            <i class="bi bi-trash-fill fs-5"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+
+@code {
+
+    IEnumerable<Especialidad> especialidades = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        especialidades = await EspecialidadNegocio.GetAll();
+    }
+
+    private async Task EliminarEspecialidad(Especialidad especialidad)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "¿Está seguro?",
+            Text = "Esta acción no se puede revertir",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            CancelButtonText = "Cancelar",
+            ConfirmButtonText = "Confirmar"
+        });
+
+        if (result.IsConfirmed)
+        {
+            await EspecialidadNegocio.Delete(especialidad);
+            await Swal.FireAsync("Especialidad eliminada", "La especialidad ha sido eliminada correctamente", SweetAlertIcon.Success);
+            especialidades = await EspecialidadNegocio.GetAll();
+        }
+    }
+
+}

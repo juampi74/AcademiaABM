@@ -1,0 +1,89 @@
+﻿@page "/especialidad"
+@page "/especialidad/{idEspecialidad:int}"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2
+
+@inject SweetAlertService Swal;
+@inject NavigationManager navegacion;
+
+<h2 class="mt-3">@titulo</h2>
+
+<EditForm Model="especialidad" OnValidSubmit="GuardarEspecialidad">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Descripcion</label>
+        <InputText class="form-control" @bind-Value="especialidad.Desc_especialidad"></InputText>
+        <ValidationMessage For="@(() => especialidad.Desc_especialidad)"></ValidationMessage>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-end mt-3">
+        <a class="btn btn-warning" href="especialidades">Volver</a>
+
+        <button class="btn btn-primary ms-2" type="submit">
+            @btnTexto
+        </button>
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int idEspecialidad { get; set; } = 0;
+
+    string titulo = string.Empty;
+    string btnTexto = string.Empty;
+
+    Especialidad especialidad = new Especialidad();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (idEspecialidad != 0)
+        {
+            titulo = "Editar Especialidad";
+            btnTexto = "Actualizar";
+            especialidad = await EspecialidadNegocio.GetOne(idEspecialidad);
+        }
+        else
+        {
+            titulo = "Nueva Especialidad";
+            btnTexto = "Guardar";
+        }
+    }
+
+    private async Task GuardarEspecialidad()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¿Está seguro?",
+                Text = "Se guardaran los cambios realizados",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
+
+        if (result.IsConfirmed)
+        {
+            if (idEspecialidad != 0)
+            {
+                EspecialidadDTO especialidadDTO = new EspecialidadDTO();
+                especialidadDTO.Desc_especialidad = especialidad.Desc_especialidad;
+
+                await EspecialidadNegocio.Update(idEspecialidad, especialidadDTO);
+                await Swal.FireAsync("Especialidad actualizada", "La especialidad ha sido actualizada correctamente", SweetAlertIcon.Success);
+            }
+            else
+            {
+                await EspecialidadNegocio.Add(especialidad);
+                await Swal.FireAsync("Especialidad creada", "La especialidad ha sido creada correctamente", SweetAlertIcon.Success);
+            }
+            navegacion.NavigateTo("/especialidades");
+        }
+
+    }
+
+}
