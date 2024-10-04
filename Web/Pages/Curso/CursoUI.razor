@@ -1,0 +1,136 @@
+﻿@page "/curso"
+@page "/curso/{idCurso:int}"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2
+
+@inject SweetAlertService Swal;
+@inject NavigationManager navegacion;
+
+<h2 class="mt-3">@titulo</h2>
+
+<EditForm Model="curso" OnValidSubmit="GuardarCurso">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Año Calendario</label>
+        <InputNumber class="form-control" @bind-Value="curso.Anio_calendario"></InputNumber>
+        <ValidationMessage For="@(() => curso.Anio_calendario)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Cupo</label>
+        <InputNumber class="form-control" @bind-Value="curso.Cupo"></InputNumber>
+        <ValidationMessage For="@(() => curso.Cupo)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Comision</label>
+        <InputSelect class="form-select" @bind-Value="curso.Id_comision">
+            @foreach (var comision in comisiones)
+            {
+                <option value="@comision.Id_comision">@comision.Desc_comision</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => curso.Id_comision)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Materia</label>
+        <InputSelect class="form-select" @bind-Value="curso.Id_materia">
+            @foreach (var materia in materias)
+            {
+                <option value="@materia.Id_materia">@materia.Desc_materia</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => curso.Id_materia)"></ValidationMessage>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-end mt-3">
+        <a class="btn btn-warning" href="cursos">Volver</a>
+
+        <button class="btn btn-primary ms-2" type="submit">
+            @btnTexto
+        </button>
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int idCurso { get; set; } = 0;
+
+    string titulo = string.Empty;
+    string btnTexto = string.Empty;
+
+    Curso curso = new Curso();
+    List<Comision> comisiones = new List<Comision>();
+    List<Materia> materias = new List<Materia>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (idCurso != 0)
+        {
+            titulo = "Editar Curso";
+            btnTexto = "Actualizar";
+            curso = await CursoNegocio.GetOne(idCurso);
+        }
+        else
+        {
+            titulo = "Nuevo Curso";
+            btnTexto = "Guardar";
+        }
+        comisiones = (List<Comision>) await ComisionNegocio.GetAll();
+        materias = (List<Materia>) await MateriaNegocio.GetAll();
+
+        comisiones = comisiones.OrderBy(com => com.Desc_comision).ToList();
+        materias = materias.OrderBy(mat => mat.Desc_materia).ToList();
+
+    }
+
+    private async Task GuardarCurso()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¿Está seguro?",
+                Text = "Se guardaran los cambios realizados",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
+
+        if (result.IsConfirmed)
+        {
+            if (idCurso != 0)
+            {
+                CursoDTO cursoDTO = new CursoDTO();
+                cursoDTO.Anio_calendario = curso.Anio_calendario;
+                cursoDTO.Cupo = curso.Cupo;
+                cursoDTO.Id_comision = curso.Id_comision;
+                cursoDTO.Id_materia = curso.Id_materia;
+
+                await CursoNegocio.Update(idCurso, cursoDTO);
+                await Swal.FireAsync("Curso actualizado", "El curso ha sido actualizado correctamente", SweetAlertIcon.Success);
+            }
+            else
+            {
+                if (curso.Id_comision == 0)
+                {
+                    curso.Id_comision = comisiones.First().Id_comision;
+                }
+                if (curso.Id_materia == 0)
+                {
+                    curso.Id_materia = materias.First().Id_materia;
+                }
+                await CursoNegocio.Add(curso);
+                await Swal.FireAsync("Curso creado", "El curso ha sido creado correctamente", SweetAlertIcon.Success);
+            }
+            navegacion.NavigateTo("/cursos");
+        }
+
+    }
+
+}

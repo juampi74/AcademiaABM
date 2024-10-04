@@ -19,7 +19,13 @@
         [HttpGet(Name = "GetInscripcion")]
         public ActionResult<IEnumerable<Alumno_Inscripcion>> GetAll()
         {
-            return _context.Alumnos_Inscripciones.ToList();
+            return _context.Alumnos_Inscripciones
+                .Include(insc => insc.Alumno)
+                .Include(insc => insc.Curso)
+                    .ThenInclude(cur => cur.Comision)
+                .Include(insc => insc.Curso)
+                    .ThenInclude(cur => cur.Materia)
+                .ToList();
         }
 
         [HttpGet("{id}")]
@@ -74,18 +80,24 @@
         [HttpDelete("{id}")]
         public ActionResult<Alumno_Inscripcion> Delete(int id)
         {
-            var Inscripcion = _context.Alumnos_Inscripciones.Find(id);
-
-            if (Inscripcion == null)
+            try
             {
-                return NotFound();
+                var Inscripcion = _context.Alumnos_Inscripciones.Find(id);
+
+                if (Inscripcion == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Alumnos_Inscripciones.Remove(Inscripcion);
+                _context.SaveChanges();
+
+                return Inscripcion;
             }
-
-            _context.Alumnos_Inscripciones.Remove(Inscripcion);
-            _context.SaveChanges();
-
-            return Inscripcion;
+            catch (DbUpdateException)
+            {
+                return BadRequest();
+            }
         }
-
     }
 }

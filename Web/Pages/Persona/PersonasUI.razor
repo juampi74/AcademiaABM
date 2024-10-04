@@ -18,7 +18,6 @@
     <thead>
         <tr>
             <th>Apellido y Nombre</th>
-            <th>Email</th>
             <th>Fecha de Nacimiento</th>
             <th>Legajo</th>
             <th>Tipo</th>
@@ -42,11 +41,10 @@
             {
                 <tr>
                     <td style="vertical-align: middle;">@persona.Apellido, @persona.Nombre</td>
-                    <td style="vertical-align: middle;">@persona.Email</td>
                     <td style="vertical-align: middle;">@persona.Fecha_nac.ToString("dd/MM/yyyy")</td>
                     <td style="vertical-align: middle;">@persona.Legajo</td>
                     <td style="vertical-align: middle;">@(persona.Tipo_persona == 0 ? "Alumno" : "Docente")</td>
-                    <td style="vertical-align: middle;">@persona.Plan.Desc_plan</td>
+                    <td style="vertical-align: middle;">@persona.Plan.Desc_plan ➡️ @persona.Plan.Especialidad.Desc_especialidad</td>
                     <td class="d-flex justify-content-end">
                         <a class="btn btn-primary btn-sm" href="persona/@persona.Id_persona">
                             <i class="bi bi-pencil-square fs-5"></i>
@@ -75,20 +73,31 @@
     private async Task EliminarPersona(Persona persona)
     {
         var result = await Swal.FireAsync(new SweetAlertOptions
-        {
-            Title = "¿Está seguro?",
-            Text = "Esta acción no se puede revertir",
-            Icon = SweetAlertIcon.Warning,
-            ShowCancelButton = true,
-            CancelButtonText = "Cancelar",
-            ConfirmButtonText = "Confirmar"
-        });
+            {
+                Title = "¿Está seguro?",
+                Text = "Esta acción no se puede revertir",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
 
         if (result.IsConfirmed)
         {
-            await PersonaNegocio.Delete(persona);
-            await Swal.FireAsync("Persona eliminada", "La persona ha sido eliminada correctamente", SweetAlertIcon.Success);
-            personas = await PersonaNegocio.GetAll();
+            var response = await PersonaNegocio.Delete(persona);
+
+
+            if (response)
+            {
+                await Swal.FireAsync("Persona eliminada", "La persona ha sido eliminada correctamente", SweetAlertIcon.Success);
+
+                personas = await PersonaNegocio.GetAll();
+
+            }
+            else
+            {
+                await Swal.FireAsync("Error", "La persona tiene dictados, inscripciones y/o usuarios asociados", SweetAlertIcon.Error);
+            }
         }
     }
 

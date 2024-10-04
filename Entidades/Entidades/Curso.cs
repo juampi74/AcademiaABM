@@ -1,16 +1,24 @@
 ﻿namespace Entidades
 {
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
     public class Curso
     {
         public int Id_curso { get; set; }
+
+        [Required(ErrorMessage = "El campo Año Calendario es obligatorio.")]
         public int Anio_calendario { get; set; }
+
+        [Required(ErrorMessage = "El campo Cupo es obligatorio.")]
         public int Cupo { get; set; }
 
         // Claves foráneas
+        [Required(ErrorMessage = "El campo Comision es obligatorio.")]
         public int Id_comision { get; set; }
+
+        [Required(ErrorMessage = "El campo Materia es obligatorio.")]
         public int Id_materia { get; set; }
 
         // Evita que se muestre una columna de este atributo con AutoGenerateColumns en la DataGridView
@@ -38,5 +46,7 @@
             this.Id_comision = id_comision;
             this.Id_materia = id_materia;
         }
+
+        public Curso() {}
     }
 }

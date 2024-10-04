@@ -4,6 +4,7 @@
     using Microsoft.EntityFrameworkCore;
     using Datos;
     using Entidades;
+    using System.Linq.Expressions;
 
     [ApiController]
     [Route("api/[controller]")]
@@ -16,16 +17,16 @@
             _context = context;
         }
 
-        
+
         [HttpGet(Name = "GetCurso")]
         public ActionResult<IEnumerable<Curso>> GetAll()
         {
             return _context.Cursos
-                .Include(cur => cur.Materia)
                 .Include(cur => cur.Comision)
+                .Include(cur => cur.Materia)
                 .ToList();
         }
-        
+
         [HttpGet("{id}")]
         public ActionResult<Curso> GetById(int id)
         {
@@ -55,7 +56,7 @@
         {
             var Curso = _context.Cursos.Find(id);
 
-            if (Curso  == null)
+            if (Curso == null)
             {
                 return NotFound();
             }
@@ -75,17 +76,23 @@
         [HttpDelete("{id}")]
         public ActionResult<Curso> Delete(int id)
         {
-            var Curso = _context.Cursos.Find(id);
-            if (Curso == null)
+            try
             {
-                return NotFound();
+                var Curso = _context.Cursos.Find(id);
+                if (Curso == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Cursos.Remove(Curso);
+                _context.SaveChanges();
+
+                return Curso;
             }
-
-            _context.Cursos.Remove(Curso);
-            _context.SaveChanges();
-
-            return Curso;
+            catch (DbUpdateException)
+            {
+                return BadRequest();
+            }
         }
-
     }
 }

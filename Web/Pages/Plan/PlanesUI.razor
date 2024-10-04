@@ -67,20 +67,30 @@
     private async Task EliminarPlan(Plan plan)
     {
         var result = await Swal.FireAsync(new SweetAlertOptions
-        {
-            Title = "¿Está seguro?",
-            Text = "Esta acción no se puede revertir",
-            Icon = SweetAlertIcon.Warning,
-            ShowCancelButton = true,
-            CancelButtonText = "Cancelar",
-            ConfirmButtonText = "Confirmar"
-        });
+            {
+                Title = "¿Está seguro?",
+                Text = "Esta acción no se puede revertir",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
 
         if (result.IsConfirmed)
         {
-            await PlanNegocio.Delete(plan);
-            await Swal.FireAsync("Plan eliminado", "El plan ha sido eliminado correctamente", SweetAlertIcon.Success);
-            planes = await PlanNegocio.GetAll();
+            var response = await PlanNegocio.Delete(plan);
+
+            if (response)
+            {
+                await Swal.FireAsync("Plan eliminado", "El plan ha sido eliminado correctamente", SweetAlertIcon.Success);
+
+                planes = await PlanNegocio.GetAll();
+
+            }
+            else
+            {
+                await Swal.FireAsync("Error", "El plan tiene comisiones, materias y/o personas asociadas", SweetAlertIcon.Error);
+            }
         }
     }
 

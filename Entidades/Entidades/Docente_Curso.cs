@@ -1,15 +1,21 @@
 ﻿namespace Entidades
 {
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
 
     public class Docente_Curso
     {
 
         public int Id_dictado { get; set; }
+
+        [Required(ErrorMessage = "El campo Cargo es obligatorio.")]
         public string Cargo { get; set; }
 
-        // Claves foráneas        
+        // Claves foráneas
+        [Required(ErrorMessage = "El campo Docente es obligatorio.")]
         public int Id_docente { get; set; }
+
+        [Required(ErrorMessage = "El campo Curso es obligatorio.")]
         public int Id_curso { get; set; }
 
         // Evita que se muestre una columna de este atributo con AutoGenerateColumns en la DataGridView
@@ -26,5 +32,7 @@
             this.Id_docente = id_docente;
             this.Id_curso = id_curso;
         }
+
+        public Docente_Curso() {}
     }
 }

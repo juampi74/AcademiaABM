@@ -21,6 +21,7 @@
         {
             return _context.Personas
                 .Include(per => per.Plan)
+                    .ThenInclude(plan => plan.Especialidad)
                 .ToList();
         }
 
@@ -78,17 +79,23 @@
         [HttpDelete("{id}")]
         public ActionResult<Persona> Delete(int id)
         {
-            var Persona = _context.Personas.Find(id);
-            if (Persona == null)
+            try
             {
-                return NotFound();
+                var Persona = _context.Personas.Find(id);
+                if (Persona == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Personas.Remove(Persona);
+                _context.SaveChanges();
+
+                return Persona;
             }
-
-            _context.Personas.Remove(Persona);
-            _context.SaveChanges();
-
-            return Persona;
+            catch (DbUpdateException)
+            {
+                return BadRequest();
+            }
         }
-
     }
 }

@@ -65,20 +65,30 @@
     private async Task EliminarEspecialidad(Especialidad especialidad)
     {
         var result = await Swal.FireAsync(new SweetAlertOptions
-        {
-            Title = "¿Está seguro?",
-            Text = "Esta acción no se puede revertir",
-            Icon = SweetAlertIcon.Warning,
-            ShowCancelButton = true,
-            CancelButtonText = "Cancelar",
-            ConfirmButtonText = "Confirmar"
-        });
+            {
+                Title = "¿Está seguro?",
+                Text = "Esta acción no se puede revertir",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
 
         if (result.IsConfirmed)
         {
-            await EspecialidadNegocio.Delete(especialidad);
-            await Swal.FireAsync("Especialidad eliminada", "La especialidad ha sido eliminada correctamente", SweetAlertIcon.Success);
-            especialidades = await EspecialidadNegocio.GetAll();
+            var response = await EspecialidadNegocio.Delete(especialidad);
+
+            if (response)
+            {
+                await Swal.FireAsync("Especialidad eliminada", "La especialidad ha sido eliminada correctamente", SweetAlertIcon.Success);
+
+                especialidades = await EspecialidadNegocio.GetAll();
+
+            }
+            else
+            {
+                await Swal.FireAsync("Error", "La especialidad tiene planes asociados", SweetAlertIcon.Error);
+            }
         }
     }
 

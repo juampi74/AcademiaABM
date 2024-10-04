@@ -1,0 +1,131 @@
+﻿@page "/dictado"
+@page "/dictado/{idDictado:int}"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2
+
+@inject SweetAlertService Swal;
+@inject NavigationManager navegacion;
+
+<h2 class="mt-3">@titulo</h2>
+
+<EditForm Model="dictado" OnValidSubmit="GuardarDictado">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Cargo</label>
+        <InputText class="form-control" @bind-Value="dictado.Cargo"></InputText>
+        <ValidationMessage For="@(() => dictado.Cargo)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Docente</label>
+        <InputSelect class="form-select" @bind-Value="dictado.Id_docente">
+            @foreach (var docente in docentes)
+            {
+                <option value="@docente.Id_persona">@docente.Apellido, @docente.Nombre</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => dictado.Id_docente)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Curso</label>
+        <InputSelect class="form-select" @bind-Value="dictado.Id_curso">
+            @foreach (var curso in cursos)
+            {
+                <option value="@curso.Id_curso">@curso.Comision.Desc_comision ➡️ @curso.Materia.Desc_materia</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => dictado.Id_curso)"></ValidationMessage>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-end mt-3">
+        <a class="btn btn-warning" href="dictados">Volver</a>
+
+        <button class="btn btn-primary ms-2" type="submit">
+            @btnTexto
+        </button>
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int idDictado { get; set; } = 0;
+
+    string titulo = string.Empty;
+    string btnTexto = string.Empty;
+
+    Docente_Curso dictado = new Docente_Curso();
+    List<Persona> docentes = new List<Persona>();
+    List<Curso> cursos = new List<Curso>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (idDictado != 0)
+        {
+            titulo = "Editar Dictado";
+            btnTexto = "Actualizar";
+            dictado = await DictadoNegocio.GetOne(idDictado);
+        }
+        else
+        {
+            titulo = "Nuevo Dictado";
+            btnTexto = "Guardar";
+        }
+        docentes = (List<Persona>) await PersonaNegocio.GetAll();
+        cursos = (List<Curso>) await CursoNegocio.GetAll();
+
+        docentes = docentes.Where(docente => docente.Tipo_persona == 1).ToList();
+
+        docentes = docentes.OrderBy(doc => doc.Apellido).ThenBy(doc => doc.Nombre).ToList();
+        cursos = cursos.OrderBy(cur => cur.Comision.Desc_comision).ThenBy(cur => cur.Materia.Desc_materia).ToList();
+
+    }
+
+    private async Task GuardarDictado()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¿Está seguro?",
+                Text = "Se guardaran los cambios realizados",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
+
+        if (result.IsConfirmed)
+        {
+            if (idDictado != 0)
+            {
+                Docente_CursoDTO dictadoDTO = new Docente_CursoDTO();
+                dictadoDTO.Cargo = dictado.Cargo;
+                dictadoDTO.Id_docente = dictado.Id_docente;
+                dictadoDTO.Id_curso = dictado.Id_curso;
+
+                await DictadoNegocio.Update(idDictado, dictadoDTO);
+                await Swal.FireAsync("Dictado actualizado", "El dictado ha sido actualizado correctamente", SweetAlertIcon.Success);
+            }
+            else
+            {
+                if (dictado.Id_docente == 0)
+                {
+                    dictado.Id_docente = docentes.First().Id_persona;
+                }
+                if (dictado.Id_curso == 0)
+                {
+                    dictado.Id_curso = cursos.First().Id_curso;
+                }
+                await DictadoNegocio.Add(dictado);
+                await Swal.FireAsync("Dictado creado", "El dictado ha sido creado correctamente", SweetAlertIcon.Success);
+            }
+            navegacion.NavigateTo("/dictados");
+        }
+
+    }
+
+}

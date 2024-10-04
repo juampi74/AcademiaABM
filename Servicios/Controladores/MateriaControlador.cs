@@ -19,7 +19,10 @@
         [HttpGet(Name = "GetMateria")]
         public ActionResult<IEnumerable<Materia>> GetAll()
         {
-            return _context.Materias.ToList();
+            return _context.Materias
+                .Include(mat => mat.Plan)
+                    .ThenInclude(plan => plan.Especialidad)
+                .ToList();
         }
 
         [HttpGet("{id}")]
@@ -71,17 +74,23 @@
         [HttpDelete("{id}")]
         public ActionResult<Materia> Delete(int id)
         {
-            var Materia = _context.Materias.Find(id);
-            if (Materia == null)
+            try
             {
-                return NotFound();
+                var Materia = _context.Materias.Find(id);
+                if (Materia == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Materias.Remove(Materia);
+                _context.SaveChanges();
+
+                return Materia;
             }
-
-            _context.Materias.Remove(Materia);
-            _context.SaveChanges();
-
-            return Materia;
+            catch (DbUpdateException)
+            {
+                return BadRequest();
+            }
         }
-
     }
 }

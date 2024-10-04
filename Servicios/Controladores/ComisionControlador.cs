@@ -19,7 +19,10 @@
         [HttpGet(Name = "GetComision")]
         public ActionResult<IEnumerable<Comision>> GetAll()
         {
-            return _context.Comisiones.ToList();
+            return _context.Comisiones
+                .Include(com => com.Plan)
+                    .ThenInclude(plan => plan.Especialidad)
+                .ToList();
         }
 
         [HttpGet("{id}")]
@@ -66,21 +69,26 @@
             return Comision;
         }
 
-
         [HttpDelete("{id}")]
         public ActionResult<Comision> Delete(int id)
         {
-            var Comision = _context.Comisiones.Find(id);
-            if (Comision == null)
+            try
             {
-                return NotFound();
+                var Comision = _context.Comisiones.Find(id);
+                if (Comision == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Comisiones.Remove(Comision);
+                _context.SaveChanges();
+
+                return Comision;
             }
-
-            _context.Comisiones.Remove(Comision);
-            _context.SaveChanges();
-
-            return Comision;
+            catch (DbUpdateException)
+            {
+                return BadRequest();
+            }
         }
-
     }
 }

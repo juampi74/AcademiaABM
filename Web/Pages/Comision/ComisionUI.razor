@@ -1,0 +1,116 @@
+﻿@page "/comision"
+@page "/comision/{idComision:int}"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2
+
+@inject SweetAlertService Swal;
+@inject NavigationManager navegacion;
+
+<h2 class="mt-3">@titulo</h2>
+
+<EditForm Model="comision" OnValidSubmit="GuardarComision">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Descripcion</label>
+        <InputText class="form-control" @bind-Value="comision.Desc_comision"></InputText>
+        <ValidationMessage For="@(() => comision.Desc_comision)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Año Especialidad</label>
+        <InputNumber class="form-control" @bind-Value="comision.Anio_especialidad"></InputNumber>
+        <ValidationMessage For="@(() => comision.Anio_especialidad)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Plan</label>
+        <InputSelect class="form-select" @bind-Value="comision.Id_plan">
+            @foreach (var plan in planes)
+            {
+                <option value="@plan.Id_plan">@plan.Desc_plan ➡️ @plan.Especialidad.Desc_especialidad</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => comision.Id_plan)"></ValidationMessage>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-end mt-3">
+        <a class="btn btn-warning" href="comisiones">Volver</a>
+
+        <button class="btn btn-primary ms-2" type="submit">
+            @btnTexto
+        </button>
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int idComision { get; set; } = 0;
+
+    string titulo = string.Empty;
+    string btnTexto = string.Empty;
+
+    Comision comision = new Comision();
+    List<Plan> planes = new List<Plan>(); 
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (idComision != 0)
+        {
+            titulo = "Editar Comisión";
+            btnTexto = "Actualizar";
+            comision = await ComisionNegocio.GetOne(idComision);
+        }
+        else
+        {
+            titulo = "Nueva Comisión";
+            btnTexto = "Guardar";
+        }
+        planes = (List<Plan>) await PlanNegocio.GetAll();
+        planes = planes.OrderBy(plan => plan.Desc_plan).ThenBy(plan => plan.Especialidad.Desc_especialidad).ToList();
+
+    }
+
+    private async Task GuardarComision()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¿Está seguro?",
+                Text = "Se guardaran los cambios realizados",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
+
+        if (result.IsConfirmed)
+        {
+            if (idComision != 0)
+            {
+                ComisionDTO comisionDTO = new ComisionDTO();
+                comisionDTO.Desc_comision = comision.Desc_comision;
+                comisionDTO.Anio_especialidad = comision.Anio_especialidad;
+                comisionDTO.Id_plan = comision.Id_plan;
+
+                await ComisionNegocio.Update(idComision, comisionDTO);
+                await Swal.FireAsync("Comisión actualizada", "La comisión ha sido actualizada correctamente", SweetAlertIcon.Success);
+            }
+            else
+            {
+                if (comision.Id_plan == 0)
+                {
+                    comision.Id_plan = planes.First().Id_plan;
+                }
+                await ComisionNegocio.Add(comision);
+                await Swal.FireAsync("Comisión creada", "La comisión ha sido creada correctamente", SweetAlertIcon.Success);
+            }
+            navegacion.NavigateTo("/comisiones");
+        }
+
+    }
+
+}

@@ -1,0 +1,100 @@
+﻿@page "/cursos"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2;
+
+@inject SweetAlertService Swal;
+
+
+<div class="d-flex align-items-center justify-content-between mt-3">
+    <h2>Cursos</h2>
+    <a href="curso">
+        <img src="./css/add.png" style="width: 65px; height: 65px" />
+    </a>
+</div>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Año Calendario</th>
+            <th>Cupo</th>
+            <th>Comision</th>
+            <th>Materia</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (cursos == null)
+        {
+            <tr>
+                <td colspan="5" align="center">
+                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var curso in cursos)
+            {
+                <tr>
+                    <td style="vertical-align: middle;">@curso.Anio_calendario</td>
+                    <td style="vertical-align: middle;">@curso.Cupo</td>
+                    <td style="vertical-align: middle;">@curso.Comision.Desc_comision</td>
+                    <td style="vertical-align: middle;">@curso.Materia.Desc_materia</td>
+                    <td class="d-flex justify-content-end">
+                        <a class="btn btn-primary btn-sm" href="curso/@curso.Id_curso">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </a>
+                        <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarCurso(curso))">
+                            <i class="bi bi-trash-fill fs-5"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+
+@code {
+
+    IEnumerable<Curso> cursos = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        cursos = await CursoNegocio.GetAll();
+    }
+
+    private async Task EliminarCurso(Curso curso)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "¿Está seguro?",
+            Text = "Esta acción no se puede revertir",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            CancelButtonText = "Cancelar",
+            ConfirmButtonText = "Confirmar"
+        });
+
+        if (result.IsConfirmed)
+        {
+            var response = await CursoNegocio.Delete(curso);
+
+            if (response)
+            {
+                await Swal.FireAsync("Curso eliminado", "El curso ha sido eliminado correctamente", SweetAlertIcon.Success);
+                
+                cursos = await CursoNegocio.GetAll();          
+                
+            } else
+            {
+                await Swal.FireAsync("Error", "El curso tiene inscripciones y/o dictados asociados", SweetAlertIcon.Error);
+            }
+        }
+
+    }
+}

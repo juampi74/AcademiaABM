@@ -71,17 +71,23 @@
         [HttpDelete("{id}")]
         public ActionResult<Plan> Delete(int id)
         {
-            var Plan = _context.Planes.Find(id);
-            if (Plan == null)
+            try
             {
-                return NotFound();
+                var Plan = _context.Planes.Find(id);
+                if (Plan == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Planes.Remove(Plan);
+                _context.SaveChanges();
+
+                return Plan;
             }
-
-            _context.Planes.Remove(Plan);
-            _context.SaveChanges();
-
-            return Plan;
+            catch (DbUpdateException)
+            {
+                return BadRequest();
+            }
         }
-
     }
 }

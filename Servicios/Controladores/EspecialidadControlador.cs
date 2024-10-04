@@ -63,21 +63,27 @@
 
             return Especialidad;
         }
-        
+
         [HttpDelete("{id}")]
         public ActionResult<Especialidad> Delete(int id)
         {
-            var Especialidad = _context.Especialidades.Find(id);
-            if (Especialidad == null)
+            try
             {
-                return NotFound();
+                var Especialidad = _context.Especialidades.Find(id);
+                if (Especialidad == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Especialidades.Remove(Especialidad);
+                _context.SaveChanges();
+
+                return Especialidad;
             }
-
-            _context.Especialidades.Remove(Especialidad);
-            _context.SaveChanges();
-
-            return Especialidad;
+            catch (DbUpdateException)
+            {
+                return BadRequest();
+            }
         }
-
     }
 }

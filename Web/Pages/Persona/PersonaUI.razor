@@ -69,7 +69,7 @@
         <InputSelect class="form-select" @bind-Value="persona.Id_plan">
             @foreach (var plan in planes)
             {
-                <option value="@plan.Id_plan">@plan.Desc_plan</option>
+                <option value="@plan.Id_plan">@plan.Desc_plan ➡️ @plan.Especialidad.Desc_especialidad</option>
             }
         </InputSelect>
         <ValidationMessage For="@(() => persona.Id_plan)"></ValidationMessage>
@@ -110,6 +110,7 @@
             btnTexto = "Guardar";
         }
         planes = (List<Plan>) await PlanNegocio.GetAll();
+        planes = planes.OrderBy(plan => plan.Desc_plan).ThenBy(plan => plan.Especialidad.Desc_especialidad).ToList();
     }
 
     private async Task GuardarPersona()

@@ -1,0 +1,100 @@
+﻿@page "/materias"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2;
+
+@inject SweetAlertService Swal;
+
+
+<div class="d-flex align-items-center justify-content-between mt-3">
+    <h2>Materias</h2>
+    <a href="materia">
+        <img src="./css/add.png" style="width: 65px; height: 65px" />
+    </a>
+</div>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Descripcion</th>
+            <th>Horas Semanales</th>
+            <th>Horas Totales</th>
+            <th>Plan</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (materias == null)
+        {
+            <tr>
+                <td colspan="5" align="center">
+                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var materia in materias)
+            {
+                <tr>
+                    <td style="vertical-align: middle;">@materia.Desc_materia</td>
+                    <td style="vertical-align: middle;">@materia.Hs_semanales</td>
+                    <td style="vertical-align: middle;">@materia.Hs_totales</td>
+                    <td style="vertical-align: middle;">@materia.Plan.Desc_plan ➡️ @materia.Plan.Especialidad.Desc_especialidad</td>
+                    <td class="d-flex justify-content-end">
+                        <a class="btn btn-primary btn-sm" href="materia/@materia.Id_materia">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </a>
+                        <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarMateria(materia))">
+                            <i class="bi bi-trash-fill fs-5"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+
+@code {
+
+    IEnumerable<Materia> materias = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        materias = await MateriaNegocio.GetAll();
+    }
+
+    private async Task EliminarMateria(Materia materia)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "¿Está seguro?",
+            Text = "Esta acción no se puede revertir",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            CancelButtonText = "Cancelar",
+            ConfirmButtonText = "Confirmar"
+        });
+
+        if (result.IsConfirmed)
+        {
+            var response = await MateriaNegocio.Delete(materia);
+
+            if (response)
+            {
+                await Swal.FireAsync("Materia eliminada", "La materia ha sido eliminada correctamente", SweetAlertIcon.Success);
+                
+                materias = await MateriaNegocio.GetAll();          
+                
+            } else
+            {
+                await Swal.FireAsync("Error", "La materia tiene cursos asociados", SweetAlertIcon.Error);
+            }
+        }
+
+    }
+}

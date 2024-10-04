@@ -19,7 +19,9 @@
         [HttpGet(Name = "GetUsuario")]
         public ActionResult<IEnumerable<Usuario>> GetAll()
         {
-            return _context.Usuarios.ToList();
+            return _context.Usuarios
+                .Include(usu => usu.Persona)
+                .ToList();
         }
 
         [HttpGet("{id}")]
@@ -72,17 +74,23 @@
         [HttpDelete("{id}")]
         public ActionResult<Usuario> Delete(int id)
         {
-            var Usuario = _context.Usuarios.Find(id);
-            if (Usuario == null)
+            try
             {
-                return NotFound();
+                var Usuario = _context.Usuarios.Find(id);
+                if (Usuario == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Usuarios.Remove(Usuario);
+                _context.SaveChanges();
+
+                return Usuario;
             }
-
-            _context.Usuarios.Remove(Usuario);
-            _context.SaveChanges();
-
-            return Usuario;
+            catch (DbUpdateException)
+            {
+                return BadRequest();
+            }
         }
-
     }
 }

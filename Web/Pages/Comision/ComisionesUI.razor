@@ -1,0 +1,98 @@
+﻿@page "/comisiones"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2;
+
+@inject SweetAlertService Swal;
+
+
+<div class="d-flex align-items-center justify-content-between mt-3">
+    <h2>Comisiones</h2>
+    <a href="comision">
+        <img src="./css/add.png" style="width: 65px; height: 65px" />
+    </a>
+</div>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Descripcion</th>
+            <th>Año Especialidad</th>
+            <th>Plan</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (comisiones == null)
+        {
+            <tr>
+                <td colspan="4" align="center">
+                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var comision in comisiones)
+            {
+                <tr>
+                    <td style="vertical-align: middle;">@comision.Desc_comision</td>
+                    <td style="vertical-align: middle;">@comision.Anio_especialidad</td>
+                    <td style="vertical-align: middle;">@comision.Plan.Desc_plan ➡️ @comision.Plan.Especialidad.Desc_especialidad</td>
+                    <td class="d-flex justify-content-end">
+                        <a class="btn btn-primary btn-sm" href="comision/@comision.Id_comision">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </a>
+                        <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarComision(comision))">
+                            <i class="bi bi-trash-fill fs-5"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+
+@code {
+
+    IEnumerable<Comision> comisiones = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        comisiones = await ComisionNegocio.GetAll();
+    }
+
+    private async Task EliminarComision(Comision comision)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "¿Está seguro?",
+            Text = "Esta acción no se puede revertir",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            CancelButtonText = "Cancelar",
+            ConfirmButtonText = "Confirmar"
+        });
+
+        if (result.IsConfirmed)
+        {
+            var response = await ComisionNegocio.Delete(comision);
+
+            if (response)
+            {
+                await Swal.FireAsync("Comisión eliminada", "La comisión ha sido eliminada correctamente", SweetAlertIcon.Success);
+                
+                comisiones = await ComisionNegocio.GetAll();          
+                
+            } else
+            {
+                await Swal.FireAsync("Error", "La comisión tiene cursos asociados", SweetAlertIcon.Error);
+            }
+        }
+
+    }
+}

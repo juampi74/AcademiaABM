@@ -1,0 +1,138 @@
+﻿@page "/inscripcion"
+@page "/inscripcion/{idInscripcion:int}"
+
+@using Entidades;
+@using Negocio;
+@using CurrieTechnologies.Razor.SweetAlert2
+
+@inject SweetAlertService Swal;
+@inject NavigationManager navegacion;
+
+<h2 class="mt-3">@titulo</h2>
+
+<EditForm Model="inscripcion" OnValidSubmit="GuardarInscripcion">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Condicion</label>
+        <InputText class="form-control" @bind-Value="inscripcion.Condicion"></InputText>
+        <ValidationMessage For="@(() => inscripcion.Condicion)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Nota</label>
+        <InputNumber class="form-control" @bind-Value="inscripcion.Nota"></InputNumber>
+        <ValidationMessage For="@(() => inscripcion.Nota)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Alumno</label>
+        <InputSelect class="form-select" @bind-Value="inscripcion.Id_alumno">
+            @foreach (var alumno in alumnos)
+            {
+                <option value="@alumno.Id_persona">@alumno.Apellido, @alumno.Nombre</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => inscripcion.Id_alumno)"></ValidationMessage>
+    </div>
+
+    <div class="mt-4">
+        <label class="form-label fw-bold">Curso</label>
+        <InputSelect class="form-select" @bind-Value="inscripcion.Id_curso">
+            @foreach (var curso in cursos)
+            {
+                <option value="@curso.Id_curso">@curso.Comision.Desc_comision ➡️ @curso.Materia.Desc_materia</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => inscripcion.Id_curso)"></ValidationMessage>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-end mt-3">
+        <a class="btn btn-warning" href="inscripciones">Volver</a>
+
+        <button class="btn btn-primary ms-2" type="submit">
+            @btnTexto
+        </button>
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int idInscripcion { get; set; } = 0;
+
+    string titulo = string.Empty;
+    string btnTexto = string.Empty;
+
+    Alumno_Inscripcion inscripcion = new Alumno_Inscripcion();
+    List<Persona> alumnos = new List<Persona>();
+    List<Curso> cursos = new List<Curso>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (idInscripcion != 0)
+        {
+            titulo = "Editar Inscripcion";
+            btnTexto = "Actualizar";
+            inscripcion = await InscripcionNegocio.GetOne(idInscripcion);
+        }
+        else
+        {
+            titulo = "Nueva Inscripcion";
+            btnTexto = "Guardar";
+        }
+        alumnos = (List<Persona>) await PersonaNegocio.GetAll();
+        cursos = (List<Curso>) await CursoNegocio.GetAll();
+
+        alumnos = alumnos.Where(alumno => alumno.Tipo_persona == 0).ToList();
+
+        alumnos = alumnos.OrderBy(alu => alu.Apellido).ThenBy(alu => alu.Nombre).ToList();
+        cursos = cursos.OrderBy(cur => cur.Comision.Desc_comision).ThenBy(cur => cur.Materia.Desc_materia).ToList();
+
+    }
+
+    private async Task GuardarInscripcion()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¿Está seguro?",
+                Text = "Se guardaran los cambios realizados",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
+
+        if (result.IsConfirmed)
+        {
+            if (idInscripcion != 0)
+            {
+                Alumno_InscripcionDTO inscripcionDTO = new Alumno_InscripcionDTO();
+                inscripcionDTO.Condicion = inscripcion.Condicion;
+                inscripcionDTO.Nota = inscripcion.Nota;
+                inscripcionDTO.Id_alumno = inscripcion.Id_alumno;
+                inscripcionDTO.Id_curso = inscripcion.Id_curso;
+
+                await InscripcionNegocio.Update(idInscripcion, inscripcionDTO);
+                await Swal.FireAsync("Inscripcion actualizada", "La inscripcion ha sido actualizada correctamente", SweetAlertIcon.Success);
+            }
+            else
+            {
+                if (inscripcion.Id_alumno == 0)
+                {
+                    inscripcion.Id_alumno = alumnos.First().Id_persona;
+                }
+                if (inscripcion.Id_curso == 0)
+                {
+                    inscripcion.Id_curso = cursos.First().Id_curso;
+                }
+                await InscripcionNegocio.Add(inscripcion);
+                await Swal.FireAsync("Inscripcion creada", "La inscripcion ha sido creada correctamente", SweetAlertIcon.Success);
+            }
+            navegacion.NavigateTo("/inscripciones");
+        }
+
+    }
+
+}

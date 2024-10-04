@@ -16,13 +16,19 @@
             _context = context;
         }
 
-        
+
         [HttpGet(Name = "GetDictado")]
         public ActionResult<IEnumerable<Docente_Curso>> GetAll()
         {
-            return _context.Docentes_cursos.ToList();
+            return _context.Docentes_cursos
+                .Include(insc => insc.Docente)
+                .Include(insc => insc.Curso)
+                    .ThenInclude(cur => cur.Comision)
+                .Include(insc => insc.Curso)
+                    .ThenInclude(cur => cur.Materia)
+                .ToList();
         }
-        
+
         [HttpGet("{id}")]
         public ActionResult<Docente_Curso> GetById(int id)
         {
@@ -52,7 +58,7 @@
         {
             var Dictado = _context.Docentes_cursos.Find(id);
 
-            if (Dictado  == null)
+            if (Dictado == null)
             {
                 return NotFound();
             }
@@ -71,18 +77,24 @@
         [HttpDelete("{id}")]
         public ActionResult<Docente_Curso> Delete(int id)
         {
-            var Dictado = _context.Docentes_cursos.Find(id);
-
-            if (Dictado == null)
+            try
             {
-                return NotFound();
+                var Dictado = _context.Docentes_cursos.Find(id);
+
+                if (Dictado == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Docentes_cursos.Remove(Dictado);
+                _context.SaveChanges();
+
+                return Dictado;
             }
-
-            _context.Docentes_cursos.Remove(Dictado);
-            _context.SaveChanges();
-
-            return Dictado;
+            catch (DbUpdateException)
+            {
+                return BadRequest();
+            }
         }
-
     }
 }
