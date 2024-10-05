@@ -20,26 +20,24 @@
                 Cargando cargando = new Cargando();
                 cargando.Show(this);
 
-                try
-                {
-                    Task<IEnumerable<Usuario>> task = new Task<IEnumerable<Usuario>>(LeerUsuarios);
-                    task.Start();
 
-                    IEnumerable<Usuario> listadoUsuarios = await task;
+                Task<IEnumerable<Usuario>> task = new Task<IEnumerable<Usuario>>(LeerUsuarios);
+                task.Start();
 
+                IEnumerable<Usuario> listadoUsuarios = await task;
+
+                if (listadoUsuarios.Any()) {
+
+                    cargando.Close();
                     ComprobarUsuarioIngresado(listadoUsuarios);
-                }
-                catch (Exception ex)
-                {
-                    cargando.Close();
-                    MessageBox.Show($"Error al conectar a la base de datos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    DialogResult = DialogResult.Cancel;
-                }
-                finally
-                {
-                    cargando.Close();
-                }
 
+                } else
+                {
+                    cargando.Close();
+                    MessageBox.Show($"Error al conectar a la base de datos!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    DialogResult = DialogResult.Cancel;
+                }                
+            
             }
         }
 
@@ -66,7 +64,14 @@
 
         private IEnumerable<Usuario> LeerUsuarios()
         {
-            return UsuarioNegocio.GetAll().Result;
+            try
+            {
+                return UsuarioNegocio.GetAll().Result;
+
+            } catch (Exception)
+            {
+                return [];
+            }
         }
 
         private void ComprobarUsuarioIngresado(IEnumerable<Usuario> listadoUsuarios)

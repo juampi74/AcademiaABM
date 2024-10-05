@@ -33,16 +33,16 @@
             return data;
         }
 
-        public async static Task<Boolean> Add(Docente_Curso dictado)
+        public async static Task<HttpResponseMessage> Add(Docente_Curso dictado)
         {
             // Realizar una solicitud POST a la API para agregar un Dictado
             var response = await Conexion.Instancia.Cliente.PostAsJsonAsync(defaultURL, dictado);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Update(int id, Docente_CursoDTO dictadoDTO)
+        public async static Task<HttpResponseMessage> Update(int id, Docente_CursoDTO dictadoDTO)
         {
             // Serializar el objeto Dictado en formato JSON
             var json = JsonConvert.SerializeObject(dictadoDTO);
@@ -54,16 +54,16 @@
             var response = await Conexion.Instancia.Cliente.PatchAsync($"{defaultURL}{id}", content);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Delete(Docente_Curso dictado)
+        public async static Task<HttpResponseMessage> Delete(Docente_Curso dictado)
         {
             // Realizar una solicitud DELETE a la API para eliminar un Dictado
             var response = await Conexion.Instancia.Cliente.DeleteAsync($"{defaultURL}{dictado.Id_dictado}");
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
     }
 }

@@ -19,57 +19,95 @@
         [HttpGet(Name = "GetUsuario")]
         public ActionResult<IEnumerable<Usuario>> GetAll()
         {
-            return _context.Usuarios
-                .Include(usu => usu.Persona)
-                .ToList();
+            try
+            {
+                return _context.Usuarios
+                    .Include(usu => usu.Persona)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpGet("{id}")]
         public ActionResult<Usuario> GetById(int id)
         {
-            var Usuario = _context.Usuarios.Find(id);
-
-            if (Usuario == null)
+            try
             {
-                return NotFound();
-            }
+                var Usuario = _context.Usuarios.Find(id);
 
-            return Usuario;
+                if (Usuario == null)
+                {
+                    return NotFound();
+                }
+
+                return Usuario;
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPost]
         public ActionResult<Usuario> Create(UsuarioDTO usuarioDTO)
         {
-            Usuario nuevoUsuario = new Usuario(usuarioDTO.Nombre_usuario, usuarioDTO.Clave, usuarioDTO.Habilitado, usuarioDTO.Cambia_clave, usuarioDTO.Id_persona);
+            try
+            {
+                Usuario nuevoUsuario = new Usuario(usuarioDTO.Nombre_usuario, usuarioDTO.Clave, usuarioDTO.Habilitado, usuarioDTO.Cambia_clave, usuarioDTO.Id_persona);
 
-            _context.Usuarios.Add(nuevoUsuario);
-            _context.SaveChanges();
+                _context.Usuarios.Add(nuevoUsuario);
+                _context.SaveChanges();
 
-            return CreatedAtAction("GetById", new { id = nuevoUsuario.Id_usuario }, nuevoUsuario);
+                return CreatedAtAction("GetById", new { id = nuevoUsuario.Id_usuario }, nuevoUsuario);
+
+            }
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPatch("{id}")]
         public ActionResult<Usuario> Update(int id, [FromBody] UsuarioDTO usuarioDTO)
         {
-            var Usuario = _context.Usuarios.Find(id);
-
-            if (Usuario == null)
+            try
             {
-                return NotFound();
+                var Usuario = _context.Usuarios.Find(id);
+
+                if (Usuario == null)
+                {
+                    return NotFound();
+                }
+
+                Usuario.Nombre_usuario = usuarioDTO.Nombre_usuario;
+                Usuario.Clave = usuarioDTO.Clave;
+                Usuario.Habilitado = usuarioDTO.Habilitado;
+                Usuario.Cambia_clave = usuarioDTO.Cambia_clave;
+                Usuario.Id_persona = usuarioDTO.Id_persona;
+
+                _context.Entry(Usuario).State = EntityState.Modified;
+                _context.SaveChanges();
+
+                return Usuario;
+
             }
-
-            Usuario.Nombre_usuario = usuarioDTO.Nombre_usuario;
-            Usuario.Clave = usuarioDTO.Clave;
-            Usuario.Habilitado = usuarioDTO.Habilitado;
-            Usuario.Cambia_clave = usuarioDTO.Cambia_clave;
-            Usuario.Id_persona = usuarioDTO.Id_persona;
-
-            _context.Entry(Usuario).State = EntityState.Modified;
-            _context.SaveChanges();
-
-            return Usuario;
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
-
 
         [HttpDelete("{id}")]
         public ActionResult<Usuario> Delete(int id)
@@ -89,7 +127,11 @@
             }
             catch (DbUpdateException)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
         }
     }

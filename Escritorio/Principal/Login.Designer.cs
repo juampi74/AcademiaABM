@@ -41,7 +41,7 @@
             // 
             BievenidaLabel.AutoSize = true;
             BievenidaLabel.Font = new Font("Segoe UI", 15F);
-            BievenidaLabel.Location = new Point(18, 7);
+            BievenidaLabel.Location = new Point(35, 10);
             BievenidaLabel.Name = "BievenidaLabel";
             BievenidaLabel.Size = new Size(214, 28);
             BievenidaLabel.TabIndex = 6;
@@ -94,7 +94,7 @@
             // IngresarInformacionLabel
             // 
             IngresarInformacionLabel.AutoSize = true;
-            IngresarInformacionLabel.Location = new Point(9, 42);
+            IngresarInformacionLabel.Location = new Point(26, 45);
             IngresarInformacionLabel.Name = "IngresarInformacionLabel";
             IngresarInformacionLabel.Size = new Size(232, 15);
             IngresarInformacionLabel.TabIndex = 5;

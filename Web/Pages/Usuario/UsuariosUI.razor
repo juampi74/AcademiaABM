@@ -1,102 +1,132 @@
 ﻿@page "/usuarios"
 
-@using Entidades;
-@using Negocio;
-@using CurrieTechnologies.Razor.SweetAlert2;
-
 @inject SweetAlertService Swal;
 
 
-<div class="d-flex align-items-center justify-content-between mt-3">
-    <h2>Usuarios</h2>
-    <a href="usuario">
-        <img src="./css/add.png" style="width: 65px; height: 65px" />
-    </a>
-</div>
+@if (!error)
+{
+    @if (usuarios == null)
+    {
+        <div class="d-flex align-items-center mt-3">
+            <h2 class="me-3">Usuarios</h2>
+            <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+        </div>
+    }
+    else
+    {
+        <div class="d-flex align-items-center justify-content-between mt-3">
+            <h2>Usuarios</h2>
+            <a href="usuario">
+                <img class="pb-2" src="/assets/add.png" style="width: 60px; height: 60px" />
+            </a>
+        </div>
 
-<table class="table mt-4">
-    <thead>
-        <tr>
-            <th>Nombre de Usuario</th>
-            <th>Clave</th>
-            <th>Habilitado</th>
-            <th>Cambia Clave</th>
-            <th>Persona</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @if (usuarios == null)
+        @if (usuarios.Count() == 0)
         {
-            <tr>
-                <td colspan="6" align="center">
-                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
-                </td>
-            </tr>
+            <div class="alert alert-primary fw-bold mt-3" role="alert">
+                No hay usuarios registrados
+            </div>
         }
         else
         {
-            @foreach (var usuario in usuarios)
-            {
-                <tr>
-                    <td style="vertical-align: middle;">@usuario.Nombre_usuario</td>
-                    <td style="vertical-align: middle;">@usuario.Clave</td>
-                    <td style="vertical-align: middle;">@(usuario.Habilitado == 1 ? "Si" : "No")</td>
-                    <td style="vertical-align: middle;">@(usuario.Cambia_clave == 0 ? "No" : "No")</td>
-                    <td style="vertical-align: middle;">@usuario.Persona.Apellido, @usuario.Persona.Nombre</td>
-                    <td class="d-flex justify-content-end">
-                        <a class="btn btn-primary btn-sm" href="usuario/@usuario.Id_usuario">
-                            <i class="bi bi-pencil-square fs-5"></i>
-                        </a>
-                        <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarUsuario(usuario))">
-                            <i class="bi bi-trash-fill fs-5"></i>
-                        </button>
-                    </td>
-                </tr>
-            }
+            <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th>Nombre de Usuario</th>
+                        <th>Clave</th>
+                        <th>Habilitado</th>
+                        <th>Cambia Clave</th>
+                        <th>Persona</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var usuario in usuarios)
+                    {
+                        <tr>
+                            <td style="vertical-align: middle;">@usuario.Nombre_usuario</td>
+                            <td style="vertical-align: middle;">@usuario.Clave</td>
+                            <td style="vertical-align: middle;">@(usuario.Habilitado == 1 ? "Si" : "No")</td>
+                            <td style="vertical-align: middle;">@(usuario.Cambia_clave == 0 ? "No" : "No")</td>
+                            <td style="vertical-align: middle;">@usuario.Persona.Apellido, @usuario.Persona.Nombre</td>
+                            <td class="d-flex justify-content-end">
+                                <a class="btn btn-primary btn-sm" href="usuario/@usuario.Id_usuario">
+                                    <i class="bi bi-pencil-square fs-5"></i>
+                                </a>
+                                <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarUsuario(usuario))">
+                                    <i class="bi bi-trash-fill fs-5"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
-
-    </tbody>
-</table>
+    }
+}
+else
+{
+    <h2 class="mt-3">Usuarios</h2>
+    <div class="alert alert-danger fw-bold my-3" role="alert">
+        Error al conectarse a la base de datos!
+    </div>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" @onclick="OnInitializedAsync">Reintentar</button>
+    </div>
+}
 
 
 @code {
+    IEnumerable<Usuario> usuarios;
 
-    IEnumerable<Usuario> usuarios = null;
+    bool error;
 
     protected override async Task OnInitializedAsync()
     {
-        usuarios = await UsuarioNegocio.GetAll();
+        usuarios = null;
+        error = false;
+
+        try
+        {
+            usuarios = await UsuarioNegocio.GetAll();
+
+        }
+        catch (Exception)
+        {
+            error = true;
+        }
     }
 
     private async Task EliminarUsuario(Usuario usuario)
     {
         var result = await Swal.FireAsync(new SweetAlertOptions
-        {
-            Title = "¿Está seguro?",
-            Text = "Esta acción no se puede revertir",
-            Icon = SweetAlertIcon.Warning,
-            ShowCancelButton = true,
-            CancelButtonText = "Cancelar",
-            ConfirmButtonText = "Confirmar"
-        });
+            {
+                Title = "¿Está seguro?",
+                Text = "Esta acción no se puede revertir",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
 
         if (result.IsConfirmed)
         {
-            var response = await UsuarioNegocio.Delete(usuario);
+            HttpResponseMessage response = await UsuarioNegocio.Delete(usuario);
 
-            if (response)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 await Swal.FireAsync("Usuario eliminado", "El usuario ha sido eliminado correctamente", SweetAlertIcon.Success);
-                
-                usuarios = await UsuarioNegocio.GetAll();          
-                
-            } else
+
+                await OnInitializedAsync();
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 await Swal.FireAsync("Error", "La operación no se ha podido llevar a cabo", SweetAlertIcon.Error);
             }
+            else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                error = true;
+            }
         }
-
     }
 }

@@ -1,73 +1,100 @@
 ﻿@page "/personas"
 
-@using Entidades;
-@using Negocio;
-@using CurrieTechnologies.Razor.SweetAlert2;
-
 @inject SweetAlertService Swal;
 
 
-<div class="d-flex align-items-center justify-content-between mt-3">
-    <h2>Personas</h2>
-    <a href="persona">
-        <img src="./css/add.png" style="width: 65px; height: 65px" />
-    </a>
-</div>
+@if (!error)
+{
+    @if (personas == null)
+    {
+        <div class="d-flex align-items-center mt-3">
+            <h2 class="me-3">Personas</h2>
+            <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+        </div>
+    }
+    else
+    {
+        <div class="d-flex align-items-center justify-content-between mt-3">
+            <h2>Personas</h2>
+            <a href="persona">
+                <img class="pb-2" src="/assets/add.png" style="width: 60px; height: 60px" />
+            </a>
+        </div>
 
-<table class="table mt-4">
-    <thead>
-        <tr>
-            <th>Apellido y Nombre</th>
-            <th>Fecha de Nacimiento</th>
-            <th>Legajo</th>
-            <th>Tipo</th>
-            <th>Plan</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @if (personas == null)
+        @if (personas.Count() == 0)
         {
-            <tr>
-                <td colspan="7" align="center">
-                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
-                </td>
-            </tr>
+            <div class="alert alert-primary fw-bold mt-3" role="alert">
+                No hay personas registradas
+            </div>
         }
         else
         {
-            @foreach (var persona in personas)
-            {
-                <tr>
-                    <td style="vertical-align: middle;">@persona.Apellido, @persona.Nombre</td>
-                    <td style="vertical-align: middle;">@persona.Fecha_nac.ToString("dd/MM/yyyy")</td>
-                    <td style="vertical-align: middle;">@persona.Legajo</td>
-                    <td style="vertical-align: middle;">@(persona.Tipo_persona == 0 ? "Alumno" : "Docente")</td>
-                    <td style="vertical-align: middle;">@persona.Plan.Desc_plan ➡️ @persona.Plan.Especialidad.Desc_especialidad</td>
-                    <td class="d-flex justify-content-end">
-                        <a class="btn btn-primary btn-sm" href="persona/@persona.Id_persona">
-                            <i class="bi bi-pencil-square fs-5"></i>
-                        </a>
-                        <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarPersona(persona))">
-                            <i class="bi bi-trash-fill fs-5"></i>
-                        </button>
-                    </td>
-                </tr>
-            }
+            <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th>Apellido y Nombre</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Legajo</th>
+                        <th>Tipo</th>
+                        <th>Plan</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var persona in personas)
+                    {
+                        <tr>
+                            <td style="vertical-align: middle;">@persona.Apellido, @persona.Nombre</td>
+                            <td style="vertical-align: middle;">@persona.Fecha_nac.ToString("dd/MM/yyyy")</td>
+                            <td style="vertical-align: middle;">@persona.Legajo</td>
+                            <td style="vertical-align: middle;">@(persona.Tipo_persona == 0 ? "Alumno" : "Docente")</td>
+                            <td style="vertical-align: middle;">@persona.Plan.Desc_plan ➡️ @persona.Plan.Especialidad.Desc_especialidad</td>
+                            <td class="d-flex justify-content-end">
+                                <a class="btn btn-primary btn-sm" href="persona/@persona.Id_persona">
+                                    <i class="bi bi-pencil-square fs-5"></i>
+                                </a>
+                                <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarPersona(persona))">
+                                    <i class="bi bi-trash-fill fs-5"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
-
-    </tbody>
-</table>
+    }
+}
+else
+{
+    <h2 class="mt-3">Personas</h2>
+    <div class="alert alert-danger fw-bold my-3" role="alert">
+        Error al conectarse a la base de datos!
+    </div>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" @onclick="OnInitializedAsync">Reintentar</button>
+    </div>
+}
 
 
 @code {
+    IEnumerable<Persona> personas;
 
-    IEnumerable<Persona> personas = null;
+    bool error;
 
     protected override async Task OnInitializedAsync()
     {
-        personas = await PersonaNegocio.GetAll();
+        personas = null;
+        error = false;
+
+        try
+        {
+            personas = await PersonaNegocio.GetAll();
+
+        }
+        catch (Exception)
+        {
+            error = true;
+        }
     }
 
     private async Task EliminarPersona(Persona persona)
@@ -84,21 +111,22 @@
 
         if (result.IsConfirmed)
         {
-            var response = await PersonaNegocio.Delete(persona);
+            HttpResponseMessage response = await PersonaNegocio.Delete(persona);
 
-
-            if (response)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 await Swal.FireAsync("Persona eliminada", "La persona ha sido eliminada correctamente", SweetAlertIcon.Success);
 
-                personas = await PersonaNegocio.GetAll();
-
+                await OnInitializedAsync();
             }
-            else
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 await Swal.FireAsync("Error", "La persona tiene dictados, inscripciones y/o usuarios asociados", SweetAlertIcon.Error);
             }
+            else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                error = true;
+            }
         }
     }
-
 }

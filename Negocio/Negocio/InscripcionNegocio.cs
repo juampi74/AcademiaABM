@@ -33,16 +33,16 @@
             return data;
         }
 
-        public async static Task<Boolean> Add(Alumno_Inscripcion inscripcion)
+        public async static Task<HttpResponseMessage> Add(Alumno_Inscripcion inscripcion)
         {
             // Realizar una solicitud POST a la API para agregar una Inscripcion
             var response = await Conexion.Instancia.Cliente.PostAsJsonAsync(defaultURL, inscripcion);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Update(int id, Alumno_InscripcionDTO inscripcionDTO)
+        public async static Task<HttpResponseMessage> Update(int id, Alumno_InscripcionDTO inscripcionDTO)
         {
             // Serializar el objeto Inscripcion en formato JSON
             var json = JsonConvert.SerializeObject(inscripcionDTO);
@@ -54,16 +54,16 @@
             var response = await Conexion.Instancia.Cliente.PatchAsync($"{defaultURL}{id}", content);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Delete(Alumno_Inscripcion inscripcion)
+        public async static Task<HttpResponseMessage> Delete(Alumno_Inscripcion inscripcion)
         {
             // Realizar una solicitud DELETE a la API para eliminar una Inscripcion
             var response = await Conexion.Instancia.Cliente.DeleteAsync($"{defaultURL}{inscripcion.Id_inscripcion}");
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
     }
 }

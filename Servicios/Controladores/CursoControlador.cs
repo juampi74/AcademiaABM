@@ -4,7 +4,6 @@
     using Microsoft.EntityFrameworkCore;
     using Datos;
     using Entidades;
-    using System.Linq.Expressions;
 
     [ApiController]
     [Route("api/[controller]")]
@@ -17,61 +16,98 @@
             _context = context;
         }
 
-
         [HttpGet(Name = "GetCurso")]
         public ActionResult<IEnumerable<Curso>> GetAll()
         {
-            return _context.Cursos
-                .Include(cur => cur.Comision)
-                .Include(cur => cur.Materia)
-                .ToList();
+            try
+            {
+                return _context.Cursos
+                    .Include(cur => cur.Comision)
+                    .Include(cur => cur.Materia)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpGet("{id}")]
         public ActionResult<Curso> GetById(int id)
         {
-            var Curso = _context.Cursos.Find(id);
-
-            if (Curso == null)
+            try
             {
-                return NotFound();
-            }
+                var Curso = _context.Cursos.Find(id);
 
-            return Curso;
+                if (Curso == null)
+                {
+                    return NotFound();
+                }
+
+                return Curso;
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPost]
         public ActionResult<Curso> Create(CursoDTO cursoDTO)
         {
-            Curso nuevoCurso = new Curso(cursoDTO.Anio_calendario, cursoDTO.Cupo, cursoDTO.Id_comision, cursoDTO.Id_materia);
+            try
+            {
+                Curso nuevoCurso = new Curso(cursoDTO.Anio_calendario, cursoDTO.Cupo, cursoDTO.Id_comision, cursoDTO.Id_materia);
 
-            _context.Cursos.Add(nuevoCurso);
-            _context.SaveChanges();
+                _context.Cursos.Add(nuevoCurso);
+                _context.SaveChanges();
 
-            return CreatedAtAction("GetById", new { id = nuevoCurso.Id_curso }, nuevoCurso);
+                return CreatedAtAction("GetById", new { id = nuevoCurso.Id_curso }, nuevoCurso);
+
+            }
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPatch("{id}")]
         public ActionResult<Curso> Update(int id, [FromBody] CursoDTO cursoDTO)
         {
-            var Curso = _context.Cursos.Find(id);
-
-            if (Curso == null)
+            try
             {
-                return NotFound();
+                var Curso = _context.Cursos.Find(id);
+
+                if (Curso == null)
+                {
+                    return NotFound();
+                }
+
+                Curso.Anio_calendario = cursoDTO.Anio_calendario;
+                Curso.Cupo = cursoDTO.Cupo;
+                Curso.Id_comision = cursoDTO.Id_comision;
+                Curso.Id_materia = cursoDTO.Id_materia;
+
+                _context.Entry(Curso).State = EntityState.Modified;
+                _context.SaveChanges();
+
+                return Curso;
+
             }
-
-            Curso.Anio_calendario = cursoDTO.Anio_calendario;
-            Curso.Cupo = cursoDTO.Cupo;
-            Curso.Id_comision = cursoDTO.Id_comision;
-            Curso.Id_materia = cursoDTO.Id_materia;
-
-            _context.Entry(Curso).State = EntityState.Modified;
-            _context.SaveChanges();
-
-            return Curso;
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
-
 
         [HttpDelete("{id}")]
         public ActionResult<Curso> Delete(int id)
@@ -91,7 +127,11 @@
             }
             catch (DbUpdateException)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
         }
     }

@@ -19,49 +19,89 @@
         [HttpGet(Name = "GetEspecialidad")]
         public ActionResult<IEnumerable<Especialidad>> GetAll()
         {
-            return _context.Especialidades.ToList();
+            try
+            {
+                return _context.Especialidades.ToList();
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpGet("{id}")]
         public ActionResult<Especialidad> GetById(int id)
         {
-            var Especialidad = _context.Especialidades.Find(id);
-
-            if (Especialidad == null)
+            try
             {
-                return NotFound();
-            }
+                var Especialidad = _context.Especialidades.Find(id);
 
-            return Especialidad;
+                if (Especialidad == null)
+                {
+                    return NotFound();
+                }
+
+                return Especialidad;
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPost]
         public ActionResult<Especialidad> Create(EspecialidadDTO especialidadDTO)
         {
-            var nuevaEspecialidad = new Especialidad(especialidadDTO.Desc_especialidad);
+            try
+            {
+                Especialidad nuevaEspecialidad = new Especialidad(especialidadDTO.Desc_especialidad);
 
-            _context.Especialidades.Add(nuevaEspecialidad);
-            _context.SaveChanges();
+                _context.Especialidades.Add(nuevaEspecialidad);
+                _context.SaveChanges();
 
-            return CreatedAtAction("GetById", new { id = nuevaEspecialidad.Id_especialidad }, nuevaEspecialidad);
+                return CreatedAtAction("GetById", new { id = nuevaEspecialidad.Id_especialidad }, nuevaEspecialidad);
+
+            }
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPatch("{id}")]
         public ActionResult<Especialidad> Update(int id, [FromBody] EspecialidadDTO especialidadDTO)
         {
-            var Especialidad = _context.Especialidades.Find(id);
-
-            if (Especialidad == null)
+            try
             {
-                return NotFound();
+                var Especialidad = _context.Especialidades.Find(id);
+
+                /*if (Especialidad == null)
+                {
+                    return NotFound();
+                }*/
+
+                Especialidad.Desc_especialidad = especialidadDTO.Desc_especialidad;
+
+                _context.Entry(Especialidad).State = EntityState.Modified;
+                _context.SaveChanges();
+
+                return Especialidad;
+
             }
-
-            Especialidad.Desc_especialidad = especialidadDTO.Desc_especialidad;
-
-            _context.Entry(Especialidad).State = EntityState.Modified;
-            _context.SaveChanges();
-
-            return Especialidad;
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -82,7 +122,11 @@
             }
             catch (DbUpdateException)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
         }
     }

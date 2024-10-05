@@ -20,7 +20,11 @@
 
             List<string> listadoPersonas = ListadoNombresPersonas();
 
+            HabilitadoComboBox.DataSource = new List<string>() { "Si", "No" };
+            CambiaClaveComboBox.DataSource = new List<string>() { "No", "Si" };
+
             PersonaComboBox.DataSource = listadoPersonas;
+
         }
 
         public UsuarioUI(List<(int Id, string ApellidoYNombre)> personas, Usuario usuarioAModificar)
@@ -36,10 +40,29 @@
 
             NombreUsuarioTextBox.Text = usuarioAModificar.Nombre_usuario;
             ClaveTextBox.Text = usuarioAModificar.Clave;
-            HabilitadoTextBox.Text = usuarioAModificar.Habilitado.ToString();
-            CambiaClaveTextbox.Text = usuarioAModificar.Cambia_clave.ToString();
-            
+
+            HabilitadoComboBox.DataSource = new List<string>() { "Si", "No" };
+            CambiaClaveComboBox.DataSource = new List<string>() { "No", "Si" };
+
             PersonaComboBox.DataSource = ListadoNombresPersonas();
+
+            if (usuarioAModificar.Habilitado == 1)
+            {
+                HabilitadoComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                HabilitadoComboBox.SelectedIndex = 1;
+            }
+
+            if (usuarioAModificar.Cambia_clave == 0)
+            {
+                CambiaClaveComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                CambiaClaveComboBox.SelectedIndex = 1;
+            }
 
             foreach (var persona in this.Personas)
             {
@@ -101,8 +124,8 @@
 
             usuario.Nombre_usuario = NombreUsuarioTextBox.Text;
             usuario.Clave = ClaveTextBox.Text;
-            usuario.Habilitado = Int32.Parse(HabilitadoTextBox.Text);
-            usuario.Cambia_clave = Int32.Parse(CambiaClaveTextbox.Text);
+            usuario.Habilitado = HabilitadoComboBox.SelectedValue.ToString() == "Si" ? 1 : 0;
+            usuario.Cambia_clave = CambiaClaveComboBox.SelectedValue.ToString() == "Si" ? 1 : 0;
             usuario.Id_persona = idPersonaSeleccionada;
 
             return usuario;
@@ -112,7 +135,7 @@
         {
             int idPersonaSeleccionada = ObtenerIdPersonaSeleccionada();
 
-            Usuario usuario = new Usuario(NombreUsuarioTextBox.Text, ClaveTextBox.Text, Int32.Parse(HabilitadoTextBox.Text), Int32.Parse(CambiaClaveTextbox.Text), idPersonaSeleccionada);
+            Usuario usuario = new Usuario(NombreUsuarioTextBox.Text, ClaveTextBox.Text, HabilitadoComboBox.SelectedValue.ToString() == "Si" ? 1 : 0, CambiaClaveComboBox.SelectedValue.ToString() == "Si" ? 1 : 0, idPersonaSeleccionada);
 
             return usuario;
         }

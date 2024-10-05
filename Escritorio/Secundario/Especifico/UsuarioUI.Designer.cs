@@ -34,13 +34,13 @@
             ClaveLabel = new Label();
             ClaveTextBox = new TextBox();
             HabilitadoLabel = new Label();
-            HabilitadoTextBox = new TextBox();
             CambiaClaveLabel = new Label();
-            CambiaClaveTextbox = new TextBox();
             PersonaLabel = new Label();
             PersonaComboBox = new ComboBox();
             CancelarButton = new Button();
             GuardarButton = new Button();
+            CambiaClaveComboBox = new ComboBox();
+            HabilitadoComboBox = new ComboBox();
             SuspendLayout();
             // 
             // TituloLabel
@@ -98,15 +98,6 @@
             HabilitadoLabel.TabIndex = 9;
             HabilitadoLabel.Text = "Habilitado:";
             // 
-            // HabilitadoTextBox
-            // 
-            HabilitadoTextBox.BackColor = SystemColors.ControlDarkDark;
-            HabilitadoTextBox.ForeColor = SystemColors.Menu;
-            HabilitadoTextBox.Location = new Point(140, 134);
-            HabilitadoTextBox.Name = "HabilitadoTextBox";
-            HabilitadoTextBox.Size = new Size(129, 23);
-            HabilitadoTextBox.TabIndex = 2;
-            // 
             // CambiaClaveLabel
             // 
             CambiaClaveLabel.AutoSize = true;
@@ -115,15 +106,6 @@
             CambiaClaveLabel.Size = new Size(83, 15);
             CambiaClaveLabel.TabIndex = 8;
             CambiaClaveLabel.Text = "Cambia Clave:";
-            // 
-            // CambiaClaveTextbox
-            // 
-            CambiaClaveTextbox.BackColor = SystemColors.ControlDarkDark;
-            CambiaClaveTextbox.ForeColor = SystemColors.Menu;
-            CambiaClaveTextbox.Location = new Point(140, 168);
-            CambiaClaveTextbox.Name = "CambiaClaveTextbox";
-            CambiaClaveTextbox.Size = new Size(129, 23);
-            CambiaClaveTextbox.TabIndex = 3;
             // 
             // PersonaLabel
             // 
@@ -168,21 +150,41 @@
             GuardarButton.UseVisualStyleBackColor = false;
             GuardarButton.Click += GuardarButton_Click;
             // 
+            // CambiaClaveComboBox
+            // 
+            CambiaClaveComboBox.BackColor = SystemColors.GrayText;
+            CambiaClaveComboBox.ForeColor = SystemColors.Window;
+            CambiaClaveComboBox.FormattingEnabled = true;
+            CambiaClaveComboBox.Location = new Point(140, 168);
+            CambiaClaveComboBox.Name = "CambiaClaveComboBox";
+            CambiaClaveComboBox.Size = new Size(127, 23);
+            CambiaClaveComboBox.TabIndex = 13;
+            // 
+            // HabilitadoComboBox
+            // 
+            HabilitadoComboBox.BackColor = SystemColors.GrayText;
+            HabilitadoComboBox.ForeColor = SystemColors.Window;
+            HabilitadoComboBox.FormattingEnabled = true;
+            HabilitadoComboBox.Location = new Point(141, 134);
+            HabilitadoComboBox.Name = "HabilitadoComboBox";
+            HabilitadoComboBox.Size = new Size(127, 23);
+            HabilitadoComboBox.TabIndex = 14;
+            // 
             // UsuarioUI
             // 
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(298, 281);
+            Controls.Add(HabilitadoComboBox);
+            Controls.Add(CambiaClaveComboBox);
             Controls.Add(TituloLabel);
             Controls.Add(NombreUsuarioLabel);
             Controls.Add(NombreUsuarioTextBox);
             Controls.Add(ClaveLabel);
             Controls.Add(ClaveTextBox);
             Controls.Add(HabilitadoLabel);
-            Controls.Add(HabilitadoTextBox);
             Controls.Add(CambiaClaveLabel);
-            Controls.Add(CambiaClaveTextbox);
             Controls.Add(PersonaLabel);
             Controls.Add(PersonaComboBox);
             Controls.Add(CancelarButton);
@@ -203,12 +205,12 @@
         private Label ClaveLabel;
         private TextBox ClaveTextBox;
         private Label HabilitadoLabel;
-        private TextBox HabilitadoTextBox;
         private Label CambiaClaveLabel;
-        private TextBox CambiaClaveTextbox;
         private Label PersonaLabel;
         private ComboBox PersonaComboBox;
         private Button CancelarButton;
         private Button GuardarButton;
+        private ComboBox CambiaClaveComboBox;
+        private ComboBox HabilitadoComboBox;
     }
 }

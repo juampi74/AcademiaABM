@@ -33,16 +33,16 @@
             return data;
         }
 
-        public async static Task<Boolean> Add(Materia materia)
+        public async static Task<HttpResponseMessage> Add(Materia materia)
         {
             // Realizar una solicitud POST a la API para agregar un Materia
             var response = await Conexion.Instancia.Cliente.PostAsJsonAsync(defaultURL, materia);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Update(int id, MateriaDTO materiaDTO)
+        public async static Task<HttpResponseMessage> Update(int id, MateriaDTO materiaDTO)
         {
             // Serializar el objeto Materia en formato JSON
             var json = JsonConvert.SerializeObject(materiaDTO);
@@ -54,16 +54,16 @@
             var response = await Conexion.Instancia.Cliente.PatchAsync($"{defaultURL}{id}", content);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Delete(Materia materia)
+        public async static Task<HttpResponseMessage> Delete(Materia materia)
         {
             // Realizar una solicitud DELETE a la API para eliminar un Materia
             var response = await Conexion.Instancia.Cliente.DeleteAsync($"{defaultURL}{materia.Id_materia}");
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
     }
 }

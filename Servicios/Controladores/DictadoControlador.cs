@@ -16,63 +16,100 @@
             _context = context;
         }
 
-
         [HttpGet(Name = "GetDictado")]
         public ActionResult<IEnumerable<Docente_Curso>> GetAll()
         {
-            return _context.Docentes_cursos
-                .Include(insc => insc.Docente)
-                .Include(insc => insc.Curso)
-                    .ThenInclude(cur => cur.Comision)
-                .Include(insc => insc.Curso)
-                    .ThenInclude(cur => cur.Materia)
-                .ToList();
+            try
+            {
+                return _context.Docentes_cursos
+                    .Include(insc => insc.Docente)
+                    .Include(insc => insc.Curso)
+                        .ThenInclude(cur => cur.Comision)
+                    .Include(insc => insc.Curso)
+                        .ThenInclude(cur => cur.Materia)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpGet("{id}")]
         public ActionResult<Docente_Curso> GetById(int id)
         {
-            var Dictado = _context.Docentes_cursos.Find(id);
-
-            if (Dictado == null)
+            try
             {
-                return NotFound();
-            }
+                var Dictado = _context.Docentes_cursos.Find(id);
 
-            return Dictado;
+                if (Dictado == null)
+                {
+                    return NotFound();
+                }
+
+                return Dictado;
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPost]
         public ActionResult<Docente_Curso> Create(Docente_CursoDTO dictadoDTO)
         {
-            Docente_Curso nuevoDictado = new Docente_Curso(dictadoDTO.Cargo, dictadoDTO.Id_docente, dictadoDTO.Id_curso);
+            try
+            {
+                Docente_Curso nuevoDictado = new Docente_Curso(dictadoDTO.Cargo, dictadoDTO.Id_docente, dictadoDTO.Id_curso);
 
-            _context.Docentes_cursos.Add(nuevoDictado);
-            _context.SaveChanges();
+                _context.Docentes_cursos.Add(nuevoDictado);
+                _context.SaveChanges();
 
-            return CreatedAtAction("GetById", new { id = nuevoDictado.Id_dictado }, nuevoDictado);
+                return CreatedAtAction("GetById", new { id = nuevoDictado.Id_dictado }, nuevoDictado);
+
+            }
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPatch("{id}")]
         public ActionResult<Docente_Curso> Update(int id, [FromBody] Docente_CursoDTO dictadoDTO)
         {
-            var Dictado = _context.Docentes_cursos.Find(id);
-
-            if (Dictado == null)
+            try
             {
-                return NotFound();
+                var Dictado = _context.Docentes_cursos.Find(id);
+
+                if (Dictado == null)
+                {
+                    return NotFound();
+                }
+
+                Dictado.Cargo = dictadoDTO.Cargo;
+                Dictado.Id_docente = dictadoDTO.Id_docente;
+                Dictado.Id_curso = dictadoDTO.Id_curso;
+
+                _context.Entry(Dictado).State = EntityState.Modified;
+                _context.SaveChanges();
+
+                return Dictado;
+
             }
-
-            Dictado.Cargo = dictadoDTO.Cargo;
-            Dictado.Id_docente = dictadoDTO.Id_docente;
-            Dictado.Id_curso = dictadoDTO.Id_curso;
-
-            _context.Entry(Dictado).State = EntityState.Modified;
-            _context.SaveChanges();
-
-            return Dictado;
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
-
 
         [HttpDelete("{id}")]
         public ActionResult<Docente_Curso> Delete(int id)
@@ -80,7 +117,6 @@
             try
             {
                 var Dictado = _context.Docentes_cursos.Find(id);
-
                 if (Dictado == null)
                 {
                     return NotFound();
@@ -93,7 +129,11 @@
             }
             catch (DbUpdateException)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
         }
     }

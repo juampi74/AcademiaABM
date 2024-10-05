@@ -33,16 +33,16 @@
             return data;
         }
 
-        public async static Task<Boolean> Add(Comision comision)
+        public async static Task<HttpResponseMessage> Add(Comision comision)
         {
             // Realizar una solicitud POST a la API para agregar un Comision
             var response = await Conexion.Instancia.Cliente.PostAsJsonAsync(defaultURL, comision);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Update(int id, ComisionDTO comisionDTO)
+        public async static Task<HttpResponseMessage> Update(int id, ComisionDTO comisionDTO)
         {
             // Serializar el objeto Comision en formato JSON
             var json = JsonConvert.SerializeObject(comisionDTO);
@@ -54,16 +54,16 @@
             var response = await Conexion.Instancia.Cliente.PatchAsync($"{defaultURL}{id}", content);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Delete(Comision comision)
+        public async static Task<HttpResponseMessage> Delete(Comision comision)
         {
             // Realizar una solicitud DELETE a la API para eliminar un Comision
             var response = await Conexion.Instancia.Cliente.DeleteAsync($"{defaultURL}{comision.Id_comision}");
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
     }
 }

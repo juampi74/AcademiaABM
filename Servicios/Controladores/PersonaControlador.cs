@@ -19,62 +19,100 @@
         [HttpGet(Name = "GetPersona")]
         public ActionResult<IEnumerable<Persona>> GetAll()
         {
-            return _context.Personas
-                .Include(per => per.Plan)
-                    .ThenInclude(plan => plan.Especialidad)
-                .ToList();
+            try
+            {
+                return _context.Personas
+                    .Include(per => per.Plan)
+                        .ThenInclude(plan => plan.Especialidad)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpGet("{id}")]
         public ActionResult<Persona> GetById(int id)
         {
-            var Persona = _context.Personas.Find(id);
-
-            if (Persona == null)
+            try
             {
-                return NotFound();
-            }
+                var Persona = _context.Personas.Find(id);
 
-            return Persona;
+                if (Persona == null)
+                {
+                    return NotFound();
+                }
+
+                return Persona;
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPost]
         public ActionResult<Persona> Create(PersonaDTO personaDTO)
         {
-            Persona nuevaPersona = new Persona(personaDTO.Nombre, personaDTO.Apellido, personaDTO.Direccion, personaDTO.Email, personaDTO.Telefono, personaDTO.Fecha_nac.Date, personaDTO.Legajo, personaDTO.Tipo_persona, personaDTO.Id_plan);
+            try
+            {
+                Persona nuevaPersona = new Persona(personaDTO.Nombre, personaDTO.Apellido, personaDTO.Direccion, personaDTO.Email, personaDTO.Telefono, personaDTO.Fecha_nac.Date, personaDTO.Legajo, personaDTO.Tipo_persona, personaDTO.Id_plan);
 
-            _context.Personas.Add(nuevaPersona);
-            _context.SaveChanges();
+                _context.Personas.Add(nuevaPersona);
+                _context.SaveChanges();
 
-            return CreatedAtAction("GetById", new { id = nuevaPersona.Id_persona }, nuevaPersona);
+                return CreatedAtAction("GetById", new { id = nuevaPersona.Id_persona }, nuevaPersona);
+
+            }
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPatch("{id}")]
         public ActionResult<Persona> Update(int id, [FromBody] PersonaDTO personaDTO)
         {
-            var Persona = _context.Personas.Find(id);
-
-            if (Persona == null)
+            try
             {
-                return NotFound();
+                var Persona = _context.Personas.Find(id);
+
+                if (Persona == null)
+                {
+                    return NotFound();
+                }
+
+                Persona.Nombre = personaDTO.Nombre;
+                Persona.Apellido = personaDTO.Apellido;
+                Persona.Direccion = personaDTO.Direccion;
+                Persona.Email = personaDTO.Email;
+                Persona.Telefono = personaDTO.Telefono;
+                Persona.Fecha_nac = personaDTO.Fecha_nac.Date;
+                Persona.Legajo = personaDTO.Legajo;
+                Persona.Tipo_persona = personaDTO.Tipo_persona;
+                Persona.Id_plan = personaDTO.Id_plan;
+
+                _context.Entry(Persona).State = EntityState.Modified;
+                _context.SaveChanges();
+
+                return Persona;
+
             }
-
-            Persona.Nombre = personaDTO.Nombre;
-            Persona.Apellido = personaDTO.Apellido;
-            Persona.Direccion = personaDTO.Direccion;
-            Persona.Email = personaDTO.Email;
-            Persona.Telefono = personaDTO.Telefono;
-            Persona.Fecha_nac = personaDTO.Fecha_nac.Date;
-            Persona.Legajo = personaDTO.Legajo;
-            Persona.Tipo_persona = personaDTO.Tipo_persona;
-            Persona.Id_plan = personaDTO.Id_plan;
-
-            _context.Entry(Persona).State = EntityState.Modified;
-            _context.SaveChanges();
-
-            return Persona;
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
-
 
         [HttpDelete("{id}")]
         public ActionResult<Persona> Delete(int id)
@@ -94,7 +132,11 @@
             }
             catch (DbUpdateException)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
         }
     }

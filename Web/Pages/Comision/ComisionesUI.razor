@@ -1,98 +1,127 @@
 ﻿@page "/comisiones"
 
-@using Entidades;
-@using Negocio;
-@using CurrieTechnologies.Razor.SweetAlert2;
-
 @inject SweetAlertService Swal;
 
+@if (!error)
+{
+    @if (comisiones == null)
+    {
+        <div class="d-flex align-items-center mt-3">
+            <h2 class="me-3">Comisiones</h2>
+            <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+        </div>
+    }
+    else
+    {
+        <div class="d-flex align-items-center justify-content-between mt-3">
+            <h2>Comisiones</h2>
+            <a href="comision">
+                <img class="pb-2" src="/assets/add.png" style="width: 60px; height: 60px" />
+            </a>
+        </div>
 
-<div class="d-flex align-items-center justify-content-between mt-3">
-    <h2>Comisiones</h2>
-    <a href="comision">
-        <img src="./css/add.png" style="width: 65px; height: 65px" />
-    </a>
-</div>
-
-<table class="table mt-4">
-    <thead>
-        <tr>
-            <th>Descripcion</th>
-            <th>Año Especialidad</th>
-            <th>Plan</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @if (comisiones == null)
+        @if (comisiones.Count() == 0)
         {
-            <tr>
-                <td colspan="4" align="center">
-                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
-                </td>
-            </tr>
+            <div class="alert alert-primary fw-bold mt-3" role="alert">
+                No hay comisiones registradas
+            </div>
         }
         else
         {
-            @foreach (var comision in comisiones)
-            {
-                <tr>
-                    <td style="vertical-align: middle;">@comision.Desc_comision</td>
-                    <td style="vertical-align: middle;">@comision.Anio_especialidad</td>
-                    <td style="vertical-align: middle;">@comision.Plan.Desc_plan ➡️ @comision.Plan.Especialidad.Desc_especialidad</td>
-                    <td class="d-flex justify-content-end">
-                        <a class="btn btn-primary btn-sm" href="comision/@comision.Id_comision">
-                            <i class="bi bi-pencil-square fs-5"></i>
-                        </a>
-                        <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarComision(comision))">
-                            <i class="bi bi-trash-fill fs-5"></i>
-                        </button>
-                    </td>
-                </tr>
-            }
+            <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th>Descripcion</th>
+                        <th>Año Especialidad</th>
+                        <th>Plan</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var comision in comisiones)
+                    {
+                        <tr>
+                            <td style="vertical-align: middle;">@comision.Desc_comision</td>
+                            <td style="vertical-align: middle;">@comision.Anio_especialidad</td>
+                            <td style="vertical-align: middle;">@comision.Plan.Desc_plan ➡️ @comision.Plan.Especialidad.Desc_especialidad</td>
+                            <td class="d-flex justify-content-end">
+                                <a class="btn btn-primary btn-sm" href="comision/@comision.Id_comision">
+                                    <i class="bi bi-pencil-square fs-5"></i>
+                                </a>
+                                <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarComision(comision))">
+                                    <i class="bi bi-trash-fill fs-5"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
-
-    </tbody>
-</table>
+    }
+}
+else
+{
+    <h2 class="mt-3">Comisiones</h2>
+    <div class="alert alert-danger fw-bold my-3" role="alert">
+        Error al conectarse a la base de datos!
+    </div>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" @onclick="OnInitializedAsync">Reintentar</button>
+    </div>
+}
 
 
 @code {
+    IEnumerable<Comision> comisiones;
 
-    IEnumerable<Comision> comisiones = null;
+    bool error;
 
     protected override async Task OnInitializedAsync()
     {
-        comisiones = await ComisionNegocio.GetAll();
+        comisiones = null;
+        error = false;
+
+        try
+        {
+            comisiones = await ComisionNegocio.GetAll();
+
+        }
+        catch (Exception)
+        {
+            error = true;
+        }
     }
 
     private async Task EliminarComision(Comision comision)
     {
         var result = await Swal.FireAsync(new SweetAlertOptions
-        {
-            Title = "¿Está seguro?",
-            Text = "Esta acción no se puede revertir",
-            Icon = SweetAlertIcon.Warning,
-            ShowCancelButton = true,
-            CancelButtonText = "Cancelar",
-            ConfirmButtonText = "Confirmar"
-        });
+            {
+                Title = "¿Está seguro?",
+                Text = "Esta acción no se puede revertir",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
 
         if (result.IsConfirmed)
         {
-            var response = await ComisionNegocio.Delete(comision);
+            HttpResponseMessage response = await ComisionNegocio.Delete(comision);
 
-            if (response)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 await Swal.FireAsync("Comisión eliminada", "La comisión ha sido eliminada correctamente", SweetAlertIcon.Success);
-                
-                comisiones = await ComisionNegocio.GetAll();          
-                
-            } else
+
+                await OnInitializedAsync();
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 await Swal.FireAsync("Error", "La comisión tiene cursos asociados", SweetAlertIcon.Error);
             }
+            else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                error = true;
+            }
         }
-
     }
 }

@@ -3,7 +3,9 @@ namespace Escritorio
     using Entidades;
     using Negocio;
     using System.Collections.Generic;
+    using System.Net;
     using System.Windows.Forms;
+    using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
     public partial class Grilla : Form
     {
@@ -455,9 +457,22 @@ namespace Escritorio
                 {
                     int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
 
-                    await ComisionNegocio.Delete(listadoComisiones.Result.ToList()[filaSeleccionada]);
+                    var response = await ComisionNegocio.Delete(listadoComisiones.Result.ToList()[filaSeleccionada]);
 
-                    btnMostrarComisiones_Click(sender, e);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                        
+                        btnMostrarComisiones_Click(sender, e);
+
+                    } else
+                    {
+                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
+                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La comisión tiene cursos asociados");
+                        errorEliminacion.ShowDialog(this);
+                    }
+
                 }
             }
             else if (entidadListada == "Curso")
@@ -467,9 +482,22 @@ namespace Escritorio
                 {
                     int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
 
-                    await CursoNegocio.Delete(listadoCursos.Result.ToList()[filaSeleccionada]);
+                    var response = await CursoNegocio.Delete(listadoCursos.Result.ToList()[filaSeleccionada]);
 
-                    btnMostrarCursos_Click(sender, e);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+
+                        btnMostrarCursos_Click(sender, e);
+
+                    }
+                    else
+                    {
+                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
+                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "El curso tiene inscripciones y/o dictados asociados");
+                        errorEliminacion.ShowDialog(this);
+                    }
                 }
             }
             else if (entidadListada == "Dictado")
@@ -479,9 +507,22 @@ namespace Escritorio
                 {
                     int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
 
-                    await DictadoNegocio.Delete(listadoDictados.Result.ToList()[filaSeleccionada]);
+                    var response = await DictadoNegocio.Delete(listadoDictados.Result.ToList()[filaSeleccionada]);
 
-                    btnMostrarDictados_Click(sender, e);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+
+                        btnMostrarDictados_Click(sender, e);
+
+                    }
+                    else
+                    {
+                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
+                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
+                        errorEliminacion.ShowDialog(this);
+                    }
                 }
             }
             else if (entidadListada == "Especialidad")
@@ -491,9 +532,22 @@ namespace Escritorio
                 {
                     int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
 
-                    await EspecialidadNegocio.Delete(listadoEspecialidades.Result.ToList()[filaSeleccionada]);
+                    var response = await EspecialidadNegocio.Delete(listadoEspecialidades.Result.ToList()[filaSeleccionada]);
 
-                    btnMostrarEspecialidades_Click(sender, e);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+
+                        btnMostrarEspecialidades_Click(sender, e);
+
+                    }
+                    else
+                    {
+                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
+                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La especialidad tiene planes asociados");
+                        errorEliminacion.ShowDialog(this);
+                    }
                 }
             }
             else if (entidadListada == "Inscripcion")
@@ -503,9 +557,22 @@ namespace Escritorio
                 {
                     int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
 
-                    await InscripcionNegocio.Delete(listadoInscripciones.Result.ToList()[filaSeleccionada]);
+                    var response = await InscripcionNegocio.Delete(listadoInscripciones.Result.ToList()[filaSeleccionada]);
 
-                    btnMostrarInscripciones_Click(sender, e);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+
+                        btnMostrarInscripciones_Click(sender, e);
+
+                    }
+                    else
+                    {
+                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
+                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
+                        errorEliminacion.ShowDialog(this);
+                    }
                 }
             }
             else if (entidadListada == "Materia")
@@ -515,9 +582,22 @@ namespace Escritorio
                 {
                     int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
 
-                    await MateriaNegocio.Delete(listadoMaterias.Result.ToList()[filaSeleccionada]);
+                    var response = await MateriaNegocio.Delete(listadoMaterias.Result.ToList()[filaSeleccionada]);
 
-                    btnMostrarMaterias_Click(sender, e);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+
+                        btnMostrarMaterias_Click(sender, e);
+
+                    }
+                    else
+                    {
+                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
+                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La materia tiene cursos asociados");
+                        errorEliminacion.ShowDialog(this);
+                    }
                 }
             }
             else if (entidadListada == "Persona")
@@ -527,9 +607,22 @@ namespace Escritorio
                 {
                     int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
 
-                    await PersonaNegocio.Delete(listadoPersonas.Result.ToList()[filaSeleccionada]);
+                    var response = await PersonaNegocio.Delete(listadoPersonas.Result.ToList()[filaSeleccionada]);
 
-                    btnMostrarPersonas_Click(sender, e);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+
+                        btnMostrarPersonas_Click(sender, e);
+
+                    }
+                    else
+                    {
+                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
+                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La persona tiene dictados, inscripciones y/o usuarios asociados");
+                        errorEliminacion.ShowDialog(this);
+                    }
                 }
             }
             else if (entidadListada == "Plan")
@@ -539,9 +632,22 @@ namespace Escritorio
                 {
                     int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
 
-                    await PlanNegocio.Delete(listadoPlanes.Result.ToList()[filaSeleccionada]);
+                    var response = await PlanNegocio.Delete(listadoPlanes.Result.ToList()[filaSeleccionada]);
 
-                    btnMostrarPlanes_Click(sender, e);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+
+                        btnMostrarPlanes_Click(sender, e);
+
+                    }
+                    else
+                    {
+                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
+                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "El plan tiene comisiones, materias y/o personas asociadas");
+                        errorEliminacion.ShowDialog(this);
+                    }
                 }
             }
             else if (entidadListada == "Usuario")
@@ -551,9 +657,22 @@ namespace Escritorio
                 {
                     int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
 
-                    await UsuarioNegocio.Delete(listadoUsuarios.Result.ToList()[filaSeleccionada]);
+                    var response = await UsuarioNegocio.Delete(listadoUsuarios.Result.ToList()[filaSeleccionada]);
 
-                    btnMostrarUsuarios_Click(sender, e);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+
+                        btnMostrarUsuarios_Click(sender, e);
+
+                    }
+                    else
+                    {
+                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
+                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
+                        errorEliminacion.ShowDialog(this);
+                    }
                 }
             }
         }

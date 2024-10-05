@@ -33,16 +33,16 @@
             return data;
         }
 
-        public async static Task<Boolean> Add(Especialidad especialidad)
+        public async static Task<HttpResponseMessage> Add(Especialidad especialidad)
         {
             // Realizar una solicitud POST a la API para agregar un Especialidad
             var response = await Conexion.Instancia.Cliente.PostAsJsonAsync(defaultURL, especialidad);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Update(int id, EspecialidadDTO especialidadDTO)
+        public async static Task<HttpResponseMessage> Update(int id, EspecialidadDTO especialidadDTO)
         {
             // Serializar el objeto Especialidad en formato JSON
             var json = JsonConvert.SerializeObject(especialidadDTO);
@@ -54,16 +54,16 @@
             var response = await Conexion.Instancia.Cliente.PatchAsync($"{defaultURL}{id}", content);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
         
-        public async static Task<Boolean> Delete(Especialidad especialidad)
+        public async static Task<HttpResponseMessage> Delete(Especialidad especialidad)
         {
             // Realizar una solicitud DELETE a la API para eliminar un Especialidad
             var response = await Conexion.Instancia.Cliente.DeleteAsync($"{defaultURL}{especialidad.Id_especialidad}");
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
     }
 }

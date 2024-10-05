@@ -33,16 +33,16 @@
             return data;
         }
 
-        public async static Task<Boolean> Add(Usuario usuario)
+        public async static Task<HttpResponseMessage> Add(Usuario usuario)
         {
             // Realizar una solicitud POST a la API para agregar un Usuario
             var response = await Conexion.Instancia.Cliente.PostAsJsonAsync(defaultURL, usuario);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Update(int id, UsuarioDTO usuarioDTO)
+        public async static Task<HttpResponseMessage> Update(int id, UsuarioDTO usuarioDTO)
         {
             // Serializar el objeto Usuario en formato JSON
             var json = JsonConvert.SerializeObject(usuarioDTO);
@@ -54,16 +54,16 @@
             var response = await Conexion.Instancia.Cliente.PatchAsync($"{defaultURL}{id}", content);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Delete(Usuario usuario)
+        public async static Task<HttpResponseMessage> Delete(Usuario usuario)
         {
             // Realizar una solicitud DELETE a la API para eliminar un Usuario
             var response = await Conexion.Instancia.Cliente.DeleteAsync($"{defaultURL}{usuario.Id_usuario}");
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
         public static bool ComprobarUsuarioIngresado(IEnumerable<Usuario> listadoUsuarios, string nombreUsuario, string clave)

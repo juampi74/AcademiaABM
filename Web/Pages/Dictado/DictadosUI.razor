@@ -1,98 +1,128 @@
 ﻿@page "/dictados"
 
-@using Entidades;
-@using Negocio;
-@using CurrieTechnologies.Razor.SweetAlert2;
-
 @inject SweetAlertService Swal;
 
 
-<div class="d-flex align-items-center justify-content-between mt-3">
-    <h2>Dictados</h2>
-    <a href="dictado">
-        <img src="./css/add.png" style="width: 65px; height: 65px" />
-    </a>
-</div>
+@if (!error)
+{
+    @if (dictados == null)
+    {
+        <div class="d-flex align-items-center mt-3">
+            <h2 class="me-3">Dictados</h2>
+            <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+        </div>
+    }
+    else
+    {
+        <div class="d-flex align-items-center justify-content-between mt-3">
+            <h2>Dictados</h2>
+            <a href="dictado">
+                <img class="pb-2" src="/assets/add.png" style="width: 60px; height: 60px" />
+            </a>
+        </div>
 
-<table class="table mt-4">
-    <thead>
-        <tr>
-            <th>Cargo</th>
-            <th>Docente</th>
-            <th>Curso</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @if (dictados == null)
+        @if (dictados.Count() == 0)
         {
-            <tr>
-                <td colspan="4" align="center">
-                    <img style="width:50px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
-                </td>
-            </tr>
+            <div class="alert alert-primary fw-bold mt-3" role="alert">
+                No hay dictados registrados
+            </div>
         }
         else
         {
-            @foreach (var dictado in dictados)
-            {
-                <tr>
-                    <td style="vertical-align: middle;">@dictado.Cargo</td>
-                    <td style="vertical-align: middle;">@dictado.Docente.Apellido, @dictado.Docente.Nombre</td>
-                    <td style="vertical-align: middle;">@dictado.Curso.Comision.Desc_comision ➡️ @dictado.Curso.Materia.Desc_materia</td>
-                    <td class="d-flex justify-content-end">
-                        <a class="btn btn-primary btn-sm" href="dictado/@dictado.Id_dictado">
-                            <i class="bi bi-pencil-square fs-5"></i>
-                        </a>
-                        <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarDictado(dictado))">
-                            <i class="bi bi-trash-fill fs-5"></i>
-                        </button>
-                    </td>
-                </tr>
-            }
+            <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th>Cargo</th>
+                        <th>Docente</th>
+                        <th>Curso</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var dictado in dictados)
+                    {
+                        <tr>
+                            <td style="vertical-align: middle;">@dictado.Cargo</td>
+                            <td style="vertical-align: middle;">@dictado.Docente.Apellido, @dictado.Docente.Nombre</td>
+                            <td style="vertical-align: middle;">@dictado.Curso.Comision.Desc_comision ➡️ @dictado.Curso.Materia.Desc_materia</td>
+                            <td class="d-flex justify-content-end">
+                                <a class="btn btn-primary btn-sm" href="dictado/@dictado.Id_dictado">
+                                    <i class="bi bi-pencil-square fs-5"></i>
+                                </a>
+                                <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarDictado(dictado))">
+                                    <i class="bi bi-trash-fill fs-5"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
-
-    </tbody>
-</table>
+    }
+}
+else
+{
+    <h2 class="mt-3">Dictados</h2>
+    <div class="alert alert-danger fw-bold my-3" role="alert">
+        Error al conectarse a la base de datos!
+    </div>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" @onclick="OnInitializedAsync">Reintentar</button>
+    </div>
+}
 
 
 @code {
+    IEnumerable<Docente_Curso> dictados;
 
-    IEnumerable<Docente_Curso> dictados = null;
+    bool error;
 
     protected override async Task OnInitializedAsync()
     {
-        dictados = await DictadoNegocio.GetAll();
+        dictados = null;
+        error = false;
+
+        try
+        {
+            dictados = await DictadoNegocio.GetAll();
+
+        }
+        catch (Exception)
+        {
+            error = true;
+        }
     }
 
     private async Task EliminarDictado(Docente_Curso dictado)
     {
         var result = await Swal.FireAsync(new SweetAlertOptions
-        {
-            Title = "¿Está seguro?",
-            Text = "Esta acción no se puede revertir",
-            Icon = SweetAlertIcon.Warning,
-            ShowCancelButton = true,
-            CancelButtonText = "Cancelar",
-            ConfirmButtonText = "Confirmar"
-        });
+            {
+                Title = "¿Está seguro?",
+                Text = "Esta acción no se puede revertir",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
 
         if (result.IsConfirmed)
         {
-            var response = await DictadoNegocio.Delete(dictado);
+            HttpResponseMessage response = await DictadoNegocio.Delete(dictado);
 
-            if (response)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 await Swal.FireAsync("Dictado eliminado", "El dictado ha sido eliminado correctamente", SweetAlertIcon.Success);
-                
-                dictados = await DictadoNegocio.GetAll();          
-                
-            } else
+
+                await OnInitializedAsync();
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 await Swal.FireAsync("Error", "La operación no se ha podido llevar a cabo", SweetAlertIcon.Error);
             }
+            else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                error = true;
+            }
         }
-
     }
 }

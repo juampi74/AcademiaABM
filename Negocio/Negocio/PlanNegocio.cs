@@ -33,16 +33,16 @@
             return data;
         }
 
-        public async static Task<Boolean> Add(Plan plan)
+        public async static Task<HttpResponseMessage> Add(Plan plan)
         {
             // Realizar una solicitud POST a la API para agregar un Plan
             var response = await Conexion.Instancia.Cliente.PostAsJsonAsync(defaultURL, plan);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Update(int id, PlanDTO planDTO)
+        public async static Task<HttpResponseMessage> Update(int id, PlanDTO planDTO)
         {
             // Serializar el objeto Plan en formato JSON
             var json = JsonConvert.SerializeObject(planDTO);
@@ -54,16 +54,16 @@
             var response = await Conexion.Instancia.Cliente.PatchAsync($"{defaultURL}{id}", content);
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
 
-        public async static Task<Boolean> Delete(Plan plan)
+        public async static Task<HttpResponseMessage> Delete(Plan plan)
         {
             // Realizar una solicitud DELETE a la API para eliminar un Plan
             var response = await Conexion.Instancia.Cliente.DeleteAsync($"{defaultURL}{plan.Id_plan}");
 
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
-            return response.IsSuccessStatusCode;
+            return response;
         }
     }
 }

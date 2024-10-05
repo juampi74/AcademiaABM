@@ -19,57 +19,95 @@
         [HttpGet(Name = "GetMateria")]
         public ActionResult<IEnumerable<Materia>> GetAll()
         {
-            return _context.Materias
-                .Include(mat => mat.Plan)
-                    .ThenInclude(plan => plan.Especialidad)
-                .ToList();
+            try
+            {
+                return _context.Materias
+                    .Include(mat => mat.Plan)
+                        .ThenInclude(plan => plan.Especialidad)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpGet("{id}")]
         public ActionResult<Materia> GetById(int id)
         {
-            var Materia = _context.Materias.Find(id);
-
-            if (Materia == null)
+            try
             {
-                return NotFound();
-            }
+                var Materia = _context.Materias.Find(id);
 
-            return Materia;
+                if (Materia == null)
+                {
+                    return NotFound();
+                }
+
+                return Materia;
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPost]
         public ActionResult<Materia> Create(MateriaDTO materiaDTO)
         {
-            Materia nuevaMateria = new Materia(materiaDTO.Desc_materia, materiaDTO.Hs_semanales, materiaDTO.Hs_totales, materiaDTO.Id_plan);
+            try
+            {
+                Materia nuevaMateria = new Materia(materiaDTO.Desc_materia, materiaDTO.Hs_semanales, materiaDTO.Hs_totales, materiaDTO.Id_plan);
 
-            _context.Materias.Add(nuevaMateria);
-            _context.SaveChanges();
+                _context.Materias.Add(nuevaMateria);
+                _context.SaveChanges();
 
-            return CreatedAtAction("GetById", new { id = nuevaMateria.Id_materia }, nuevaMateria);
+                return CreatedAtAction("GetById", new { id = nuevaMateria.Id_materia }, nuevaMateria);
+
+            }
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
 
         [HttpPatch("{id}")]
         public ActionResult<Materia> Update(int id, [FromBody] MateriaDTO materiaDTO)
         {
-            var Materia = _context.Materias.Find(id);
-
-            if (Materia == null)
+            try
             {
-                return NotFound();
+                var Materia = _context.Materias.Find(id);
+
+                if (Materia == null)
+                {
+                    return NotFound();
+                }
+
+                Materia.Desc_materia = materiaDTO.Desc_materia;
+                Materia.Hs_semanales = materiaDTO.Hs_semanales;
+                Materia.Hs_totales = materiaDTO.Hs_totales;
+                Materia.Id_plan = materiaDTO.Id_plan;
+
+                _context.Entry(Materia).State = EntityState.Modified;
+                _context.SaveChanges();
+
+                return Materia;
+
             }
-
-            Materia.Desc_materia = materiaDTO.Desc_materia;
-            Materia.Hs_semanales = materiaDTO.Hs_semanales;
-            Materia.Hs_totales = materiaDTO.Hs_totales;
-            Materia.Id_plan = materiaDTO.Id_plan;
-
-            _context.Entry(Materia).State = EntityState.Modified;
-            _context.SaveChanges();
-
-            return Materia;
+            catch (DbUpdateException)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
         }
-
 
         [HttpDelete("{id}")]
         public ActionResult<Materia> Delete(int id)
@@ -89,7 +127,11 @@
             }
             catch (DbUpdateException)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
         }
     }
