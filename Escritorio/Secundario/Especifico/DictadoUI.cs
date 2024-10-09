@@ -86,7 +86,7 @@
 
                     var response = await DictadoNegocio.Add(nuevoDictado);
 
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.StatusCode == HttpStatusCode.Created)
                     {
                         DialogResult = DialogResult.OK;
                     }

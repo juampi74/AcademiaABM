@@ -76,7 +76,7 @@
 
                     var response = await MateriaNegocio.Add(nuevaMateria);
 
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.StatusCode == HttpStatusCode.Created)
                     {
                         DialogResult = DialogResult.OK;
                     }

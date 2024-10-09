@@ -66,7 +66,18 @@
             {
                 Alumno_Inscripcion nuevaInscripcion = new Alumno_Inscripcion(inscripcionDTO.Condicion, inscripcionDTO.Nota, inscripcionDTO.Id_alumno, inscripcionDTO.Id_curso);
 
+                var Curso = _context.Cursos.Find(nuevaInscripcion.Id_curso);
+
+                if (Curso == null || Curso.Cupo == 0)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict);
+                }
+
+                Curso.Cupo = Curso.Cupo - 1;
+
                 _context.Alumnos_Inscripciones.Add(nuevaInscripcion);
+                _context.Entry(Curso).State = EntityState.Modified;
+
                 _context.SaveChanges();
 
                 return CreatedAtAction("GetById", new { id = nuevaInscripcion.Id_inscripcion }, nuevaInscripcion);

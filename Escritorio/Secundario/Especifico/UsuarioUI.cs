@@ -100,7 +100,7 @@
 
                     var response = await UsuarioNegocio.Add(nuevoUsuario);
 
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.StatusCode == HttpStatusCode.Created)
                     {
                         DialogResult = DialogResult.OK;
                     }

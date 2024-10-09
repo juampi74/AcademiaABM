@@ -41,7 +41,7 @@
             // 
             TituloLabel.AutoSize = true;
             TituloLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TituloLabel.Location = new Point(54, 9);
+            TituloLabel.Location = new Point(101, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(68, 37);
             TituloLabel.TabIndex = 6;
@@ -62,7 +62,7 @@
             DescPlanTextBox.ForeColor = SystemColors.Menu;
             DescPlanTextBox.Location = new Point(127, 60);
             DescPlanTextBox.Name = "DescPlanTextBox";
-            DescPlanTextBox.Size = new Size(130, 23);
+            DescPlanTextBox.Size = new Size(216, 23);
             DescPlanTextBox.TabIndex = 0;
             // 
             // EspecialidadLabel
@@ -81,14 +81,14 @@
             EspecialidadComboBox.FormattingEnabled = true;
             EspecialidadComboBox.Location = new Point(127, 104);
             EspecialidadComboBox.Name = "EspecialidadComboBox";
-            EspecialidadComboBox.Size = new Size(130, 23);
+            EspecialidadComboBox.Size = new Size(216, 23);
             EspecialidadComboBox.TabIndex = 1;
             // 
             // CancelarButton
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(34, 149);
+            CancelarButton.Location = new Point(64, 149);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
             CancelarButton.TabIndex = 3;
@@ -100,7 +100,7 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(176, 149);
+            GuardarButton.Location = new Point(203, 149);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
             GuardarButton.TabIndex = 2;
@@ -113,7 +113,7 @@
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(284, 184);
+            ClientSize = new Size(355, 184);
             Controls.Add(TituloLabel);
             Controls.Add(DescPlanLabel);
             Controls.Add(DescPlanTextBox);

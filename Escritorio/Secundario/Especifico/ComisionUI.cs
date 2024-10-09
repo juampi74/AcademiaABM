@@ -75,7 +75,7 @@
 
                     var response = await ComisionNegocio.Add(nuevaComision);
 
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.StatusCode == HttpStatusCode.Created)
                     {
                         DialogResult = DialogResult.OK;
                     }

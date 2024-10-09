@@ -14,9 +14,14 @@
             <DataAnnotationsValidator></DataAnnotationsValidator>
 
             <div class="mt-4">
-                <label class="form-label fw-bold">Cargo</label>
-                <InputText class="form-control" @bind-Value="dictado.Cargo"></InputText>
-                <ValidationMessage For="@(() => dictado.Cargo)"></ValidationMessage>
+                <label class="form-label fw-bold">Curso</label>
+                <InputSelect class="form-select" @bind-Value="dictado.Id_curso">
+                    @foreach (var curso in cursos)
+                    {
+                        <option value="@curso.Id_curso">@curso.Materia.Desc_materia ➡️ @curso.Comision.Desc_comision</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => dictado.Id_curso)"></ValidationMessage>
             </div>
 
             <div class="mt-4">
@@ -29,16 +34,11 @@
                 </InputSelect>
                 <ValidationMessage For="@(() => dictado.Id_docente)"></ValidationMessage>
             </div>
-
+            
             <div class="mt-4">
-                <label class="form-label fw-bold">Curso</label>
-                <InputSelect class="form-select" @bind-Value="dictado.Id_curso">
-                    @foreach (var curso in cursos)
-                    {
-                        <option value="@curso.Id_curso">@curso.Comision.Desc_comision ➡️ @curso.Materia.Desc_materia</option>
-                    }
-                </InputSelect>
-                <ValidationMessage For="@(() => dictado.Id_curso)"></ValidationMessage>
+                <label class="form-label fw-bold">Cargo</label>
+                <InputText class="form-control" @bind-Value="dictado.Cargo"></InputText>
+                <ValidationMessage For="@(() => dictado.Cargo)"></ValidationMessage>
             </div>
 
             <div class="d-flex align-items-center justify-content-end mt-3">

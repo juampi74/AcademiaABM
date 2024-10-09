@@ -221,10 +221,18 @@ namespace Escritorio
                         List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
 
                         InscripcionUI nuevaInscripcion = new InscripcionUI(opcionesAlumno, opcionesCurso);
-                        if (nuevaInscripcion.ShowDialog(this) == DialogResult.OK)
+
+                        var result = nuevaInscripcion.ShowDialog(this);
+                        if (result == DialogResult.OK)
                         {
                             OperacionExitosa operacionExitosa = new OperacionExitosa();
                             operacionExitosa.ShowDialog(this);
+
+                        } else if (result == DialogResult.Abort)
+                        {
+                            ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                            errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "El curso no tiene más cupos disponibles");
+                            errorBD.ShowDialog(this);
                         }
                         btnMostrarInscripciones_Click(sender, e);
                     }

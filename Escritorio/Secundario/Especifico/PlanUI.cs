@@ -74,7 +74,7 @@
 
                     var response = await PlanNegocio.Add(nuevoPlan);
 
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.StatusCode == HttpStatusCode.Created)
                     {
                         DialogResult = DialogResult.OK;
                     }

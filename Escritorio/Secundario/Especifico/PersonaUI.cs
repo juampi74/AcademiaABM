@@ -94,7 +94,7 @@
 
                     var response = await PersonaNegocio.Add(nuevaPersona);
 
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.StatusCode == HttpStatusCode.Created)
                     {
                         DialogResult = DialogResult.OK;
                     }

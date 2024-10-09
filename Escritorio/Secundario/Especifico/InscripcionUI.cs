@@ -78,7 +78,7 @@
                     }
                     else
                     {
-                        DialogResult = DialogResult.Cancel;
+                        DialogResult = DialogResult.Abort;
                     }
                 }
                 else
@@ -87,13 +87,13 @@
 
                     var response = await InscripcionNegocio.Add(nuevaInscripcion);
 
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.StatusCode == HttpStatusCode.Created)
                     {
                         DialogResult = DialogResult.OK;
                     }
                     else
                     {
-                        DialogResult = DialogResult.Cancel;
+                        DialogResult = DialogResult.Abort;
                     }
                 }
             }
