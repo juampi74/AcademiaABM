@@ -1,5 +1,7 @@
 ﻿namespace Escritorio
 {
+    using System.Net;
+
     using Entidades;
     using Negocio;
 
@@ -71,16 +73,32 @@
                 {
                     CursoDTO cursoModificado = EstablecerDatosCursoAModificar();
 
-                    await CursoNegocio.Update(Curso.Id_curso, cursoModificado);
+                    var response = await CursoNegocio.Update(Curso.Id_curso, cursoModificado);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
                 }
                 else
                 {
                     Curso nuevoCurso = EstablecerDatosNuevoCurso();
 
-                    await CursoNegocio.Add(nuevoCurso);
-                }
+                    var response = await CursoNegocio.Add(nuevoCurso);
 
-                DialogResult = DialogResult.OK;
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
+                }
             }
         }
 
@@ -135,7 +153,6 @@
         {
             int idComisionSeleccionada = 0;
 
-            // Buscar el Id de la Comision que coincida con la Descripcion seleccionada
             foreach (var comision in this.Comisiones)
             {
                 if (comision.Descripcion == ComisionComboBox.SelectedValue.ToString())
@@ -151,7 +168,6 @@
         {
             int idMateriaSeleccionada = 0;
 
-            // Buscar el Id de la Materia que coincida con la Descripcion seleccionada
             foreach (var materia in this.Materias)
             {
                 if (materia.Descripcion == MateriaComboBox.SelectedValue.ToString())
@@ -165,10 +181,8 @@
 
         private List<string> ListadoNombresComisiones()
         {
-            // Obtener solo los nombres de las comisiones
             List<string> listadoNombresComisiones = this.Comisiones.Select(comision => comision.Descripcion).ToList();
 
-            // Ordenar la lista de nombres de las comisiones según su descripción
             listadoNombresComisiones.Sort();
 
             return listadoNombresComisiones;
@@ -176,10 +190,8 @@
         
         private List<string> ListadoNombresMaterias()
         {
-            // Obtener solo los nombres de las materias
             List<string> listadoNombresMaterias = this.Materias.Select(materia => materia.Descripcion).ToList();
 
-            // Ordenar la lista de nombres de las materias según su descripción
             listadoNombresMaterias.Sort();
 
             return listadoNombresMaterias;

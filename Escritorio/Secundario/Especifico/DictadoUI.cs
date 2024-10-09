@@ -1,5 +1,7 @@
 ﻿namespace Escritorio
 {
+    using System.Net;
+
     using Entidades;
     using Negocio;
 
@@ -67,16 +69,32 @@
                 {
                     Docente_CursoDTO dictadoModificado = EstablecerDatosDictadoAModificar();
 
-                    await DictadoNegocio.Update(Dictado.Id_dictado, dictadoModificado);
+                    var response = await DictadoNegocio.Update(Dictado.Id_dictado, dictadoModificado);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
                 }
                 else
                 {
                     Docente_Curso nuevoDictado = EstablecerDatosNuevoDictado();
 
-                    await DictadoNegocio.Add(nuevoDictado);
-                }
+                    var response = await DictadoNegocio.Add(nuevoDictado);
 
-                DialogResult = DialogResult.OK;
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
+                }
             }
         }
 

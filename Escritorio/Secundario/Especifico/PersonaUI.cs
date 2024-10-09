@@ -1,5 +1,7 @@
 ﻿namespace Escritorio
 {
+    using System.Net;
+
     using Entidades;
     using Negocio;
 
@@ -20,10 +22,8 @@
 
             List<string> listadoPlanes = ListadoNombresPlanes();
 
-            // Asignar los nombres de los planes al ComboBox de Plan
             PlanComboBox.DataSource = listadoPlanes;
 
-            // Dar opciones para el ComboBox de TipoPersona
             TipoPersonaComboBox.DataSource = new List<string>() { "Alumno", "Docente" };
         }
 
@@ -77,16 +77,32 @@
                 {
                     PersonaDTO personaModificada = EstablecerDatosPersonaAModificar();
 
-                    await PersonaNegocio.Update(Persona.Id_persona, personaModificada);
+                    var response = await PersonaNegocio.Update(Persona.Id_persona, personaModificada);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
                 }
                 else
                 {
                     Persona nuevaPersona = EstablecerDatosNuevaPersona();
 
-                    await PersonaNegocio.Add(nuevaPersona);
-                }
+                    var response = await PersonaNegocio.Add(nuevaPersona);
 
-                DialogResult = DialogResult.OK;
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
+                }
             }
         }
 
@@ -146,7 +162,6 @@
         {
             int idPlanSeleccionado = 0;
 
-            // Buscar el Id del Plan que coincida con la Descripcion seleccionada
             foreach (var plan in this.Planes)
             {
                 if (plan.Descripcion == PlanComboBox.SelectedValue.ToString())
@@ -162,7 +177,6 @@
         {
             int numeroTipoPersona = 0;
 
-            // Asigna un número a numeroTipoPersona según lo seleccionada en el ComboBox
             if (TipoPersonaComboBox.SelectedValue.ToString() == "Alumno")
             {
                 numeroTipoPersona = 0;
@@ -177,10 +191,8 @@
 
         private List<string> ListadoNombresPlanes()
         {
-            // Obtener solo los nombres de los planes
             List<string> listadoNombresPlanes = this.Planes.Select(plan => plan.Descripcion).ToList();
 
-            // Ordenar la lista de nombres de los planes según su descripción
             listadoNombresPlanes.Sort();
 
             return listadoNombresPlanes;

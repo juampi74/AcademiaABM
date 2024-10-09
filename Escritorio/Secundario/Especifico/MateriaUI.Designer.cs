@@ -45,7 +45,7 @@
             // 
             TituloLabel.AutoSize = true;
             TituloLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TituloLabel.Location = new Point(26, 9);
+            TituloLabel.Location = new Point(86, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(108, 37);
             TituloLabel.TabIndex = 10;
@@ -66,7 +66,7 @@
             DescripcionTextBox.ForeColor = SystemColors.Menu;
             DescripcionTextBox.Location = new Point(120, 64);
             DescripcionTextBox.Name = "DescripcionTextBox";
-            DescripcionTextBox.Size = new Size(129, 23);
+            DescripcionTextBox.Size = new Size(250, 23);
             DescripcionTextBox.TabIndex = 0;
             // 
             // HsSemanalesLabel
@@ -84,7 +84,7 @@
             HsSemanalesTextBox.ForeColor = SystemColors.Menu;
             HsSemanalesTextBox.Location = new Point(119, 103);
             HsSemanalesTextBox.Name = "HsSemanalesTextBox";
-            HsSemanalesTextBox.Size = new Size(129, 23);
+            HsSemanalesTextBox.Size = new Size(250, 23);
             HsSemanalesTextBox.TabIndex = 1;
             // 
             // HsTotalesLabel
@@ -102,7 +102,7 @@
             HsTotalesTextBox.ForeColor = SystemColors.Menu;
             HsTotalesTextBox.Location = new Point(119, 139);
             HsTotalesTextBox.Name = "HsTotalesTextBox";
-            HsTotalesTextBox.Size = new Size(129, 23);
+            HsTotalesTextBox.Size = new Size(250, 23);
             HsTotalesTextBox.TabIndex = 2;
             // 
             // PlanLabel
@@ -121,14 +121,14 @@
             PlanComboBox.FormattingEnabled = true;
             PlanComboBox.Location = new Point(119, 173);
             PlanComboBox.Name = "PlanComboBox";
-            PlanComboBox.Size = new Size(127, 23);
+            PlanComboBox.Size = new Size(248, 23);
             PlanComboBox.TabIndex = 3;
             // 
             // CancelarButton
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(22, 215);
+            CancelarButton.Location = new Point(75, 215);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
             CancelarButton.TabIndex = 5;
@@ -140,7 +140,7 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(164, 215);
+            GuardarButton.Location = new Point(217, 215);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
             GuardarButton.TabIndex = 4;
@@ -153,7 +153,7 @@
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(262, 256);
+            ClientSize = new Size(382, 256);
             Controls.Add(TituloLabel);
             Controls.Add(DescripcionLabel);
             Controls.Add(DescripcionTextBox);

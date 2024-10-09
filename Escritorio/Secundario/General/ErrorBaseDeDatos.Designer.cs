@@ -1,6 +1,6 @@
 ﻿namespace Escritorio
 {
-    partial class ErrorEliminacion
+    partial class ErrorBaseDeDatos
     {
         /// <summary>
         /// Required designer variable.

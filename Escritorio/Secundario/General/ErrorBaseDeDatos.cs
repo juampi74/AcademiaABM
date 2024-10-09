@@ -1,8 +1,8 @@
 ﻿namespace Escritorio
 {
-    public partial class ErrorEliminacion : Form
+    public partial class ErrorBaseDeDatos : Form
     {
-        public ErrorEliminacion()
+        public ErrorBaseDeDatos()
         {
             InitializeComponent();
         }

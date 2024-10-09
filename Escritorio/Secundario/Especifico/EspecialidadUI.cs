@@ -1,5 +1,7 @@
 ﻿namespace Escritorio
 {
+    using System.Net;
+
     using Entidades;
     using Negocio;
 
@@ -35,17 +37,32 @@
                 {
                     EspecialidadDTO especialidadModificada = EstablecerDatosEspecialidadAModificar();
 
-                    await EspecialidadNegocio.Update(Especialidad.Id_especialidad, especialidadModificada);
+                    var response = await EspecialidadNegocio.Update(Especialidad.Id_especialidad, especialidadModificada);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
                 }
                 else
                 {
                     Especialidad nuevaEspecialidad = EstablecerDatosNuevaEspecialidad();
 
-                    await EspecialidadNegocio.Add(nuevaEspecialidad
-                        );
-                }
+                    var response = await EspecialidadNegocio.Add(nuevaEspecialidad);
 
-                DialogResult = DialogResult.OK;
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
+                }
             }
         }
 

@@ -1,5 +1,7 @@
 ﻿namespace Escritorio
 {
+    using System.Net;
+
     using Entidades;
     using Negocio;
 
@@ -81,16 +83,32 @@
                 {
                     UsuarioDTO usuarioModificado = EstablecerDatosUsuarioAModificar();
 
-                    await UsuarioNegocio.Update(Usuario.Id_usuario, usuarioModificado);
+                    var response = await UsuarioNegocio.Update(Usuario.Id_usuario, usuarioModificado);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
                 }
                 else
                 {
                     Usuario nuevoUsuario = EstablecerDatosNuevoUsuario();
 
-                    await UsuarioNegocio.Add(nuevoUsuario);
-                }
+                    var response = await UsuarioNegocio.Add(nuevoUsuario);
 
-                DialogResult = DialogResult.OK;
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
+                }
             }
         }
 

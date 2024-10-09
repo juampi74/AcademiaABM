@@ -1,5 +1,7 @@
 ﻿namespace Escritorio
 {
+    using System.Net;
+
     using Entidades;
     using Negocio;
 
@@ -55,16 +57,32 @@
                 {
                     PlanDTO planModificado = EstablecerDatosPlanAModificar();
 
-                    await PlanNegocio.Update(Plan.Id_plan, planModificado);
+                    var response = await PlanNegocio.Update(Plan.Id_plan, planModificado);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
                 }
                 else
                 {
                     Plan nuevoPlan = EstablecerDatosNuevoPlan();
 
-                    await PlanNegocio.Add(nuevoPlan);
-                }
+                    var response = await PlanNegocio.Add(nuevoPlan);
 
-                DialogResult = DialogResult.OK;
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
+                }
             }
         }
 
@@ -115,7 +133,6 @@
         {
             int idEspecialidadSeleccionada = 0;
 
-            // Buscar el Id de la Especialidad que coincida con la Descripcion seleccionada
             foreach (var especialidad in this.Especialidades)
             {
                 if (especialidad.Descripcion == EspecialidadComboBox.SelectedValue.ToString())
@@ -129,10 +146,8 @@
 
         private List<string> ListadoNombresEspecialidades()
         {
-            // Obtener solo los nombres de las especialidades
             List<string> listadoNombresEspecialidades = this.Especialidades.Select(plan => plan.Descripcion).ToList();
 
-            // Ordenar la lista de nombres de las especialidades según su descripción
             listadoNombresEspecialidades.Sort();
 
             return listadoNombresEspecialidades;

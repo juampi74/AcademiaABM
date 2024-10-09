@@ -1,5 +1,7 @@
 ﻿namespace Escritorio
 {
+    using System.Net;
+
     using Entidades;
     using Negocio;
 
@@ -20,7 +22,6 @@
 
             List<string> listadoPlanes = ListadoNombresPlanes();
 
-            // Asignar los nombres de los planes al ComboBox de Plan
             PlanComboBox.DataSource = listadoPlanes;
         }
 
@@ -57,16 +58,32 @@
                 {
                     ComisionDTO comisionModificada = EstablecerDatosComisionAModificar();
 
-                    await ComisionNegocio.Update(Comision.Id_comision, comisionModificada);
+                    var response = await ComisionNegocio.Update(Comision.Id_comision, comisionModificada);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
                 }
                 else
                 {
                     Comision nuevaComision = EstablecerDatosNuevaComision();
 
-                    await ComisionNegocio.Add(nuevaComision);
-                }
+                    var response = await ComisionNegocio.Add(nuevaComision);
 
-                DialogResult = DialogResult.OK;
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
+                }
             }
         }
 
@@ -118,7 +135,6 @@
         {
             int idPlanSeleccionado = 0;
 
-            // Buscar el Id del Plan que coincida con la Descripcion seleccionada
             foreach (var plan in this.Planes)
             {
                 if (plan.Descripcion == PlanComboBox.SelectedValue.ToString())
@@ -132,10 +148,8 @@
 
         private List<string> ListadoNombresPlanes()
         {
-            // Obtener solo los nombres de los planes
             List<string> listadoNombresPlanes = this.Planes.Select(plan => plan.Descripcion).ToList();
 
-            // Ordenar la lista de nombres de los planes según su descripción
             listadoNombresPlanes.Sort();
 
             return listadoNombresPlanes;

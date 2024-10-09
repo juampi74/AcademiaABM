@@ -32,7 +32,7 @@
     <Compile Update="Secundario\Especifico\MateriaUI.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Secundario\General\ErrorEliminacion.cs">
+    <Compile Update="Secundario\General\ErrorBaseDeDatos.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Secundario\General\CampoRequerido.cs">

@@ -1,11 +1,11 @@
 namespace Escritorio
 {
-    using Entidades;
-    using Negocio;
-    using System.Collections.Generic;
     using System.Net;
     using System.Windows.Forms;
-    using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+    using System.Collections.Generic;
+
+    using Entidades;
+    using Negocio;
 
     public partial class Grilla : Form
     {
@@ -28,62 +28,75 @@ namespace Escritorio
 
         public IEnumerable<T> LeerEntidades<T>()
         {
-            if (typeof(T) == typeof(Comision))
+            try
             {
-                this.listadoComisiones = ComisionNegocio.GetAll();
-                entidadListada = "Comision";
-                return (IEnumerable<T>)this.listadoComisiones.Result;
+                if (typeof(T) == typeof(Comision))
+                {
+                    this.listadoComisiones = ComisionNegocio.GetAll();
+                    entidadListada = "Comision";
+                    return (IEnumerable<T>) this.listadoComisiones.Result;
+                }
+                else if (typeof(T) == typeof(Curso))
+                {
+                    this.listadoCursos = CursoNegocio.GetAll();
+                    entidadListada = "Curso";
+                    return (IEnumerable<T>) this.listadoCursos.Result;
+                }
+                else if (typeof(T) == typeof(Docente_Curso))
+                {
+                    this.listadoDictados = DictadoNegocio.GetAll();
+                    entidadListada = "Dictado";
+                    return (IEnumerable<T>) this.listadoDictados.Result;
+                }
+                else if (typeof(T) == typeof(Especialidad))
+                {
+                    this.listadoEspecialidades = EspecialidadNegocio.GetAll();
+                    entidadListada = "Especialidad";
+                    return (IEnumerable<T>) this.listadoEspecialidades.Result;
+                }
+                else if (typeof(T) == typeof(Alumno_Inscripcion))
+                {
+                    this.listadoInscripciones = InscripcionNegocio.GetAll();
+                    entidadListada = "Inscripcion";
+                    return (IEnumerable<T>) this.listadoInscripciones.Result;
+                }
+                else if (typeof(T) == typeof(Materia))
+                {
+                    this.listadoMaterias = MateriaNegocio.GetAll();
+                    entidadListada = "Materia";
+                    return (IEnumerable<T>) this.listadoMaterias.Result;
+                }
+                else if (typeof(T) == typeof(Persona))
+                {
+                    this.listadoPersonas = PersonaNegocio.GetAll();
+                    entidadListada = "Persona";
+                    return (IEnumerable<T>) this.listadoPersonas.Result;
+                }
+                else if (typeof(T) == typeof(Plan))
+                {
+                    this.listadoPlanes = PlanNegocio.GetAll();
+                    entidadListada = "Plan";
+                    return (IEnumerable<T>) this.listadoPlanes.Result;
+                }
+                else if (typeof(T) == typeof(Usuario))
+                {
+                    this.listadoUsuarios = UsuarioNegocio.GetAll();
+                    entidadListada = "Usuario";
+                    return (IEnumerable<T>) this.listadoUsuarios.Result;
+                }
+                else
+                {
+                    entidadListada = "";
+                    return null;
+                }
             }
-            else if (typeof(T) == typeof(Curso))
+            catch (Exception)
             {
-                this.listadoCursos = CursoNegocio.GetAll();
-                entidadListada = "Curso";
-                return (IEnumerable<T>)this.listadoCursos.Result;
-            }
-            else if (typeof(T) == typeof(Docente_Curso))
-            {
-                this.listadoDictados = DictadoNegocio.GetAll();
-                entidadListada = "Dictado";
-                return (IEnumerable<T>)this.listadoDictados.Result;
-            }
-            else if (typeof(T) == typeof(Especialidad))
-            {
-                this.listadoEspecialidades = EspecialidadNegocio.GetAll();
-                entidadListada = "Especialidad";
-                return (IEnumerable<T>)this.listadoEspecialidades.Result;
-            }
-            else if (typeof(T) == typeof(Alumno_Inscripcion))
-            {
-                this.listadoInscripciones = InscripcionNegocio.GetAll();
-                entidadListada = "Inscripcion";
-                return (IEnumerable<T>)this.listadoInscripciones.Result;
-            }
-            else if (typeof(T) == typeof(Materia))
-            {
-                this.listadoMaterias = MateriaNegocio.GetAll();
-                entidadListada = "Materia";
-                return (IEnumerable<T>)this.listadoMaterias.Result;
-            }
-            else if (typeof(T) == typeof(Persona))
-            {
-                this.listadoPersonas = PersonaNegocio.GetAll();
-                entidadListada = "Persona";
-                return (IEnumerable<T>)this.listadoPersonas.Result;
-            }
-            else if (typeof(T) == typeof(Plan))
-            {
-                this.listadoPlanes = PlanNegocio.GetAll();
-                entidadListada = "Plan";
-                return (IEnumerable<T>)this.listadoPlanes.Result;
-            }
-            else if (typeof(T) == typeof(Usuario))
-            {
-                this.listadoUsuarios = UsuarioNegocio.GetAll();
-                entidadListada = "Usuario";
-                return (IEnumerable<T>)this.listadoUsuarios.Result;
-            }
-            else
-            {
+                ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "Error al conectarse a la base de datos!");
+                this.Invoke(new Action(() => errorBD.ShowDialog(this)));
+
+                entidadListada = "";
                 return null;
             }
         }
@@ -104,15 +117,23 @@ namespace Escritorio
                 task.Start();
                 IEnumerable<Plan> planes = await task;
 
-                List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan)).ToList();
-
-                ComisionUI nuevaComision = new ComisionUI(opcionesPlan);
-                if (nuevaComision.ShowDialog(this) == DialogResult.OK)
+                if (planes != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan + " - " + plan.Especialidad.Desc_especialidad)).ToList();
+
+                    ComisionUI nuevaComision = new ComisionUI(opcionesPlan);
+                    if (nuevaComision.ShowDialog(this) == DialogResult.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                    btnMostrarComisiones_Click(sender, e);
+
                 }
-                btnMostrarComisiones_Click(sender, e);
+                else
+                {
+                    entidadListada = "";
+                }
             }
             else if (entidadListada == "Curso")
             {
@@ -120,20 +141,26 @@ namespace Escritorio
                 task1.Start();
                 IEnumerable<Comision> comisiones = await task1;
 
-                Task<IEnumerable<Materia>> task2 = new Task<IEnumerable<Materia>>(LeerEntidades<Materia>);
-                task2.Start();
-                IEnumerable<Materia> materias = await task2;
-
-                List<(int Id, string Descripcion)> opcionesComision = comisiones.Select(comision => (comision.Id_comision, comision.Desc_comision)).ToList();
-                List<(int Id, string Descripcion)> opcionesMateria = materias.Select(materia => (materia.Id_materia, materia.Desc_materia)).ToList();
-
-                CursoUI nuevoCurso = new CursoUI(opcionesComision, opcionesMateria);
-                if (nuevoCurso.ShowDialog(this) == DialogResult.OK)
+                if (comisiones != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    Task<IEnumerable<Materia>> task2 = new Task<IEnumerable<Materia>>(LeerEntidades<Materia>);
+                    task2.Start();
+                    IEnumerable<Materia> materias = await task2;
+
+                    if (materias != null)
+                    {
+                        List<(int Id, string Descripcion)> opcionesComision = comisiones.Select(comision => (comision.Id_comision, comision.Desc_comision)).ToList();
+                        List<(int Id, string Descripcion)> opcionesMateria = materias.Select(materia => (materia.Id_materia, materia.Desc_materia)).ToList();
+
+                        CursoUI nuevoCurso = new CursoUI(opcionesComision, opcionesMateria);
+                        if (nuevoCurso.ShowDialog(this) == DialogResult.OK)
+                        {
+                            OperacionExitosa operacionExitosa = new OperacionExitosa();
+                            operacionExitosa.ShowDialog(this);
+                        }
+                        btnMostrarCursos_Click(sender, e);
+                    }
                 }
-                btnMostrarCursos_Click(sender, e);
             }
             else if (entidadListada == "Dictado")
             {
@@ -141,22 +168,28 @@ namespace Escritorio
                 task1.Start();
                 IEnumerable<Persona> docentes = await task1;
 
-                Task<IEnumerable<Curso>> task2 = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
-                task2.Start();
-                IEnumerable<Curso> cursos = await task2;
-
-                List<(int Id, string ApellidoYNombre)> opcionesDocente = docentes.Where(docente => docente.Tipo_persona == 1)
-                                                                                 .Select(docente => (docente.Id_persona, docente.Apellido + ", " + docente.Nombre)).ToList();
-
-                List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
-
-                DictadoUI nuevoDictado = new DictadoUI(opcionesDocente, opcionesCurso);
-                if (nuevoDictado.ShowDialog(this) == DialogResult.OK)
+                if (docentes != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    Task<IEnumerable<Curso>> task2 = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
+                    task2.Start();
+                    IEnumerable<Curso> cursos = await task2;
+
+                    if (cursos != null)
+                    {
+                        List<(int Id, string ApellidoYNombre)> opcionesDocente = docentes.Where(docente => docente.Tipo_persona == 1)
+                                                                                         .Select(docente => (docente.Id_persona, docente.Apellido + ", " + docente.Nombre)).ToList();
+
+                        List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
+
+                        DictadoUI nuevoDictado = new DictadoUI(opcionesDocente, opcionesCurso);
+                        if (nuevoDictado.ShowDialog(this) == DialogResult.OK)
+                        {
+                            OperacionExitosa operacionExitosa = new OperacionExitosa();
+                            operacionExitosa.ShowDialog(this);
+                        }
+                        btnMostrarDictados_Click(sender, e);
+                    }
                 }
-                btnMostrarDictados_Click(sender, e);
             }
             else if (entidadListada == "Especialidad")
             {
@@ -174,22 +207,28 @@ namespace Escritorio
                 task1.Start();
                 IEnumerable<Persona> alumnos = await task1;
 
-                Task<IEnumerable<Curso>> task2 = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
-                task2.Start();
-                IEnumerable<Curso> cursos = await task2;
-
-                List<(int Id, string ApellidoYNombre)> opcionesAlumno = alumnos.Where(alumno => alumno.Tipo_persona == 0)
-                                                                                 .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
-                
-                List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
-
-                InscripcionUI nuevaInscripcion = new InscripcionUI(opcionesAlumno, opcionesCurso);
-                if (nuevaInscripcion.ShowDialog(this) == DialogResult.OK)
+                if (alumnos != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    Task<IEnumerable<Curso>> task2 = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
+                    task2.Start();
+                    IEnumerable<Curso> cursos = await task2;
+
+                    if (cursos != null)
+                    {
+                        List<(int Id, string ApellidoYNombre)> opcionesAlumno = alumnos.Where(alumno => alumno.Tipo_persona == 0)
+                                                                                       .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
+
+                        List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
+
+                        InscripcionUI nuevaInscripcion = new InscripcionUI(opcionesAlumno, opcionesCurso);
+                        if (nuevaInscripcion.ShowDialog(this) == DialogResult.OK)
+                        {
+                            OperacionExitosa operacionExitosa = new OperacionExitosa();
+                            operacionExitosa.ShowDialog(this);
+                        }
+                        btnMostrarInscripciones_Click(sender, e);
+                    }
                 }
-                btnMostrarInscripciones_Click(sender, e);
             }
             else if (entidadListada == "Materia")
             {
@@ -197,15 +236,18 @@ namespace Escritorio
                 task.Start();
                 IEnumerable<Plan> planes = await task;
 
-                List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan)).ToList();
-
-                MateriaUI nuevaMateria = new MateriaUI(opcionesPlan);
-                if (nuevaMateria.ShowDialog(this) == DialogResult.OK)
+                if (planes != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan + " - " + plan.Especialidad.Desc_especialidad)).ToList();
+
+                    MateriaUI nuevaMateria = new MateriaUI(opcionesPlan);
+                    if (nuevaMateria.ShowDialog(this) == DialogResult.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                    btnMostrarMaterias_Click(sender, e);
                 }
-                btnMostrarMaterias_Click(sender, e);
             }
             else if (entidadListada == "Persona")
             {
@@ -213,15 +255,18 @@ namespace Escritorio
                 task.Start();
                 IEnumerable<Plan> planes = await task;
 
-                List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan)).ToList();
-
-                PersonaUI nuevaPersona = new PersonaUI(opcionesPlan);
-                if (nuevaPersona.ShowDialog(this) == DialogResult.OK)
+                if (planes != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan + " - " + plan.Especialidad.Desc_especialidad)).ToList();
+
+                    PersonaUI nuevaPersona = new PersonaUI(opcionesPlan);
+                    if (nuevaPersona.ShowDialog(this) == DialogResult.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                    btnMostrarPersonas_Click(sender, e);
                 }
-                btnMostrarPersonas_Click(sender, e);
             }
             else if (entidadListada == "Plan")
             {
@@ -229,15 +274,18 @@ namespace Escritorio
                 task.Start();
                 IEnumerable<Especialidad> especialidades = await task;
 
-                List<(int Id, string Descripcion)> opcionesEspecialidad = especialidades.Select(especialidad => (especialidad.Id_especialidad, especialidad.Desc_especialidad)).ToList();
-
-                PlanUI nuevoPlan = new PlanUI(opcionesEspecialidad);
-                if (nuevoPlan.ShowDialog(this) == DialogResult.OK)
+                if (especialidades != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    List<(int Id, string Descripcion)> opcionesEspecialidad = especialidades.Select(especialidad => (especialidad.Id_especialidad, especialidad.Desc_especialidad)).ToList();
+
+                    PlanUI nuevoPlan = new PlanUI(opcionesEspecialidad);
+                    if (nuevoPlan.ShowDialog(this) == DialogResult.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                    btnMostrarPlanes_Click(sender, e);
                 }
-                btnMostrarPlanes_Click(sender, e);
             }
             else if (entidadListada == "Usuario")
             {
@@ -245,15 +293,18 @@ namespace Escritorio
                 task.Start();
                 IEnumerable<Persona> personas = await task;
 
-                List<(int Id, string ApellidoYNombre)> opcionesPersona = personas.Select(persona => (persona.Id_persona, persona.Apellido + ", " + persona.Nombre)).ToList();
-
-                UsuarioUI nuevaPersona = new UsuarioUI(opcionesPersona);
-                if (nuevaPersona.ShowDialog(this) == DialogResult.OK)
+                if (personas != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    List<(int Id, string ApellidoYNombre)> opcionesPersona = personas.Select(persona => (persona.Id_persona, persona.Apellido + ", " + persona.Nombre)).ToList();
+
+                    UsuarioUI nuevaPersona = new UsuarioUI(opcionesPersona);
+                    if (nuevaPersona.ShowDialog(this) == DialogResult.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                    btnMostrarUsuarios_Click(sender, e);
                 }
-                btnMostrarUsuarios_Click(sender, e);
             }
         }
 
@@ -265,19 +316,21 @@ namespace Escritorio
                 task.Start();
                 IEnumerable<Plan> planes = await task;
 
-                List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan)).ToList();
-
-                int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
-
-                ComisionUI editarComision = new ComisionUI(opcionesPlan, listadoComisiones.Result.ToList()[filaSeleccionada]);
-
-                if (editarComision.ShowDialog(this) == DialogResult.OK)
+                if (planes != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
-                }
-                btnMostrarComisiones_Click(sender, e);
+                    List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan + " - " + plan.Especialidad.Desc_especialidad)).ToList();
 
+                    int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
+
+                    ComisionUI editarComision = new ComisionUI(opcionesPlan, listadoComisiones.Result.ToList()[filaSeleccionada]);
+
+                    if (editarComision.ShowDialog(this) == DialogResult.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                    btnMostrarComisiones_Click(sender, e);
+                }
             }
             else if (entidadListada == "Curso")
             {
@@ -285,23 +338,29 @@ namespace Escritorio
                 task1.Start();
                 IEnumerable<Comision> comisiones = await task1;
 
-                Task<IEnumerable<Materia>> task2 = new Task<IEnumerable<Materia>>(LeerEntidades<Materia>);
-                task2.Start();
-                IEnumerable<Materia> materias = await task2;
-
-                List<(int Id, string Descripcion)> opcionesComision = comisiones.Select(comision => (comision.Id_comision, comision.Desc_comision)).ToList();
-                List<(int Id, string Descripcion)> opcionesMateria = materias.Select(materia => (materia.Id_materia, materia.Desc_materia)).ToList();
-
-                int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
-
-                CursoUI editarCurso = new CursoUI(opcionesComision, opcionesMateria, listadoCursos.Result.ToList()[filaSeleccionada]);
-
-                if (editarCurso.ShowDialog(this) == DialogResult.OK)
+                if (comisiones != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    Task<IEnumerable<Materia>> task2 = new Task<IEnumerable<Materia>>(LeerEntidades<Materia>);
+                    task2.Start();
+                    IEnumerable<Materia> materias = await task2;
+
+                    if (materias != null)
+                    {
+                        List<(int Id, string Descripcion)> opcionesComision = comisiones.Select(comision => (comision.Id_comision, comision.Desc_comision)).ToList();
+                        List<(int Id, string Descripcion)> opcionesMateria = materias.Select(materia => (materia.Id_materia, materia.Desc_materia)).ToList();
+
+                        int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
+
+                        CursoUI editarCurso = new CursoUI(opcionesComision, opcionesMateria, listadoCursos.Result.ToList()[filaSeleccionada]);
+
+                        if (editarCurso.ShowDialog(this) == DialogResult.OK)
+                        {
+                            OperacionExitosa operacionExitosa = new OperacionExitosa();
+                            operacionExitosa.ShowDialog(this);
+                        }
+                        btnMostrarCursos_Click(sender, e);
+                    }
                 }
-                btnMostrarCursos_Click(sender, e);
             }
             else if (entidadListada == "Dictado")
             {
@@ -309,25 +368,31 @@ namespace Escritorio
                 task1.Start();
                 IEnumerable<Persona> docentes = await task1;
 
-                Task<IEnumerable<Curso>> task2 = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
-                task2.Start();
-                IEnumerable<Curso> cursos = await task2;
-
-                List<(int Id, string ApellidoYNombre)> opcionesDocente = docentes.Where(docente => docente.Tipo_persona == 1)
-                                                                                 .Select(docente => (docente.Id_persona, docente.Apellido + ", " + docente.Nombre)).ToList();
-
-                List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
-
-                int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
-
-                DictadoUI editarDictado = new DictadoUI(opcionesDocente, opcionesCurso, listadoDictados.Result.ToList()[filaSeleccionada]);
-
-                if (editarDictado.ShowDialog(this) == DialogResult.OK)
+                if (docentes != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    Task<IEnumerable<Curso>> task2 = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
+                    task2.Start();
+                    IEnumerable<Curso> cursos = await task2;
+
+                    if (cursos != null)
+                    {
+                        List<(int Id, string ApellidoYNombre)> opcionesDocente = docentes.Where(docente => docente.Tipo_persona == 1)
+                                                                                         .Select(docente => (docente.Id_persona, docente.Apellido + ", " + docente.Nombre)).ToList();
+
+                        List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
+
+                        int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
+
+                        DictadoUI editarDictado = new DictadoUI(opcionesDocente, opcionesCurso, listadoDictados.Result.ToList()[filaSeleccionada]);
+
+                        if (editarDictado.ShowDialog(this) == DialogResult.OK)
+                        {
+                            OperacionExitosa operacionExitosa = new OperacionExitosa();
+                            operacionExitosa.ShowDialog(this);
+                        }
+                        btnMostrarDictados_Click(sender, e);
+                    }
                 }
-                btnMostrarDictados_Click(sender, e);
             }
             else if (entidadListada == "Especialidad")
             {
@@ -341,6 +406,7 @@ namespace Escritorio
                     operacionExitosa.ShowDialog(this);
                 }
                 btnMostrarEspecialidades_Click(sender, e);
+
             }
             else if (entidadListada == "Inscripcion")
             {
@@ -348,25 +414,31 @@ namespace Escritorio
                 task1.Start();
                 IEnumerable<Persona> alumnos = await task1;
 
-                Task<IEnumerable<Curso>> task2 = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
-                task2.Start();
-                IEnumerable<Curso> cursos = await task2;
-
-                List<(int Id, string ApellidoYNombre)> opcionesAlumno = alumnos.Where(alumno => alumno.Tipo_persona == 0)
-                                                                                 .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
-                
-                List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
-
-                int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
-
-                InscripcionUI editarInscripcion = new InscripcionUI(opcionesAlumno, opcionesCurso, listadoInscripciones.Result.ToList()[filaSeleccionada]);
-
-                if (editarInscripcion.ShowDialog(this) == DialogResult.OK)
+                if (alumnos != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    Task<IEnumerable<Curso>> task2 = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
+                    task2.Start();
+                    IEnumerable<Curso> cursos = await task2;
+
+                    if (cursos != null)
+                    {
+                        List<(int Id, string ApellidoYNombre)> opcionesAlumno = alumnos.Where(alumno => alumno.Tipo_persona == 0)
+                                                                                       .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
+
+                        List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
+
+                        int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
+
+                        InscripcionUI editarInscripcion = new InscripcionUI(opcionesAlumno, opcionesCurso, listadoInscripciones.Result.ToList()[filaSeleccionada]);
+
+                        if (editarInscripcion.ShowDialog(this) == DialogResult.OK)
+                        {
+                            OperacionExitosa operacionExitosa = new OperacionExitosa();
+                            operacionExitosa.ShowDialog(this);
+                        }
+                        btnMostrarInscripciones_Click(sender, e);
+                    }
                 }
-                btnMostrarInscripciones_Click(sender, e);
             }
             else if (entidadListada == "Materia")
             {
@@ -374,18 +446,21 @@ namespace Escritorio
                 task.Start();
                 IEnumerable<Plan> planes = await task;
 
-                List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan)).ToList();
-
-                int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
-
-                MateriaUI editarMateria = new MateriaUI(opcionesPlan, listadoMaterias.Result.ToList()[filaSeleccionada]);
-
-                if (editarMateria.ShowDialog(this) == DialogResult.OK)
+                if (planes != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan + " - " + plan.Especialidad.Desc_especialidad)).ToList();
+
+                    int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
+
+                    MateriaUI editarMateria = new MateriaUI(opcionesPlan, listadoMaterias.Result.ToList()[filaSeleccionada]);
+
+                    if (editarMateria.ShowDialog(this) == DialogResult.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                    btnMostrarMaterias_Click(sender, e);
                 }
-                btnMostrarMaterias_Click(sender, e);
             }
             else if (entidadListada == "Persona")
             {
@@ -393,19 +468,22 @@ namespace Escritorio
                 task.Start();
                 IEnumerable<Plan> planes = await task;
 
-                List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan)).ToList();
-
-                int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
-
-                PersonaUI editarPersona = new PersonaUI(opcionesPlan, listadoPersonas.Result.ToList()[filaSeleccionada]);
-
-                if (editarPersona.ShowDialog(this) == DialogResult.OK)
+                if (planes != null)
                 {
+                    List<(int Id, string Descripcion)> opcionesPlan = planes.Select(plan => (plan.Id_plan, plan.Desc_plan + " - " + plan.Especialidad.Desc_especialidad)).ToList();
 
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
+
+                    PersonaUI editarPersona = new PersonaUI(opcionesPlan, listadoPersonas.Result.ToList()[filaSeleccionada]);
+
+                    if (editarPersona.ShowDialog(this) == DialogResult.OK)
+                    {
+
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                    btnMostrarPersonas_Click(sender, e);
                 }
-                btnMostrarPersonas_Click(sender, e);
             }
             else if (entidadListada == "Plan")
             {
@@ -413,18 +491,21 @@ namespace Escritorio
                 task.Start();
                 IEnumerable<Especialidad> especialidades = await task;
 
-                List<(int Id, string Descripcion)> opcionesEspecialidad = especialidades.Select(especialidad => (especialidad.Id_especialidad, especialidad.Desc_especialidad)).ToList();
-
-                int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
-
-                PlanUI editarPlan = new PlanUI(opcionesEspecialidad, listadoPlanes.Result.ToList()[filaSeleccionada]);
-
-                if (editarPlan.ShowDialog(this) == DialogResult.OK)
+                if (especialidades != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
+                    List<(int Id, string Descripcion)> opcionesEspecialidad = especialidades.Select(especialidad => (especialidad.Id_especialidad, especialidad.Desc_especialidad)).ToList();
+
+                    int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
+
+                    PlanUI editarPlan = new PlanUI(opcionesEspecialidad, listadoPlanes.Result.ToList()[filaSeleccionada]);
+
+                    if (editarPlan.ShowDialog(this) == DialogResult.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                    btnMostrarPlanes_Click(sender, e);
                 }
-                btnMostrarPlanes_Click(sender, e);
             }
             else if (entidadListada == "Usuario")
             {
@@ -432,19 +513,21 @@ namespace Escritorio
                 task.Start();
                 IEnumerable<Persona> personas = await task;
 
-                List<(int Id, string ApellidoYNombre)> opcionesPersona = personas.Select(persona => (persona.Id_persona, persona.Apellido + ", " + persona.Nombre)).ToList();
-
-                int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
-
-                UsuarioUI editarUsuario = new UsuarioUI(opcionesPersona, listadoUsuarios.Result.ToList()[filaSeleccionada]);
-
-                if (editarUsuario.ShowDialog(this) == DialogResult.OK)
+                if (personas != null)
                 {
-                    OperacionExitosa operacionExitosa = new OperacionExitosa();
-                    operacionExitosa.ShowDialog(this);
-                }
-                btnMostrarUsuarios_Click(sender, e);
+                    List<(int Id, string ApellidoYNombre)> opcionesPersona = personas.Select(persona => (persona.Id_persona, persona.Apellido + ", " + persona.Nombre)).ToList();
 
+                    int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
+
+                    UsuarioUI editarUsuario = new UsuarioUI(opcionesPersona, listadoUsuarios.Result.ToList()[filaSeleccionada]);
+
+                    if (editarUsuario.ShowDialog(this) == DialogResult.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+                    }
+                    btnMostrarUsuarios_Click(sender, e);
+                }
             }
         }
 
@@ -468,9 +551,9 @@ namespace Escritorio
 
                     } else
                     {
-                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
-                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La comisión tiene cursos asociados");
-                        errorEliminacion.ShowDialog(this);
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La comisión tiene cursos asociados");
+                        errorBD.ShowDialog(this);
                     }
 
                 }
@@ -494,9 +577,9 @@ namespace Escritorio
                     }
                     else
                     {
-                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
-                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "El curso tiene inscripciones y/o dictados asociados");
-                        errorEliminacion.ShowDialog(this);
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "El curso tiene inscripciones y/o dictados asociados");
+                        errorBD.ShowDialog(this);
                     }
                 }
             }
@@ -519,9 +602,9 @@ namespace Escritorio
                     }
                     else
                     {
-                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
-                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
-                        errorEliminacion.ShowDialog(this);
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
+                        errorBD.ShowDialog(this);
                     }
                 }
             }
@@ -544,9 +627,9 @@ namespace Escritorio
                     }
                     else
                     {
-                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
-                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La especialidad tiene planes asociados");
-                        errorEliminacion.ShowDialog(this);
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La especialidad tiene planes asociados");
+                        errorBD.ShowDialog(this);
                     }
                 }
             }
@@ -569,9 +652,9 @@ namespace Escritorio
                     }
                     else
                     {
-                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
-                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
-                        errorEliminacion.ShowDialog(this);
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
+                        errorBD.ShowDialog(this);
                     }
                 }
             }
@@ -594,9 +677,9 @@ namespace Escritorio
                     }
                     else
                     {
-                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
-                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La materia tiene cursos asociados");
-                        errorEliminacion.ShowDialog(this);
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La materia tiene cursos asociados");
+                        errorBD.ShowDialog(this);
                     }
                 }
             }
@@ -619,9 +702,9 @@ namespace Escritorio
                     }
                     else
                     {
-                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
-                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La persona tiene dictados, inscripciones y/o usuarios asociados");
-                        errorEliminacion.ShowDialog(this);
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La persona tiene dictados, inscripciones y/o usuarios asociados");
+                        errorBD.ShowDialog(this);
                     }
                 }
             }
@@ -644,9 +727,9 @@ namespace Escritorio
                     }
                     else
                     {
-                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
-                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "El plan tiene comisiones, materias y/o personas asociadas");
-                        errorEliminacion.ShowDialog(this);
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "El plan tiene comisiones, materias y/o personas asociadas");
+                        errorBD.ShowDialog(this);
                     }
                 }
             }
@@ -669,9 +752,9 @@ namespace Escritorio
                     }
                     else
                     {
-                        ErrorEliminacion errorEliminacion = new ErrorEliminacion();
-                        errorEliminacion.ErrorEliminacionLabel.Text = errorEliminacion.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
-                        errorEliminacion.ShowDialog(this);
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
+                        errorBD.ShowDialog(this);
                     }
                 }
             }
