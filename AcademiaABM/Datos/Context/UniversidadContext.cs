@@ -15,107 +15,110 @@
         public DbSet<Alumno_Inscripcion> Alumnos_Inscripciones { get; set; }
         public DbSet<Docente_Curso> Docentes_cursos { get; set; }
 
+        public UniversidadContext(DbContextOptions<UniversidadContext> options) : base(options) { }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {          
-            modelBuilder.Entity<Persona>()
-                            .HasKey(per => per.Id_persona);
-
-            modelBuilder.Entity<Usuario>()
-                            .HasKey(usu => usu.Id_usuario);
-
-            modelBuilder.Entity<Especialidad>()
-                            .HasKey(esp => esp.Id_especialidad);
-
-            modelBuilder.Entity<Plan>()
-                            .HasKey(pla => pla.Id_plan);
-
-            modelBuilder.Entity<Materia>()
-                            .HasKey(mat => mat.Id_materia);
+        {
+            modelBuilder.Entity<Alumno_Inscripcion>()
+                .HasKey(ai => ai.Id_inscripcion);
 
             modelBuilder.Entity<Comision>()
-                            .HasKey(com => com.Id_comision);
+                .HasKey(com => com.Id_comision);
 
             modelBuilder.Entity<Curso>()
-                            .HasKey(cur => cur.Id_curso);
-
-            modelBuilder.Entity<Alumno_Inscripcion>()
-                            .HasKey(ai => ai.Id_inscripcion);
+                .HasKey(cur => cur.Id_curso);
 
             modelBuilder.Entity<Docente_Curso>()
-                            .HasKey(dc => dc.Id_dictado);
+                .HasKey(dc => dc.Id_dictado);
 
-            // Relación 1:N entre Persona y Usuario
+            modelBuilder.Entity<Especialidad>()
+                .HasKey(esp => esp.Id_especialidad);
+
+            modelBuilder.Entity<Materia>()
+                .HasKey(mat => mat.Id_materia);
+
+            modelBuilder.Entity<Persona>()
+                .HasKey(per => per.Id_persona);
+
+            modelBuilder.Entity<Plan>()
+                .HasKey(pla => pla.Id_plan);
+
+            modelBuilder.Entity<Usuario>()
+                .HasKey(usu => usu.Id_usuario);
+
+            // Relación opcional 1:N entre Usuario y Persona
             modelBuilder.Entity<Usuario>()
                 .HasOne(usu => usu.Persona)
-                .WithMany(per => per.Usuarios)
+                .WithMany()
                 .HasForeignKey(usu => usu.Id_persona)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false); // Esto permite que Id_persona sea null (solo para Administradores)
 
             // Relación 1:N entre Especialidad y Plan
             modelBuilder.Entity<Plan>()
                 .HasOne(pla => pla.Especialidad)
-                .WithMany(esp => esp.Planes)
+                .WithMany()
                 .HasForeignKey(pla => pla.Id_especialidad)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relación 1:N entre Plan y Persona
             modelBuilder.Entity<Persona>()
                 .HasOne(per => per.Plan)
-                .WithMany(pla => pla.Personas)
+                .WithMany()
                 .HasForeignKey(per => per.Id_plan)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relación 1:N entre Plan y Comision
             modelBuilder.Entity<Comision>()
                 .HasOne(com => com.Plan)
-                .WithMany(pla => pla.Comisiones)
+                .WithMany()
                 .HasForeignKey(com => com.Id_plan)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relación 1:N entre Comision y Curso
             modelBuilder.Entity<Curso>()
                 .HasOne(cur => cur.Comision)
-                .WithMany(com => com.Cursos)
+                .WithMany()
                 .HasForeignKey(cur => cur.Id_comision)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relación 1:N entre Plan y Materia
             modelBuilder.Entity<Materia>()
                 .HasOne(mat => mat.Plan)
-                .WithMany(pla => pla.Materias)
+                .WithMany()
                 .HasForeignKey(mat => mat.Id_plan)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relación 1:N entre Materia y Curso
             modelBuilder.Entity<Curso>()
                 .HasOne(cur => cur.Materia)
-                .WithMany(mat => mat.Cursos)
+                .WithMany()
                 .HasForeignKey(cur => cur.Id_materia)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relación N:M entre Curso y Alumno
             modelBuilder.Entity<Alumno_Inscripcion>()
                 .HasOne(ai => ai.Alumno)
-                .WithMany(per => per.Alumno_Inscripciones)
+                .WithMany()
                 .HasForeignKey(ai => ai.Id_alumno)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Alumno_Inscripcion>()
                 .HasOne(ai => ai.Curso)
-                .WithMany(cur => cur.Alumno_Inscripciones)
+                .WithMany()
                 .HasForeignKey(ai => ai.Id_curso)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relación N:M entre Curso y Docente
             modelBuilder.Entity<Docente_Curso>()
                 .HasOne(dc => dc.Docente)
-                .WithMany(per => per.Docente_Cursos)
+                .WithMany()
                 .HasForeignKey(dc => dc.Id_docente)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Docente_Curso>()
                 .HasOne(dc => dc.Curso)
-                .WithMany(cur => cur.Docente_Cursos)
+                .WithMany()
                 .HasForeignKey(dc => dc.Id_curso)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -133,8 +136,7 @@
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Configura la cadena de conexión a SQL Server
-            // optionsBuilder.UseSqlServer(@"Server=DESKTOP-I6LRHO6\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5"); // Juan Pablo
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-7MNA3TJ\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5"); // Nahuel
+            optionsBuilder.UseSqlServer(@"Server=DESKTOP-I6LRHO6\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5");
         }
         public UniversidadContext()
         {
