@@ -66,17 +66,17 @@
             return response;
         }
 
-        public static bool ComprobarUsuarioIngresado(IEnumerable<Usuario> listadoUsuarios, string nombreUsuario, string clave)
+        public static Usuario ComprobarUsuarioIngresado(IEnumerable<Usuario> listadoUsuarios, string nombreUsuario, string clave)
         {
             foreach (var usuario in listadoUsuarios)
             {
                 if (usuario.Nombre_usuario == nombreUsuario && usuario.Clave == clave)
                 {
-                    return true;
+                    return usuario;
                 }
             }
 
-            return false;
+            return null;
         }
     }
 }

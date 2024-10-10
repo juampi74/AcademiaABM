@@ -6,6 +6,8 @@
 
     public partial class Login : Form
     {
+        public Usuario usuarioAutenticado { get; private set; }
+
         private int cantidadDeIntentosErroneos = 0;
 
         public Login()
@@ -19,7 +21,6 @@
             {
                 Cargando cargando = new Cargando();
                 cargando.Show(this);
-
 
                 Task<IEnumerable<Usuario>> task = new Task<IEnumerable<Usuario>>(LeerUsuarios);
                 task.Start();
@@ -70,16 +71,17 @@
 
             } catch (Exception)
             {
-                return [];
+                return Enumerable.Empty<Usuario>();
             }
         }
 
         private void ComprobarUsuarioIngresado(IEnumerable<Usuario> listadoUsuarios)
         {
-            bool usuarioEncontrado = UsuarioNegocio.ComprobarUsuarioIngresado(listadoUsuarios, NombreDeUsuarioTextBox.Text, ClaveTextBox.Text);
+            Usuario usuarioEncontrado = UsuarioNegocio.ComprobarUsuarioIngresado(listadoUsuarios, NombreDeUsuarioTextBox.Text, ClaveTextBox.Text);
 
-            if (usuarioEncontrado)
+            if (usuarioEncontrado != null)
             {
+                usuarioAutenticado = usuarioEncontrado;
                 DialogResult = DialogResult.OK;
             }
             else

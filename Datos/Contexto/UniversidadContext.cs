@@ -15,13 +15,10 @@
         public DbSet<Plan> Planes { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
 
-
         public UniversidadContext(DbContextOptions<UniversidadContext> options) : base(options) { }
-
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-        
             modelBuilder.Entity<Alumno_Inscripcion>()
                             .HasKey(ai => ai.Id_inscripcion);
             
@@ -125,28 +122,6 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
-
-            // El método Include en Entity Framework se utiliza para especificar las entidades
-            // relacionadas que deben cargarse junto con la entidad principal.
-            // var cursoConComision = context.Cursos
-            // .Include(c => c.Comision)  // Incluye la entidad relacionada Comision
-            // .FirstOrDefault(c => c.Id == cursoId);  // Devuelve el primer Curso que coincide
-            //                                            con el Id especificado o null
-        
-        
         }
-        /*
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            // Configura la cadena de conexión a SQL Server
-            // optionsBuilder.UseSqlServer(@"Server=DESKTOP-I6LRHO6\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5"); // Juan Pablo
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-7MNA3TJ\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5"); // Nahuel
-        }
-        public UniversidadContext()
-        {
-            // Asegura que la base de datos se cree si no existe
-            Database.EnsureCreated();
-        }
-        */
     }
 }

@@ -9,6 +9,8 @@ namespace Escritorio
 
     public partial class Grilla : Form
     {
+        private Usuario usuarioAutenticado;
+
         private string entidadListada;
 
         private Task<IEnumerable<Comision>>? listadoComisiones;
@@ -21,9 +23,36 @@ namespace Escritorio
         private Task<IEnumerable<Plan>>? listadoPlanes;
         private Task<IEnumerable<Usuario>>? listadoUsuarios;
 
-        public Grilla()
+        public Grilla(Usuario usuarioAutenticado)
         {
             InitializeComponent();
+        
+            this.usuarioAutenticado = usuarioAutenticado;
+
+            ConfigurarIntefaz();
+        }
+
+        public void ConfigurarIntefaz()
+        {
+            List<Button> botonesAOcultarAlumno = new List<Button> { btnMostrarDictados, btnMostrarMaterias, btnMostrarUsuarios };
+            List<Button> botonesAOcultarDocente = new List<Button> { btnMostrarInscripciones, btnMostrarPersonas, btnMostrarUsuarios };
+
+            if (usuarioAutenticado.Persona.Tipo_persona == 0)
+            {
+                OcultarBotones(botonesAOcultarAlumno);
+
+            } else
+            {
+                OcultarBotones(botonesAOcultarDocente);
+            }
+        }
+
+        public void OcultarBotones(List<Button> botonesAOcultar)
+        {
+            foreach (Button boton in botonesAOcultar)
+            {
+                boton.Visible = false;
+            }
         }
 
         public IEnumerable<T> LeerEntidades<T>()

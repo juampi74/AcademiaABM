@@ -17,7 +17,7 @@ namespace Escritorio
 
             if (login.ShowDialog() == DialogResult.OK)
             {
-                Application.Run(new Grilla());
+                Application.Run(new Grilla(login.usuarioAutenticado));
             }
         }
     }
