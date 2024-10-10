@@ -40,14 +40,6 @@
             modelBuilder.Entity<Persona>()
                 .HasKey(per => per.Id_persona);
 
-            modelBuilder.Entity<Persona>()
-                .Property(per => per.Legajo)
-                .IsRequired(false); // El Legajo es opcional
-
-            modelBuilder.Entity<Persona>()
-                .Property(per => per.Id_plan)
-                .IsRequired(false); // El Id_plan sea opcional
-
             modelBuilder.Entity<Plan>()
                 .HasKey(pla => pla.Id_plan);
 
@@ -59,9 +51,8 @@
                 .HasOne(usu => usu.Persona)
                 .WithMany()
                 .HasForeignKey(usu => usu.Id_persona)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired(); // Id_persona siempre debe estar presente
-
+                .OnDelete(DeleteBehavior.Restrict);
+    
             // Relación 1:N entre Especialidad y Plan
             modelBuilder.Entity<Plan>()
                 .HasOne(pla => pla.Especialidad)
@@ -74,9 +65,8 @@
                 .HasOne(per => per.Plan)
                 .WithMany()
                 .HasForeignKey(per => per.Id_plan)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired(false); // Ahora Id_plan es opcional
-
+                .OnDelete(DeleteBehavior.Restrict);
+    
             // Relación 1:N entre Plan y Comision
             modelBuilder.Entity<Comision>()
                 .HasOne(com => com.Plan)
@@ -133,6 +123,7 @@
 
             base.OnModelCreating(modelBuilder);
         }
+        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

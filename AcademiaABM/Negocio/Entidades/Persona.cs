@@ -12,11 +12,11 @@
         private string email;
         private string telefono;
         private DateTime fecha_nac;
-        private int? legajo;
+        private int legajo;
         private int tipo_persona;
 
         // Clave foránea
-        private int? id_plan;
+        private int id_plan;
 
         // Evita que se muestre una columna de este atributo con AutoGenerateColumns en la DataGridView
         [Browsable(false)]
@@ -45,17 +45,6 @@
             this.Legajo = legajo;
             this.Tipo_persona = tipo_persona;
             this.Id_plan = id_plan;
-        }
-
-        public Persona(string nombre, string apellido, string direccion, string email, string telefono, DateTime fecha_nac, int tipo_persona)
-        {
-            this.Nombre = nombre;
-            this.Apellido = apellido;
-            this.Direccion = direccion;
-            this.Email = email;
-            this.Telefono = telefono;
-            this.Fecha_nac = fecha_nac;
-            this.Tipo_persona = tipo_persona;
         }
 
         public int Id_persona
@@ -100,7 +89,7 @@
             set { fecha_nac = value; }
         }
 
-        public int? Legajo
+        public int Legajo
         {
             get { return legajo; }
             set { legajo = value; }
@@ -112,7 +101,7 @@
             set { tipo_persona = value; }
         }
 
-        public int? Id_plan
+        public int Id_plan
         {
             get { return id_plan; }
             set { id_plan = value; }
