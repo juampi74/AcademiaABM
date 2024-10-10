@@ -40,19 +40,27 @@
             modelBuilder.Entity<Persona>()
                 .HasKey(per => per.Id_persona);
 
+            modelBuilder.Entity<Persona>()
+                .Property(per => per.Legajo)
+                .IsRequired(false); // El Legajo es opcional
+
+            modelBuilder.Entity<Persona>()
+                .Property(per => per.Id_plan)
+                .IsRequired(false); // El Id_plan sea opcional
+
             modelBuilder.Entity<Plan>()
                 .HasKey(pla => pla.Id_plan);
 
             modelBuilder.Entity<Usuario>()
                 .HasKey(usu => usu.Id_usuario);
 
-            // Relación opcional 1:N entre Usuario y Persona
+            // Relación 1:1 entre Usuario y Persona
             modelBuilder.Entity<Usuario>()
                 .HasOne(usu => usu.Persona)
                 .WithMany()
                 .HasForeignKey(usu => usu.Id_persona)
                 .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired(false); // Esto permite que Id_persona sea null (solo para Administradores)
+                .IsRequired(); // Id_persona siempre debe estar presente
 
             // Relación 1:N entre Especialidad y Plan
             modelBuilder.Entity<Plan>()
@@ -66,7 +74,8 @@
                 .HasOne(per => per.Plan)
                 .WithMany()
                 .HasForeignKey(per => per.Id_plan)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false); // Ahora Id_plan es opcional
 
             // Relación 1:N entre Plan y Comision
             modelBuilder.Entity<Comision>()
@@ -123,14 +132,6 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
-
-            // El método Include en Entity Framework se utiliza para especificar las entidades
-            // relacionadas que deben cargarse junto con la entidad principal.
-            // var cursoConComision = context.Cursos
-            // .Include(c => c.Comision)  // Incluye la entidad relacionada Comision
-            // .FirstOrDefault(c => c.Id == cursoId);  // Devuelve el primer Curso que coincide
-            //                                            con el Id especificado o null
-
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -138,11 +139,11 @@
             // Configura la cadena de conexión a SQL Server
             optionsBuilder.UseSqlServer(@"Server=DESKTOP-I6LRHO6\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5");
         }
+
         public UniversidadContext()
         {
             // Asegura que la base de datos se cree si no existe
             Database.EnsureCreated();
         }
-
     }
 }
