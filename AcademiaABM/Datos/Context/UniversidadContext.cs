@@ -14,6 +14,8 @@
         public DbSet<Curso> Cursos { get; set; }
         public DbSet<Alumno_Inscripcion> Alumnos_Inscripciones { get; set; }
         public DbSet<Docente_Curso> Docentes_cursos { get; set; }
+        public DbSet<Politica_Usuario> Politica_Usuarios { get; set; }
+
 
         public UniversidadContext(DbContextOptions<UniversidadContext> options) : base(options) { }
 
@@ -128,7 +130,7 @@
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Configura la cadena de conexión a SQL Server
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-I6LRHO6\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5");
+            optionsBuilder.UseSqlServer(@"Server=DESKTOP-I6LRHO6\SQLEXPRESS;Initial Catalog=universidad2;Integrated Security=true;Encrypt=False;Connection Timeout=5");
         }
 
         public UniversidadContext()
