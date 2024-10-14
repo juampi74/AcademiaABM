@@ -14,8 +14,6 @@
         public DbSet<Curso> Cursos { get; set; }
         public DbSet<Alumno_Inscripcion> Alumnos_Inscripciones { get; set; }
         public DbSet<Docente_Curso> Docentes_cursos { get; set; }
-        public DbSet<Politica_Usuario> Politica_Usuarios { get; set; }
-
 
         public UniversidadContext(DbContextOptions<UniversidadContext> options) : base(options) { }
 
