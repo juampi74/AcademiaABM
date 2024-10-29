@@ -2,7 +2,6 @@
 
 @inject SweetAlertService Swal;
 
-
 @if (!error)
 {
     @if (planes == null)
@@ -21,10 +20,14 @@
             </a>
         </div>
 
-        @if (planes.Count() == 0)
+        <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Descripcion o Especialidad..." class="form-control mb-3 busqueda-input" />
+
+        IEnumerable<Plan> planesFilt = planesFiltrados();
+
+        @if (!planesFilt.Any())
         {
             <div class="alert alert-primary fw-bold mt-3" role="alert">
-                No hay planes registrados
+                No hay planes registrados o no hay resultados que coincidan con la búsqueda.
             </div>
         }
         else
@@ -38,7 +41,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var plan in planes)
+                    @foreach (var plan in planesFilt)
                     {
                         <tr>
                             <td style="vertical-align: middle;">@plan.Desc_plan</td>
@@ -72,10 +75,15 @@ else
 
 @code {
     IEnumerable<Plan> planes;
-
+    string busqueda = "";
     bool error;
 
     protected override async Task OnInitializedAsync()
+    {
+        await CargarPlanes();
+    }
+
+    private async Task CargarPlanes()
     {
         planes = null;
         error = false;
@@ -83,12 +91,24 @@ else
         try
         {
             planes = await PlanNegocio.GetAll();
-
         }
         catch (Exception)
         {
             error = true;
         }
+    }
+
+    private IEnumerable<Plan> planesFiltrados()
+    {
+        if (string.IsNullOrWhiteSpace(busqueda))
+        {
+            return planes ?? new List<Plan>();
+        }
+
+        return planes?.Where(pla =>
+               pla.Desc_plan.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               pla.Especialidad.Desc_especialidad.Contains(busqueda, StringComparison.OrdinalIgnoreCase))
+            ?? new List<Plan>();
     }
 
     private async Task EliminarPlan(Plan plan)
@@ -111,7 +131,8 @@ else
             {
                 await Swal.FireAsync("Plan eliminado", "El plan ha sido eliminado correctamente", SweetAlertIcon.Success);
 
-                await OnInitializedAsync();
+                // Eliminar el plan de la lista localmente para evitar una recarga completa
+                planes = planes.Where(pla => pla.Id_plan != pla.Id_plan);
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

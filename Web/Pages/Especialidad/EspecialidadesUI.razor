@@ -2,7 +2,6 @@
 
 @inject SweetAlertService Swal;
 
-
 @if (!error)
 {
     @if (especialidades == null)
@@ -21,10 +20,14 @@
             </a>
         </div>
 
-        @if (especialidades.Count() == 0)
+        <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Descripcion..." class="form-control mb-3 busqueda-input" />
+        
+        IEnumerable<Especialidad> especialidadesFilt = especialidadesFiltradas();
+
+        @if (!especialidadesFilt.Any())
         {
             <div class="alert alert-primary fw-bold mt-3" role="alert">
-                No hay especialidades registradas
+                No hay especialidades registradas o no hay resultados que coincidan con la búsqueda.
             </div>
         }
         else
@@ -37,7 +40,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var especialidad in especialidades)
+                    @foreach (var especialidad in especialidadesFilt)
                     {
                         <tr>
                             <td style="vertical-align: middle;">@especialidad.Desc_especialidad</td>
@@ -67,13 +70,17 @@ else
     </div>
 }
 
-
 @code {
     IEnumerable<Especialidad> especialidades;
-
+    string busqueda = "";
     bool error;
 
     protected override async Task OnInitializedAsync()
+    {
+        await CargarEspecialidades();
+    }
+
+    private async Task CargarEspecialidades()
     {
         especialidades = null;
         error = false;
@@ -81,12 +88,22 @@ else
         try
         {
             especialidades = await EspecialidadNegocio.GetAll();
-
         }
         catch (Exception)
         {
             error = true;
         }
+    }
+
+    private IEnumerable<Especialidad> especialidadesFiltradas()
+    {
+        if (string.IsNullOrWhiteSpace(busqueda))
+        {
+            return especialidades ?? new List<Especialidad>();
+        }
+
+        return especialidades?.Where(esp => esp.Desc_especialidad.Contains(busqueda, StringComparison.OrdinalIgnoreCase))
+               ?? new List<Especialidad>();
     }
 
     private async Task EliminarEspecialidad(Especialidad especialidad)
@@ -109,7 +126,8 @@ else
             {
                 await Swal.FireAsync("Especialidad eliminada", "La especialidad ha sido eliminada correctamente", SweetAlertIcon.Success);
 
-                await OnInitializedAsync();
+                // Eliminar la especialidad de la lista localmente para evitar una recarga completa
+                especialidades = especialidades.Where(esp => esp.Id_especialidad != especialidad.Id_especialidad);
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -117,6 +135,7 @@ else
             }
             else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
             {
+                await Swal.FireAsync("Error", "El servicio no está disponible. Intente más tarde.", SweetAlertIcon.Error);
                 error = true;
             }
         }

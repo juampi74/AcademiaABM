@@ -2,7 +2,6 @@
 
 @inject SweetAlertService Swal;
 
-
 @if (!error)
 {
     @if (usuarios == null)
@@ -21,10 +20,14 @@
             </a>
         </div>
 
-        @if (usuarios.Count() == 0)
+        <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Nombre de Usuario o Persona..." class="form-control mb-3 busqueda-input" />
+
+        IEnumerable<Usuario> usuariosFilt = usuariosFiltrados();
+
+        @if (!usuariosFilt.Any())
         {
             <div class="alert alert-primary fw-bold mt-3" role="alert">
-                No hay usuarios registrados
+                No hay usuarios registrados o no hay resultados que coincidan con la búsqueda.
             </div>
         }
         else
@@ -41,7 +44,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var usuario in usuarios)
+                    @foreach (var usuario in usuariosFilt)
                     {
                         <tr>
                             <td style="vertical-align: middle;">@usuario.Nombre_usuario</td>
@@ -78,10 +81,15 @@ else
 
 @code {
     IEnumerable<Usuario> usuarios;
-
+    string busqueda = "";
     bool error;
 
     protected override async Task OnInitializedAsync()
+    {
+        await CargarUsuarios();
+    }
+
+    private async Task CargarUsuarios()
     {
         usuarios = null;
         error = false;
@@ -89,12 +97,24 @@ else
         try
         {
             usuarios = await UsuarioNegocio.GetAll();
-
         }
         catch (Exception)
         {
             error = true;
         }
+    }
+
+    private IEnumerable<Usuario> usuariosFiltrados()
+    {
+        if (string.IsNullOrWhiteSpace(busqueda))
+        {
+            return usuarios ?? new List<Usuario>();
+        }
+
+        return usuarios?.Where(usu =>
+               usu.Nombre_usuario.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+              (usu.Persona.Apellido + ", " + usu.Persona.Nombre).Contains(busqueda, StringComparison.OrdinalIgnoreCase))
+            ?? new List<Usuario>();
     }
 
     private async Task EliminarUsuario(Usuario usuario)
@@ -117,7 +137,8 @@ else
             {
                 await Swal.FireAsync("Usuario eliminado", "El usuario ha sido eliminado correctamente", SweetAlertIcon.Success);
 
-                await OnInitializedAsync();
+                // Eliminar el usuario de la lista localmente para evitar una recarga completa
+                usuarios = usuarios.Where(usu => usu.Id_usuario != usu.Id_usuario);
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

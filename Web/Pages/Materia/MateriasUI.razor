@@ -2,7 +2,6 @@
 
 @inject SweetAlertService Swal;
 
-
 @if (!error)
 {
     @if (materias == null)
@@ -21,10 +20,14 @@
             </a>
         </div>
 
-        @if (materias.Count() == 0)
+        <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Descripcion, Plan o Especialidad..." class="form-control mb-3 busqueda-input" />
+
+        IEnumerable<Materia> materiasFilt = materiasFiltradas();
+
+        @if (!materiasFilt.Any())
         {
             <div class="alert alert-primary fw-bold mt-3" role="alert">
-                No hay materias registradas
+                No hay materias registradas o no hay resultados que coincidan con la búsqueda.
             </div>
         }
         else
@@ -40,7 +43,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var materia in materias)
+                    @foreach (var materia in materiasFilt)
                     {
                         <tr>
                             <td style="vertical-align: middle;">@materia.Desc_materia</td>
@@ -76,10 +79,15 @@ else
 
 @code {
     IEnumerable<Materia> materias;
-
+    string busqueda = "";
     bool error;
 
     protected override async Task OnInitializedAsync()
+    {
+        await CargarMaterias();
+    }
+
+    private async Task CargarMaterias()
     {
         materias = null;
         error = false;
@@ -87,12 +95,25 @@ else
         try
         {
             materias = await MateriaNegocio.GetAll();
-
         }
         catch (Exception)
         {
             error = true;
         }
+    }
+
+    private IEnumerable<Materia> materiasFiltradas()
+    {
+        if (string.IsNullOrWhiteSpace(busqueda))
+        {
+            return materias ?? new List<Materia>();
+        }
+
+        return materias?.Where(mat =>
+               mat.Desc_materia.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               mat.Plan.Desc_plan.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               mat.Plan.Especialidad.Desc_especialidad.Contains(busqueda, StringComparison.OrdinalIgnoreCase))
+            ?? new List<Materia>();
     }
 
     private async Task EliminarMateria(Materia materia)
@@ -115,7 +136,8 @@ else
             {
                 await Swal.FireAsync("Materia eliminada", "La materia ha sido eliminada correctamente", SweetAlertIcon.Success);
 
-                await OnInitializedAsync();
+                // Eliminar la materia de la lista localmente para evitar una recarga completa
+                materias = materias.Where(mat => mat.Id_materia != materia.Id_materia);
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

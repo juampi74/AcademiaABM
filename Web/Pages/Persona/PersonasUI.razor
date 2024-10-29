@@ -2,7 +2,6 @@
 
 @inject SweetAlertService Swal;
 
-
 @if (!error)
 {
     @if (personas == null)
@@ -21,10 +20,14 @@
             </a>
         </div>
 
-        @if (personas.Count() == 0)
+        <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Apellido y Nombre, Legajo, Tipo de Persona, Plan o Especialidad..." class="form-control mb-3 busqueda-input" />
+
+        IEnumerable<Persona> personasFilt = personasFiltradas();
+
+        @if (!personasFilt.Any())
         {
             <div class="alert alert-primary fw-bold mt-3" role="alert">
-                No hay personas registradas
+                No hay personas registradas o no hay resultados que coincidan con la búsqueda.
             </div>
         }
         else
@@ -41,7 +44,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var persona in personas)
+                    @foreach (var persona in personasFilt)
                     {
                         <tr>
                             <td style="vertical-align: middle;">@persona.Apellido, @persona.Nombre</td>
@@ -78,10 +81,15 @@ else
 
 @code {
     IEnumerable<Persona> personas;
-
+    string busqueda = "";
     bool error;
 
     protected override async Task OnInitializedAsync()
+    {
+        await CargarPersonas();
+    }
+
+    private async Task CargarPersonas()
     {
         personas = null;
         error = false;
@@ -89,12 +97,28 @@ else
         try
         {
             personas = await PersonaNegocio.GetAll();
-
         }
         catch (Exception)
         {
             error = true;
         }
+    }
+
+    private IEnumerable<Persona> personasFiltradas()
+    {
+        if (string.IsNullOrWhiteSpace(busqueda))
+        {
+            return personas ?? new List<Persona>();
+        }
+
+        return personas?.Where(per =>
+              (per.Apellido + ", " + per.Nombre).Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               per.Legajo.ToString().Contains(busqueda) ||
+              (busqueda.Equals("Alumno", StringComparison.OrdinalIgnoreCase) && per.Tipo_persona == 0) ||
+              (busqueda.Equals("Docente", StringComparison.OrdinalIgnoreCase) && per.Tipo_persona == 1) ||
+               per.Plan.Desc_plan.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               per.Plan.Especialidad.Desc_especialidad.Contains(busqueda, StringComparison.OrdinalIgnoreCase))
+            ?? new List<Persona>();
     }
 
     private async Task EliminarPersona(Persona persona)
@@ -117,7 +141,8 @@ else
             {
                 await Swal.FireAsync("Persona eliminada", "La persona ha sido eliminada correctamente", SweetAlertIcon.Success);
 
-                await OnInitializedAsync();
+                // Eliminar la persona de la lista localmente para evitar una recarga completa
+                personas = personas.Where(per => per.Id_persona != per.Id_persona);
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

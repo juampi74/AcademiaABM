@@ -2,7 +2,6 @@
 
 @inject SweetAlertService Swal;
 
-
 @if (!error)
 {
     @if (inscripciones == null)
@@ -21,10 +20,14 @@
             </a>
         </div>
 
-        @if (inscripciones.Count() == 0)
+        <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Condicion, Alumno, Comision o Materia..." class="form-control mb-3 busqueda-input" />
+
+        IEnumerable<Alumno_Inscripcion> inscripcionesFilt = inscripcionesFiltradas();
+
+        @if (!inscripcionesFilt.Any())
         {
             <div class="alert alert-primary fw-bold mt-3" role="alert">
-                No hay inscripciones registradas
+                No hay inscripciones registradas o no hay resultados que coincidan con la búsqueda.
             </div>
         }
         else
@@ -40,7 +43,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                        @foreach (var inscripcion in inscripciones)
+                        @foreach (var inscripcion in inscripcionesFilt)
                         {
                             <tr>
                                 <td style="vertical-align: middle;">@inscripcion.Condicion</td>
@@ -76,10 +79,15 @@ else
 
 @code {
     IEnumerable<Alumno_Inscripcion> inscripciones;
-
+    string busqueda = "";
     bool error;
 
     protected override async Task OnInitializedAsync()
+    {
+        await CargarInscripciones();
+    }
+
+    private async Task CargarInscripciones()
     {
         inscripciones = null;
         error = false;
@@ -87,12 +95,26 @@ else
         try
         {
             inscripciones = await InscripcionNegocio.GetAll();
-
         }
         catch (Exception)
         {
             error = true;
         }
+    }
+
+    private IEnumerable<Alumno_Inscripcion> inscripcionesFiltradas()
+    {
+        if (string.IsNullOrWhiteSpace(busqueda))
+        {
+            return inscripciones ?? new List<Alumno_Inscripcion>();
+        }
+
+        return inscripciones?.Where(ins =>
+               ins.Condicion.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+              (ins.Alumno.Apellido + ", " + ins.Alumno.Nombre).Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               ins.Curso.Comision.Desc_comision.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               ins.Curso.Materia.Desc_materia.Contains(busqueda, StringComparison.OrdinalIgnoreCase))
+            ?? new List<Alumno_Inscripcion>();
     }
 
     private async Task EliminarInscripcion(Alumno_Inscripcion inscripcion)
@@ -115,7 +137,8 @@ else
             {
                 await Swal.FireAsync("Inscripcion eliminada", "La inscripcion ha sido eliminada correctamente", SweetAlertIcon.Success);
 
-                await OnInitializedAsync();
+                // Eliminar la inscripcion de la lista localmente para evitar una recarga completa
+                inscripciones = inscripciones.Where(ins => ins.Id_inscripcion != inscripcion.Id_inscripcion);
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

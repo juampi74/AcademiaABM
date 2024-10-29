@@ -2,7 +2,6 @@
 
 @inject SweetAlertService Swal;
 
-
 @if (!error)
 {
     @if (dictados == null)
@@ -21,10 +20,14 @@
             </a>
         </div>
 
-        @if (dictados.Count() == 0)
+        <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Cargo, Docente, Comision o Materia..." class="form-control mb-3 busqueda-input" />
+
+        IEnumerable<Docente_Curso> dictadosFilt = dictadosFiltrados();
+
+        @if (!dictadosFilt.Any())
         {
             <div class="alert alert-primary fw-bold mt-3" role="alert">
-                No hay dictados registrados
+                No hay dictados registrados o no hay resultados que coincidan con la búsqueda.
             </div>
         }
         else
@@ -39,7 +42,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var dictado in dictados)
+                    @foreach (var dictado in dictadosFilt)
                     {
                         <tr>
                             <td style="vertical-align: middle;">@dictado.Cargo</td>
@@ -74,10 +77,15 @@ else
 
 @code {
     IEnumerable<Docente_Curso> dictados;
-
+    string busqueda = "";
     bool error;
 
     protected override async Task OnInitializedAsync()
+    {
+        await CargarDictados();
+    }
+
+    private async Task CargarDictados()
     {
         dictados = null;
         error = false;
@@ -85,12 +93,26 @@ else
         try
         {
             dictados = await DictadoNegocio.GetAll();
-
         }
         catch (Exception)
         {
             error = true;
         }
+    }
+
+    private IEnumerable<Docente_Curso> dictadosFiltrados()
+    {
+        if (string.IsNullOrWhiteSpace(busqueda))
+        {
+            return dictados ?? new List<Docente_Curso>();
+        }
+
+        return dictados?.Where(dic =>
+               dic.Cargo.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+              (dic.Docente.Apellido + ", " + dic.Docente.Nombre).Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               dic.Curso.Comision.Desc_comision.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               dic.Curso.Materia.Desc_materia.Contains(busqueda, StringComparison.OrdinalIgnoreCase))
+            ?? new List<Docente_Curso>();
     }
 
     private async Task EliminarDictado(Docente_Curso dictado)
@@ -113,7 +135,8 @@ else
             {
                 await Swal.FireAsync("Dictado eliminado", "El dictado ha sido eliminado correctamente", SweetAlertIcon.Success);
 
-                await OnInitializedAsync();
+                // Eliminar el dictado de la lista localmente para evitar una recarga completa
+                dictados = dictados.Where(dic => dic.Id_dictado != dictado.Id_dictado);
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

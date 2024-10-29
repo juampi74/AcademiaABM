@@ -2,7 +2,6 @@
 
 @inject SweetAlertService Swal;
 
-
 @if (!error)
 {
     @if (cursos == null)
@@ -21,10 +20,14 @@
             </a>
         </div>
 
-        @if (cursos.Count() == 0)
+        <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Comision o Materia..." class="form-control mb-3 busqueda-input" />
+
+        IEnumerable<Curso> cursosFilt = cursosFiltrados();
+
+        @if (!cursosFilt.Any())
         {
             <div class="alert alert-primary fw-bold mt-3" role="alert">
-                No hay cursos registrados
+                No hay cursos registrados o no hay resultados que coincidan con la búsqueda.
             </div>
         }
         else
@@ -40,7 +43,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var curso in cursos)
+                    @foreach (var curso in cursosFilt)
                     {
                         <tr>
                             <td style="vertical-align: middle;">@curso.Anio_calendario</td>
@@ -76,10 +79,15 @@ else
 
 @code {
     IEnumerable<Curso> cursos;
-
+    string busqueda = "";
     bool error;
 
     protected override async Task OnInitializedAsync()
+    {
+        await CargarCursos();
+    }
+
+    private async Task CargarCursos()
     {
         cursos = null;
         error = false;
@@ -87,12 +95,24 @@ else
         try
         {
             cursos = await CursoNegocio.GetAll();
-
         }
         catch (Exception)
         {
             error = true;
         }
+    }
+
+    private IEnumerable<Curso> cursosFiltrados()
+    {
+        if (string.IsNullOrWhiteSpace(busqueda))
+        {
+            return cursos ?? new List<Curso>();
+        }
+
+        return cursos?.Where(cur =>
+               cur.Comision.Desc_comision.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               cur.Materia.Desc_materia.Contains(busqueda, StringComparison.OrdinalIgnoreCase))
+            ?? new List<Curso>();
     }
 
     private async Task EliminarCurso(Curso curso)
@@ -115,7 +135,8 @@ else
             {
                 await Swal.FireAsync("Curso eliminado", "El curso ha sido eliminado correctamente", SweetAlertIcon.Success);
 
-                await OnInitializedAsync();
+                // Eliminar el curso de la lista localmente para evitar una recarga completa
+                cursos = cursos.Where(cur => cur.Id_curso != curso.Id_curso);
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
