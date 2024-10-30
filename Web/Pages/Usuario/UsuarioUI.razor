@@ -15,14 +15,20 @@
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Nombre de Usuario</label>
-                <InputText class="form-control" @bind-Value="usuario.Nombre_usuario"></InputText>
-                <ValidationMessage For="@(() => usuario.Nombre_usuario)"></ValidationMessage>
+                <InputText class="form-control" @bind-Value="usuario.Nombre_usuario" @oninput="ValidarNombreUsuario"></InputText>
+                @if (errorNombreUsuarioInvalido)
+                {
+                    <div class="text-danger mt-2">El nombre de usuario debe tener entre de 5 y 20 caracteres.</div>
+                }
             </div>
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Clave</label>
-                <InputText class="form-control" @bind-Value="usuario.Clave"></InputText>
-                <ValidationMessage For="@(() => usuario.Clave)"></ValidationMessage>
+                <InputText class="form-control" @bind-Value="usuario.Clave" @oninput="ValidarClave"></InputText>
+                @if (errorClaveInvalida)
+                {
+                    <div class="text-danger mt-2">La clave debe tener entre de 5 y 15 caracteres.</div>
+                }
             </div>
 
             <div class="mt-4">
@@ -57,7 +63,7 @@
             <div class="d-flex align-items-center justify-content-end mt-3">
                 <a class="btn btn-warning" href="usuarios">Volver</a>
 
-                <button class="btn btn-primary ms-2" type="submit">
+                <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
                     @btnTexto
                 </button>
             </div>
@@ -98,6 +104,14 @@ else
     bool errorBD = false;
     bool errorFaltanEntidades = false;
 
+    bool errorNombreUsuarioInvalido = false;
+    bool errorClaveInvalida = false;
+
+    bool botonDeshabilitado = false;
+
+    bool nombreUsuarioModificado = false;
+    bool claveModificada = false;
+
     protected override async Task OnInitializedAsync()
     {
         if (idUsuario != 0)
@@ -122,6 +136,8 @@ else
             titulo = "Nuevo Usuario";
             btnTexto = "Guardar";
 
+            botonDeshabilitado = true;
+
             try
             {
                 personas = (List<Persona>) await PersonaNegocio.GetAll();
@@ -140,6 +156,55 @@ else
         else
         {
             errorFaltanEntidades = true;
+        }
+    }
+
+    private void ValidarNombreUsuario(ChangeEventArgs e)
+    {
+        nombreUsuarioModificado = true;
+
+        string? nombreUsuario = e.Value?.ToString();
+
+        if (nombreUsuario == null || nombreUsuario.Length < 5 || nombreUsuario.Length > 20)
+        {
+            errorNombreUsuarioInvalido = true;
+        }
+        else
+        {
+            errorNombreUsuarioInvalido = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarClave(ChangeEventArgs e)
+    {
+        claveModificada = true;
+
+        string? clave = e.Value?.ToString();
+
+        if (clave == null || clave.Length < 5 || clave.Length > 15)
+        {
+            errorClaveInvalida = true;
+        }
+        else
+        {
+            errorClaveInvalida = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ActualizarEstadoBoton()
+    {
+        if (idUsuario != 0)
+        {
+            botonDeshabilitado = errorNombreUsuarioInvalido || errorClaveInvalida;
+        }
+        else
+        {
+            botonDeshabilitado = errorNombreUsuarioInvalido || errorClaveInvalida ||
+                             !nombreUsuarioModificado || !claveModificada;
         }
     }
 

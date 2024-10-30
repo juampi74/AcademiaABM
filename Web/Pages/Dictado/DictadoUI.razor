@@ -37,14 +37,17 @@
             
             <div class="mt-4">
                 <label class="form-label fw-bold">Cargo</label>
-                <InputText class="form-control" @bind-Value="dictado.Cargo"></InputText>
-                <ValidationMessage For="@(() => dictado.Cargo)"></ValidationMessage>
+                <InputText class="form-control" @bind-Value="dictado.Cargo" @oninput="ValidarCargo"></InputText>
+                @if (errorCargoInvalido)
+                {
+                    <div class="text-danger mt-2">El cargo debe tener más de 10 caracteres.</div>
+                }
             </div>
 
             <div class="d-flex align-items-center justify-content-end mt-3">
                 <a class="btn btn-warning" href="dictados">Volver</a>
 
-                <button class="btn btn-primary ms-2" type="submit">
+                <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
                     @btnTexto
                 </button>
             </div>
@@ -86,6 +89,10 @@ else
     bool errorBD = false;
     bool errorFaltanEntidades = false;
 
+    bool errorCargoInvalido = false;
+
+    bool botonDeshabilitado = false;
+
     protected override async Task OnInitializedAsync()
     {
         if (idDictado != 0)
@@ -111,6 +118,8 @@ else
             titulo = "Nuevo Dictado";
             btnTexto = "Guardar";
 
+            botonDeshabilitado = true;
+
             try
             {
                 docentes = (List<Persona>) await PersonaNegocio.GetAll();
@@ -133,6 +142,22 @@ else
         else
         {
             errorFaltanEntidades = true;
+        }
+    }
+
+    private void ValidarCargo(ChangeEventArgs e)
+    {
+        string? cargo = e.Value?.ToString();
+
+        if (cargo == null || cargo.Length < 10)
+        {
+            errorCargoInvalido = true;
+            botonDeshabilitado = true;
+        }
+        else
+        {
+            errorCargoInvalido = false;
+            botonDeshabilitado = false;
         }
     }
 

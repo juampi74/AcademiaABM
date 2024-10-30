@@ -131,8 +131,7 @@ else
             {
                 await Swal.FireAsync("Plan eliminado", "El plan ha sido eliminado correctamente", SweetAlertIcon.Success);
 
-                // Eliminar el plan de la lista localmente para evitar una recarga completa
-                planes = planes.Where(pla => pla.Id_plan != pla.Id_plan);
+                await CargarPlanes();
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

@@ -15,8 +15,11 @@
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Descripcion</label>
-                <InputText class="form-control" @bind-Value="plan.Desc_plan"></InputText>
-                <ValidationMessage For="@(() => plan.Desc_plan)"></ValidationMessage>
+                <InputText class="form-control" @bind-Value="plan.Desc_plan" @oninput="ValidarDescripcion"></InputText>
+                @if (errorDescripcionInvalida)
+                {
+                    <div class="text-danger mt-2">La descripción debe tener más de 10 caracteres.</div>
+                }
             </div>
 
             <div class="mt-4">
@@ -33,7 +36,7 @@
             <div class="d-flex align-items-center justify-content-end mt-3">
                 <a class="btn btn-warning" href="planes">Volver</a>
 
-                <button class="btn btn-primary ms-2" type="submit">
+                <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
                     @btnTexto
                 </button>
             </div>
@@ -75,6 +78,10 @@ else
     bool errorBD = false;
     bool errorFaltanEntidades = false;
 
+    bool errorDescripcionInvalida = false;
+
+    bool botonDeshabilitado = false;
+
     protected override async Task OnInitializedAsync()
     {
         if (idPlan != 0)
@@ -100,6 +107,8 @@ else
             titulo = "Nuevo Plan";
             btnTexto = "Guardar";
 
+            botonDeshabilitado = true;
+
             try
             {
                 especialidades = (List<Especialidad>) await EspecialidadNegocio.GetAll();
@@ -119,6 +128,22 @@ else
         else
         {
             errorFaltanEntidades = true;
+        }
+    }
+
+    private void ValidarDescripcion(ChangeEventArgs e)
+    {
+        string? descripcion = e.Value?.ToString();
+
+        if (descripcion == null || descripcion.Length < 10)
+        {
+            errorDescripcionInvalida = true;
+            botonDeshabilitado = true;
+        }
+        else
+        {
+            errorDescripcionInvalida = false;
+            botonDeshabilitado = false;
         }
     }
 

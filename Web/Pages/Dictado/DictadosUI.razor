@@ -135,8 +135,7 @@ else
             {
                 await Swal.FireAsync("Dictado eliminado", "El dictado ha sido eliminado correctamente", SweetAlertIcon.Success);
 
-                // Eliminar el dictado de la lista localmente para evitar una recarga completa
-                dictados = dictados.Where(dic => dic.Id_dictado != dictado.Id_dictado);
+                await CargarDictados();
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

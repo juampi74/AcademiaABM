@@ -15,14 +15,20 @@
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Descripcion</label>
-                <InputText class="form-control" @bind-Value="comision.Desc_comision"></InputText>
-                <ValidationMessage For="@(() => comision.Desc_comision)"></ValidationMessage>
+                <InputText class="form-control" @bind-Value="comision.Desc_comision" @oninput="ValidarDescripcion"></InputText>
+                @if (errorDescripcionInvalida)
+                {
+                    <div class="text-danger mt-2">La descripción debe tener más de 10 caracteres.</div>
+                }
             </div>
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Año Especialidad</label>
-                <InputNumber class="form-control" @bind-Value="comision.Anio_especialidad"></InputNumber>
-                <ValidationMessage For="@(() => comision.Anio_especialidad)"></ValidationMessage>
+                <InputNumber class="form-control" @bind-Value="comision.Anio_especialidad" @oninput="ValidarAnio"></InputNumber>
+                @if (errorAnioInvalido)
+                {
+                    <div class="text-danger mt-2">El año de la especialidad debe ser un número entre 1 y 6.</div>
+                }
             </div>
 
             <div class="mt-4">
@@ -39,7 +45,7 @@
             <div class="d-flex align-items-center justify-content-end mt-3">
                 <a class="btn btn-warning" href="comisiones">Volver</a>
 
-                <button class="btn btn-primary ms-2" type="submit">
+                <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
                     @btnTexto
                 </button>
             </div>
@@ -68,17 +74,25 @@ else
 
 
 @code {
-    [Parameter]
-    public int idComision { get; set; } = 0;
+        [Parameter]
+        public int idComision { get; set; } = 0;
 
-    string titulo = string.Empty;
-    string btnTexto = string.Empty;
+        string titulo = string.Empty;
+        string btnTexto = string.Empty;
 
-    Comision comision = new Comision();
-    List<Plan> planes = new List<Plan>();
+        Comision comision = new Comision();
+        List<Plan> planes = new List<Plan>();
 
-    bool errorBD = false;
-    bool errorFaltanEntidades = false;
+        bool errorBD = false;
+        bool errorFaltanEntidades = false;
+
+        bool errorDescripcionInvalida = false;
+        bool errorAnioInvalido = false;
+
+        bool botonDeshabilitado = false;
+
+        bool descripcionModificada = false;
+        bool anioModificado = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -103,6 +117,8 @@ else
         {
             titulo = "Nueva Comision";
             btnTexto = "Guardar";
+            
+            botonDeshabilitado = true;
 
             try
             {
@@ -122,6 +138,53 @@ else
         else
         {
             errorFaltanEntidades = true;
+        }
+    }
+
+    private void ValidarDescripcion(ChangeEventArgs e)
+    {
+        descripcionModificada = true;
+
+        string? descripcion = e.Value?.ToString();
+
+        if (descripcion == null || descripcion.Length < 10)
+        {
+            errorDescripcionInvalida = true;
+        }
+        else
+        {
+            errorDescripcionInvalida = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarAnio(ChangeEventArgs e)
+    {
+        anioModificado = true;
+
+        if (int.TryParse(e.Value?.ToString(), out int anio))
+        {
+            errorAnioInvalido = anio < 1 || anio > 6;
+        }
+        else
+        {
+            errorAnioInvalido = true;    
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ActualizarEstadoBoton()
+    {
+        if (idComision != 0)
+        {
+            botonDeshabilitado = errorDescripcionInvalida || errorAnioInvalido;
+        }
+        else
+        {
+            botonDeshabilitado = errorDescripcionInvalida || errorAnioInvalido ||
+                                   !descripcionModificada || !anioModificado;
         }
     }
 

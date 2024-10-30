@@ -15,14 +15,20 @@
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Año Calendario</label>
-                <InputNumber class="form-control" @bind-Value="curso.Anio_calendario"></InputNumber>
-                <ValidationMessage For="@(() => curso.Anio_calendario)"></ValidationMessage>
+                <InputNumber class="form-control" @bind-Value="curso.Anio_calendario" @oninput="ValidarAnio"></InputNumber>
+                @if (errorAnioInvalido)
+                {
+                    <div class="text-danger mt-2">El año debe corresponder al actual o al siguiente.</div>
+                }
             </div>
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Cupo</label>
-                <InputNumber class="form-control" @bind-Value="curso.Cupo"></InputNumber>
-                <ValidationMessage For="@(() => curso.Cupo)"></ValidationMessage>
+                <InputNumber class="form-control" @bind-Value="curso.Cupo" @oninput="ValidarCupo"></InputNumber>
+                @if (errorCupoInvalido)
+                {
+                    <div class="text-danger mt-2">El cupo debe ser un número entre 20 y 100.</div>
+                }
             </div>
 
             <div class="mt-4">
@@ -50,7 +56,7 @@
             <div class="d-flex align-items-center justify-content-end mt-3">
                 <a class="btn btn-warning" href="cursos">Volver</a>
 
-                <button class="btn btn-primary ms-2" type="submit">
+                <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
                     @btnTexto
                 </button>
             </div>
@@ -93,6 +99,14 @@ else
     bool errorBD = false;
     bool errorFaltanEntidades = false;
 
+    bool errorAnioInvalido = false;
+    bool errorCupoInvalido = false;
+
+    bool botonDeshabilitado = false;
+
+    bool anioModificado = false;
+    bool cupoModificado = false;
+
     protected override async Task OnInitializedAsync()
     {
         if (idCurso != 0)
@@ -118,6 +132,8 @@ else
             titulo = "Nuevo Curso";
             btnTexto = "Guardar";
 
+            botonDeshabilitado = true;
+
             try
             {
                 comisiones = (List<Comision>)await ComisionNegocio.GetAll();
@@ -138,6 +154,54 @@ else
         else
         {
             errorFaltanEntidades = true;
+        }
+    }
+
+    private void ValidarAnio(ChangeEventArgs e)
+    {
+        anioModificado = true;
+
+        if (int.TryParse(e.Value?.ToString(), out int anio))
+        {
+            int anioActual = DateTime.Now.Year;
+
+            errorAnioInvalido = anio != anioActual && anio != (anioActual + 1);
+        }
+        else
+        {
+            errorAnioInvalido = true;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+
+    private void ValidarCupo(ChangeEventArgs e)
+    {
+        cupoModificado = true;
+
+        if (int.TryParse(e.Value?.ToString(), out int cupo))
+        {
+            errorCupoInvalido = cupo < 20 || cupo > 100;
+        }
+        else
+        {
+            errorCupoInvalido = true;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ActualizarEstadoBoton()
+    {
+        if (idCurso != 0)
+        {
+            botonDeshabilitado = errorAnioInvalido || errorCupoInvalido;
+        }
+        else
+        {
+            botonDeshabilitado = errorAnioInvalido || errorCupoInvalido ||
+                                   !anioModificado || !cupoModificado;
         }
     }
 

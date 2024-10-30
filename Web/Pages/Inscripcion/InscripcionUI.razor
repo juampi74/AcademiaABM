@@ -42,7 +42,7 @@
                     <InputNumber class="form-control" @bind-Value="inscripcion.Nota" @oninput="CalcularCondicion"></InputNumber>
                     @if (errorNotaInvalida)
                     {
-                        <div class="text-danger">Por favor, ingrese una nota válida entre 1 y 10.</div>
+                        <div class="text-danger mt-2">Por favor, ingrese una nota válida entre 1 y 10.</div>
                     }
                 </div>
                 <div class="mt-4">
@@ -53,7 +53,7 @@
 
             <div class="d-flex align-items-center justify-content-end mt-3">
                 <a class="btn btn-warning" href="inscripciones">Volver</a>
-                <button class="btn btn-primary ms-2" type="submit" disabled=@botonDeshabilitado>
+                <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
                     @btnTexto
                 </button>
             </div>
@@ -94,7 +94,9 @@ else
 
     bool errorBD = false;
     bool errorFaltanEntidades = false;
+
     bool errorNotaInvalida = false;
+
     bool botonDeshabilitado = true;
 
     string condicionCalculada = "";

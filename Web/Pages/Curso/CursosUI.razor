@@ -135,8 +135,7 @@ else
             {
                 await Swal.FireAsync("Curso eliminado", "El curso ha sido eliminado correctamente", SweetAlertIcon.Success);
 
-                // Eliminar el curso de la lista localmente para evitar una recarga completa
-                cursos = cursos.Where(cur => cur.Id_curso != curso.Id_curso);
+                await CargarCursos();
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

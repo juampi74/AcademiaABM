@@ -137,8 +137,7 @@ else
             {
                 await Swal.FireAsync("Inscripcion eliminada", "La inscripcion ha sido eliminada correctamente", SweetAlertIcon.Success);
 
-                // Eliminar la inscripcion de la lista localmente para evitar una recarga completa
-                inscripciones = inscripciones.Where(ins => ins.Id_inscripcion != inscripcion.Id_inscripcion);
+                await CargarInscripciones();
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

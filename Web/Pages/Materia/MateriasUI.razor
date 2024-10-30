@@ -136,8 +136,7 @@ else
             {
                 await Swal.FireAsync("Materia eliminada", "La materia ha sido eliminada correctamente", SweetAlertIcon.Success);
 
-                // Eliminar la materia de la lista localmente para evitar una recarga completa
-                materias = materias.Where(mat => mat.Id_materia != materia.Id_materia);
+                await CargarMaterias();
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

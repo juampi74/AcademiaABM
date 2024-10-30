@@ -126,8 +126,7 @@ else
             {
                 await Swal.FireAsync("Especialidad eliminada", "La especialidad ha sido eliminada correctamente", SweetAlertIcon.Success);
 
-                // Eliminar la especialidad de la lista localmente para evitar una recarga completa
-                especialidades = especialidades.Where(esp => esp.Id_especialidad != especialidad.Id_especialidad);
+                await CargarEspecialidades();
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

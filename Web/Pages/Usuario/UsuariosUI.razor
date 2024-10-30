@@ -50,7 +50,7 @@
                             <td style="vertical-align: middle;">@usuario.Nombre_usuario</td>
                             <td style="vertical-align: middle;">@usuario.Clave</td>
                             <td style="vertical-align: middle;">@(usuario.Habilitado == 1 ? "Si" : "No")</td>
-                            <td style="vertical-align: middle;">@(usuario.Cambia_clave == 0 ? "No" : "No")</td>
+                            <td style="vertical-align: middle;">@(usuario.Cambia_clave == 0 ? "No" : "Si")</td>
                             <td style="vertical-align: middle;">@usuario.Persona.Apellido, @usuario.Persona.Nombre</td>
                             <td class="d-flex justify-content-end">
                                 <a class="btn btn-primary btn-sm" href="usuario/@usuario.Id_usuario">
@@ -137,8 +137,7 @@ else
             {
                 await Swal.FireAsync("Usuario eliminado", "El usuario ha sido eliminado correctamente", SweetAlertIcon.Success);
 
-                // Eliminar el usuario de la lista localmente para evitar una recarga completa
-                usuarios = usuarios.Where(usu => usu.Id_usuario != usu.Id_usuario);
+                await CargarUsuarios();
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

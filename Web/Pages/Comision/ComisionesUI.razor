@@ -83,7 +83,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         await CargarComisiones();
-
     }
 
     private async Task CargarComisiones()
@@ -135,8 +134,7 @@ else
             {
                 await Swal.FireAsync("Comisión eliminada", "La comisión ha sido eliminada correctamente", SweetAlertIcon.Success);
 
-                // Eliminar la comision de la lista localmente para evitar una recarga completa
-                comisiones = comisiones.Where(com => com.Id_comision != comision.Id_comision);
+                await CargarComisiones();
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

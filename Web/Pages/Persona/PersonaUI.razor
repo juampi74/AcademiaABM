@@ -1,6 +1,8 @@
 ﻿@page "/persona"
 @page "/persona/{idPersona:int}"
 
+@using System.Text.RegularExpressions;
+
 @inject SweetAlertService Swal;
 @inject NavigationManager navegacion;
 
@@ -15,44 +17,65 @@
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Nombre</label>
-                <InputText class="form-control" @bind-Value="persona.Nombre"></InputText>
-                <ValidationMessage For="@(() => persona.Nombre)"></ValidationMessage>
+                <InputText class="form-control" @bind-Value="persona.Nombre" @oninput="ValidarNombre"></InputText>
+                @if (errorNombreInvalido)
+                {
+                    <div class="text-danger mt-2">El nombre debe tener entre de 5 y 30 caracteres.</div>
+                }
             </div>
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Apellido</label>
-                <InputText class="form-control" @bind-Value="persona.Apellido"></InputText>
-                <ValidationMessage For="@(() => persona.Apellido)"></ValidationMessage>
+                <InputText class="form-control" @bind-Value="persona.Apellido" @oninput="ValidarApellido"></InputText>
+                @if (errorApellidoInvalido)
+                {
+                    <div class="text-danger mt-2">El apellido debe tener entre de 2 y 20 caracteres.</div>
+                }
             </div>
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Direccion</label>
-                <InputText class="form-control" @bind-Value="persona.Direccion"></InputText>
-                <ValidationMessage For="@(() => persona.Direccion)"></ValidationMessage>
+                <InputText class="form-control" @bind-Value="persona.Direccion" @oninput="ValidarDireccion"></InputText>
+                @if (errorDireccionInvalida)
+                {
+                    <div class="text-danger mt-2">La dirección debe tener entre de 5 y 20 caracteres.</div>
+                }
             </div>
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Email</label>
-                <InputText class="form-control" @bind-Value="persona.Email"></InputText>
-                <ValidationMessage For="@(() => persona.Email)"></ValidationMessage>
+                <InputText class="form-control" @bind-Value="persona.Email" @oninput="ValidarEmail"></InputText>
+                @if (errorEmailInvalido)
+                {
+                    <div class="text-danger mt-2">El email ingresado es inválido.</div>
+                }
             </div>
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Telefono</label>
-                <InputText class="form-control" @bind-Value="persona.Telefono"></InputText>
-                <ValidationMessage For="@(() => persona.Telefono)"></ValidationMessage>
+                <InputText class="form-control" @bind-Value="persona.Telefono" @oninput="ValidarTelefono"></InputText>
+                @if (errorTelefonoInvalido)
+                {
+                    <div class="text-danger mt-2">El teléfono debe estar conformado por entre 10 y 20 números.</div>
+                }
             </div>
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Fecha de Nacimiento</label>
-                <InputDate class="form-control" @bind-Value="persona.Fecha_nac"></InputDate>
-                <ValidationMessage For="@(() => persona.Fecha_nac)"></ValidationMessage>
+                <InputDate class="form-control" @bind-Value="persona.Fecha_nac" @oninput="ValidarFechaNacimiento"></InputDate>
+                @if (errorFechaNacimientoInvalida)
+                {
+                    <div class="text-danger mt-2">La fecha de nacimiento debe ser mayor o igual al año 1900 y menor a la actual.</div>
+                }
             </div>
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Legajo</label>
-                <InputNumber class="form-control" @bind-Value="persona.Legajo"></InputNumber>
-                <ValidationMessage For="@(() => persona.Legajo)"></ValidationMessage>
+                <InputNumber class="form-control" @bind-Value="persona.Legajo" @oninput="ValidarLegajo"></InputNumber>
+                @if (errorLegajoInvalido)
+                {
+                    <div class="text-danger mt-2">El legajo debe estar conformado por 5 o 6 números.</div>
+                }
             </div>
 
             <div class="mt-4">
@@ -78,7 +101,7 @@
             <div class="d-flex align-items-center justify-content-end my-3">
                 <a class="btn btn-warning" href="personas">Volver</a>
 
-                <button class="btn btn-primary ms-2" type="submit">
+                <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
                     @btnTexto
                 </button>
             </div>
@@ -120,6 +143,24 @@ else
     bool errorBD = false;
     bool errorFaltanEntidades = false;
 
+    bool errorNombreInvalido = false;
+    bool errorApellidoInvalido = false;
+    bool errorDireccionInvalida = false;
+    bool errorEmailInvalido = false;
+    bool errorTelefonoInvalido = false;
+    bool errorFechaNacimientoInvalida = false;
+    bool errorLegajoInvalido = false;
+
+    bool botonDeshabilitado = false;
+
+    bool nombreModificado = false;
+    bool apellidoModificado = false;
+    bool direccionModificada = false;
+    bool emailModificado = false;
+    bool telefonoModificado = false;
+    bool fechaNacimientoModificada = false;
+    bool legajoModificado = false;
+
     protected override async Task OnInitializedAsync()
     {
         if (idPersona != 0)
@@ -144,6 +185,8 @@ else
             titulo = "Nueva Persona";
             btnTexto = "Guardar";
 
+            botonDeshabilitado = true;
+
             try
             {
                 planes = (List<Plan>) await PlanNegocio.GetAll();
@@ -162,6 +205,148 @@ else
         else
         {
             errorFaltanEntidades = true;
+        }
+    }
+
+    private void ValidarNombre(ChangeEventArgs e)
+    {
+        nombreModificado = true;
+
+        string? nombre = e.Value?.ToString();
+
+        if (nombre == null || nombre.Length < 5 || nombre.Length > 30)
+        {
+            errorNombreInvalido = true;
+        }
+        else
+        {
+            errorNombreInvalido = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarApellido(ChangeEventArgs e)
+    {
+        apellidoModificado = true;
+
+        string? apellido = e.Value?.ToString();
+
+        if (apellido == null || apellido.Length < 2 || apellido.Length > 20)
+        {
+            errorApellidoInvalido = true;
+        }
+        else
+        {
+            errorApellidoInvalido = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarDireccion(ChangeEventArgs e)
+    {
+        direccionModificada = true;
+
+        string? direccion = e.Value?.ToString();
+
+        if (direccion == null || direccion.Length < 5 || direccion.Length > 20)
+        {
+            errorDireccionInvalida = true;
+        }
+        else
+        {
+            errorDireccionInvalida = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarEmail(ChangeEventArgs e)
+    {
+        emailModificado = true;
+
+        string? email = e.Value?.ToString();
+
+        string patronEmail = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
+        if (email == null || !Regex.IsMatch(email, patronEmail))
+        {
+            errorEmailInvalido = true;
+        }
+        else
+        {
+            errorEmailInvalido = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarTelefono(ChangeEventArgs e)
+    {
+        telefonoModificado = true;
+
+        string? telefono = e.Value?.ToString();
+
+        string patronTelefono = @"^\d{10,20}$";
+
+        if (telefono == null || !Regex.IsMatch(telefono, patronTelefono))
+        {
+            errorTelefonoInvalido = true;
+        }
+        else
+        {
+            errorTelefonoInvalido = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarFechaNacimiento(ChangeEventArgs e)
+    {
+        fechaNacimientoModificada = true;
+
+        if (DateTime.TryParse(e.Value?.ToString(), out DateTime fechaNacimiento))
+        {
+            errorFechaNacimientoInvalida = fechaNacimiento >= DateTime.Today || fechaNacimiento < new DateTime(1900, 1, 1);
+        }
+        else
+        {
+            errorFechaNacimientoInvalida = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+
+    private void ValidarLegajo(ChangeEventArgs e)
+    {
+        legajoModificado = true;
+
+        if (int.TryParse(e.Value?.ToString(), out int legajo))
+        {
+            string patronLegajo = @"^\d{5,6}$";
+
+            errorLegajoInvalido = !Regex.IsMatch(legajo.ToString(), patronLegajo);
+        }
+        else
+        {
+            errorLegajoInvalido = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ActualizarEstadoBoton()
+    {
+        if (idPersona!= 0)
+        {
+            botonDeshabilitado = errorNombreInvalido || errorApellidoInvalido || errorDireccionInvalida || errorEmailInvalido || errorTelefonoInvalido || errorFechaNacimientoInvalida || errorLegajoInvalido;
+        }
+        else
+        {
+            botonDeshabilitado = errorNombreInvalido || errorApellidoInvalido || errorDireccionInvalida || errorEmailInvalido || errorTelefonoInvalido || errorFechaNacimientoInvalida || errorLegajoInvalido ||
+                               !nombreModificado || !apellidoModificado || !direccionModificada || !emailModificado || !telefonoModificado || !fechaNacimientoModificada || !legajoModificado;
         }
     }
 

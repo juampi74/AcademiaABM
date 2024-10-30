@@ -141,8 +141,7 @@ else
             {
                 await Swal.FireAsync("Persona eliminada", "La persona ha sido eliminada correctamente", SweetAlertIcon.Success);
 
-                // Eliminar la persona de la lista localmente para evitar una recarga completa
-                personas = personas.Where(per => per.Id_persona != per.Id_persona);
+                await CargarPersonas();
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

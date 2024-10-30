@@ -6,21 +6,24 @@
 
 <h2 class="mt-3">@titulo</h2>
 
-@if (!error)
+@if (!errorBD)
 {
     <EditForm Model="especialidad" OnValidSubmit="GuardarEspecialidad">
         <DataAnnotationsValidator></DataAnnotationsValidator>
 
         <div class="mt-4">
             <label class="form-label fw-bold">Descripcion</label>
-            <InputText class="form-control" @bind-Value="especialidad.Desc_especialidad"></InputText>
-            <ValidationMessage For="@(() => especialidad.Desc_especialidad)"></ValidationMessage>
+            <InputText class="form-control" @bind-Value="especialidad.Desc_especialidad" @oninput="ValidarDescripcion"></InputText>
+            @if (errorDescripcionInvalida)
+            {
+                <div class="text-danger mt-2">La descripción debe tener más de 10 caracteres.</div>
+            }
         </div>
 
         <div class="d-flex align-items-center justify-content-end mt-3">
             <a class="btn btn-warning" href="especialidades">Volver</a>
 
-            <button class="btn btn-primary ms-2" type="submit">
+            <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
                 @btnTexto
             </button>
         </div>
@@ -48,7 +51,11 @@ else
 
     Especialidad especialidad = new Especialidad();
 
-    bool error = false;
+    bool errorBD = false;
+
+    bool errorDescripcionInvalida = false;
+
+    bool botonDeshabilitado = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,13 +71,31 @@ else
             }
             catch (Exception)
             {
-                error = true;
+                errorBD = true;
             }
         }
         else
         {
             titulo = "Nueva Especialidad";
             btnTexto = "Guardar";
+
+            botonDeshabilitado = true;
+        }
+    }
+
+    private void ValidarDescripcion(ChangeEventArgs e)
+    {
+        string? descripcion = e.Value?.ToString();
+
+        if (descripcion == null || descripcion.Length < 10)
+        {
+            errorDescripcionInvalida = true;
+            botonDeshabilitado = true;
+        }
+        else
+        {
+            errorDescripcionInvalida = false;
+            botonDeshabilitado = false;
         }
     }
 
