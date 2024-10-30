@@ -65,6 +65,25 @@
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
             return response;
         }
+
+        public async static Task<Dictionary<string, int>> GetInscripcionesPorCurso()
+        {
+            var inscripciones = await GetAll(); // Obtén todas las inscripciones
+            var cursos = await CursoNegocio.GetAll(); // Obtén todos los cursos
+            var resultado = new Dictionary<string, int>();
+
+            // Mapea cada curso con su respectiva cantidad de inscripciones
+            foreach (var curso in cursos)
+            {
+                var cursoIdentificador = $"{curso.Comision.Desc_comision} - {curso.Materia.Desc_materia}";
+
+                var cantidad = inscripciones.Count(ins => ins.Id_curso == curso.Id_curso); // Asegúrate de que Id_curso está en Alumno_Inscripcion
+                
+                resultado[cursoIdentificador] = cantidad;
+            }
+
+            return resultado;
+        }
     }
 }
 

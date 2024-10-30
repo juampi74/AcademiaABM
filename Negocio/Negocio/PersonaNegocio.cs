@@ -65,6 +65,24 @@
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
             return response;
         }
+
+        public async static Task<Dictionary<string, int>> GetAlumnosPorPlan()
+        {
+            var alumnos = (await GetAll()).Where(per => per.Tipo_persona == 0).ToList();
+            var planes = await PlanNegocio.GetAll();
+            var resultado = new Dictionary<string, int>();
+
+            foreach (var plan in planes)
+            {
+                var planIdentificador = $"{plan.Especialidad.Desc_especialidad} - {plan.Desc_plan}";
+
+                var cantidad = alumnos.Count(alu => alu.Id_plan == plan.Id_plan);
+
+                resultado[planIdentificador] = cantidad;
+            }
+
+            return resultado;
+        }
     }
 }
 

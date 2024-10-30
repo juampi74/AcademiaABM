@@ -1,0 +1,52 @@
+﻿@page "/alumnos-por-plan"
+
+@using ChartJs.Blazor.PieChart;
+
+@if (alumnosPorPlan == null)
+{
+    <div class="d-flex align-items-center mt-3">
+        <h2 class="me-3">Alumnos por Plan</h2>
+        <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    </div>
+}
+else
+{
+    <h2>Alumnos por Plan</h2>
+    <Chart Config="_config"></Chart>
+}
+
+@code {
+    private PieConfig _config;
+
+    private Dictionary<string, int> alumnosPorPlan;
+
+    protected override async Task OnInitializedAsync()
+    {
+        alumnosPorPlan = await PersonaNegocio.GetAlumnosPorPlan();
+
+        _config = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Cantidad de Alumnos por Plan"
+                },
+            }
+        };
+
+        foreach (string label in alumnosPorPlan.Keys.ToList())
+        {
+            _config.Data.Labels.Add(label);
+        }
+
+        _config.Data.Datasets.Add(new PieDataset<int>(alumnosPorPlan.Values.ToArray())
+        {
+            BackgroundColor = new[] { "rgba(8, 23, 61, 0.8)", "rgba(15, 32, 97, 0.8)", "rgba(25, 21, 88, 0.6)", "rgba(45, 11, 78, 0.8)", "rgba(57, 6, 71, 0.8)", "rgba(57, 5, 70, 0.8)", "rgba(58, 6, 71, 0.8)" },
+            BorderColor = "rgba(0, 0, 0, 1)",
+            BorderWidth = 2
+        });
+    }
+}

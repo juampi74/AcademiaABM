@@ -14,19 +14,8 @@
             <DataAnnotationsValidator></DataAnnotationsValidator>
 
             <div class="mt-4">
-                <label class="form-label fw-bold">Curso</label>
-                <InputSelect class="form-select" @bind-Value="inscripcion.Id_curso">
-                    @foreach (var curso in cursos)
-                    {
-                        <option value="@curso.Id_curso">@curso.Materia.Desc_materia ➡️ @curso.Comision.Desc_comision</option>
-                    }
-                </InputSelect>
-                <ValidationMessage For="@(() => inscripcion.Id_curso)"></ValidationMessage>
-            </div>
-            
-            <div class="mt-4">
                 <label class="form-label fw-bold">Alumno</label>
-                <InputSelect class="form-select" @bind-Value="inscripcion.Id_alumno">
+                <InputSelect class="form-select" @bind-Value="inscripcion.Id_alumno" disabled="@modoEdicion">
                     @foreach (var alumno in alumnos)
                     {
                         <option value="@alumno.Id_persona">@alumno.Apellido, @alumno.Nombre</option>
@@ -36,21 +25,35 @@
             </div>
             
             <div class="mt-4">
-                <label class="form-label fw-bold">Condicion</label>
-                <InputText class="form-control" @bind-Value="inscripcion.Condicion"></InputText>
-                <ValidationMessage For="@(() => inscripcion.Condicion)"></ValidationMessage>
+                <label class="form-label fw-bold">Curso</label>
+                <InputSelect class="form-select" @bind-Value="inscripcion.Id_curso" disabled="@modoEdicion">
+                    @foreach (var curso in cursos)
+                    {
+                        <option value="@curso.Id_curso">@curso.Materia.Desc_materia ➡️ @curso.Comision.Desc_comision</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => inscripcion.Id_curso)"></ValidationMessage>
             </div>
 
-            <div class="mt-4">
-                <label class="form-label fw-bold">Nota</label>
-                <InputNumber class="form-control" @bind-Value="inscripcion.Nota"></InputNumber>
-                <ValidationMessage For="@(() => inscripcion.Nota)"></ValidationMessage>
-            </div>
+            @if (modoEdicion)
+            {
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Nota</label>
+                    <InputNumber class="form-control" @bind-Value="inscripcion.Nota" @oninput="CalcularCondicion"></InputNumber>
+                    @if (errorNotaInvalida)
+                    {
+                        <div class="text-danger">Por favor, ingrese una nota válida entre 1 y 10.</div>
+                    }
+                </div>
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Condicion</label>
+                    <InputText class="form-control" @bind-Value="condicionCalculada" disabled></InputText>
+                </div>
+            }
 
             <div class="d-flex align-items-center justify-content-end mt-3">
                 <a class="btn btn-warning" href="inscripciones">Volver</a>
-
-                <button class="btn btn-primary ms-2" type="submit">
+                <button class="btn btn-primary ms-2" type="submit" disabled=@botonDeshabilitado>
                     @btnTexto
                 </button>
             </div>
@@ -77,13 +80,13 @@ else
     </div>
 }
 
-
 @code {
     [Parameter]
     public int idInscripcion { get; set; } = 0;
 
     string titulo = string.Empty;
     string btnTexto = string.Empty;
+    bool modoEdicion => idInscripcion != 0;
 
     Alumno_Inscripcion inscripcion = new Alumno_Inscripcion();
     List<Persona> alumnos = new List<Persona>();
@@ -91,10 +94,14 @@ else
 
     bool errorBD = false;
     bool errorFaltanEntidades = false;
+    bool errorNotaInvalida = false;
+    bool botonDeshabilitado = true;
+
+    string condicionCalculada = "";
 
     protected override async Task OnInitializedAsync()
     {
-        if (idInscripcion != 0)
+        if (modoEdicion)
         {
             titulo = "Editar Inscripcion";
             btnTexto = "Actualizar";
@@ -102,6 +109,7 @@ else
             try
             {
                 inscripcion = await InscripcionNegocio.GetOne(idInscripcion);
+                condicionCalculada = inscripcion.Condicion;
 
                 alumnos = (List<Persona>) await PersonaNegocio.GetAll();
                 cursos = (List<Curso>) await CursoNegocio.GetAll();
@@ -116,6 +124,9 @@ else
         {
             titulo = "Nueva Inscripcion";
             btnTexto = "Guardar";
+            inscripcion.Condicion = "Inscripto";
+
+            botonDeshabilitado = false;
 
             try
             {
@@ -142,6 +153,36 @@ else
         }
     }
 
+    private void CalcularCondicion(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int nota))
+        {
+            if (nota < 1 || nota > 10)
+            {
+                errorNotaInvalida = true;
+                condicionCalculada = "Nota fuera de rango";
+
+                botonDeshabilitado = true;
+            }
+            else
+            {
+                errorNotaInvalida = false;
+                condicionCalculada = (nota < 4) ? "Libre" : (nota < 6) ? "Regular" : "Aprobado";
+
+                botonDeshabilitado = false;
+            }
+
+            inscripcion.Condicion = condicionCalculada;
+        }
+        else
+        {
+            errorNotaInvalida = true;
+            condicionCalculada = "Nota invalida";
+
+            botonDeshabilitado = true;
+        }
+    }
+
     private async Task GuardarInscripcion()
     {
         var result = await Swal.FireAsync(new SweetAlertOptions
@@ -156,7 +197,7 @@ else
 
         if (result.IsConfirmed)
         {
-            if (idInscripcion != 0)
+            if (modoEdicion)
             {
                 Alumno_InscripcionDTO inscripcionDTO = new Alumno_InscripcionDTO();
                 inscripcionDTO.Condicion = inscripcion.Condicion;
@@ -198,7 +239,9 @@ else
                 }
                 else if (response.StatusCode == HttpStatusCode.Conflict)
                 {
-                    await Swal.FireAsync("Error", "El curso no tiene más cupos disponibles", SweetAlertIcon.Error);
+                    var mensaje = (await response.Content.ReadAsStringAsync()).Trim('"');
+                    
+                    await Swal.FireAsync("Error", mensaje, SweetAlertIcon.Error);
                 }
                 else if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
@@ -209,7 +252,8 @@ else
                     await Swal.FireAsync("Error", "Error al conectarse a la base de datos!", SweetAlertIcon.Error);
                 }
             }
-            navegacion.NavigateTo("/inscripciones");
+
+            navegacion.NavigateTo("inscripciones");
         }
     }
 }

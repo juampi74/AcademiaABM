@@ -47,7 +47,7 @@
                         {
                             <tr>
                                 <td style="vertical-align: middle;">@inscripcion.Condicion</td>
-                                <td style="vertical-align: middle;">@inscripcion.Nota</td>
+                                <td style="vertical-align: middle;">@(inscripcion.Nota == 0 ? "-": @inscripcion.Nota)</td>
                                 <td style="vertical-align: middle;">@inscripcion.Alumno.Apellido, @inscripcion.Alumno.Nombre</td>
                                 <td style="vertical-align: middle;">@inscripcion.Curso.Comision.Desc_comision ➡️ @inscripcion.Curso.Materia.Desc_materia</td>
                                 <td class="d-flex justify-content-end">

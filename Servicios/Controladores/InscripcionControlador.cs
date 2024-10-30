@@ -66,11 +66,21 @@
             {
                 Alumno_Inscripcion nuevaInscripcion = new Alumno_Inscripcion(inscripcionDTO.Condicion, inscripcionDTO.Nota, inscripcionDTO.Id_alumno, inscripcionDTO.Id_curso);
 
+                var existeInscripcion = _context.Alumnos_Inscripciones
+                    .Any(ins => ins.Id_alumno == nuevaInscripcion.Id_alumno
+                             && ins.Id_curso == nuevaInscripcion.Id_curso
+                             && ins.Condicion != "Libre");
+
+                if (existeInscripcion)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, "El alumno ya se inscribió al curso");
+                }
+
                 var Curso = _context.Cursos.Find(nuevaInscripcion.Id_curso);
 
                 if (Curso == null || Curso.Cupo == 0)
                 {
-                    return StatusCode(StatusCodes.Status409Conflict);
+                    return StatusCode(StatusCodes.Status409Conflict, "El curso no tiene más cupos disponibles");
                 }
 
                 Curso.Cupo = Curso.Cupo - 1;

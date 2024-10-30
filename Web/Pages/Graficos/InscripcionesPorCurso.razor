@@ -1,0 +1,73 @@
+﻿@page "/inscripciones-por-curso"
+
+@using ChartJs.Blazor.BarChart;
+@using ChartJs.Blazor.BarChart.Axes;
+
+@if (inscripcionesPorCurso == null)
+{
+    <div class="d-flex align-items-center mt-3">
+        <h2 class="me-3">Inscripciones por Curso</h2>
+        <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    </div>
+}
+else
+{
+    <h2>Inscripciones por Curso</h2>
+    <Chart Config="_config"></Chart>
+}
+
+@code {
+    private BarConfig _config;
+
+    private Dictionary<string, int> inscripcionesPorCurso;
+
+    protected override async Task OnInitializedAsync()
+    {
+        inscripcionesPorCurso = (await InscripcionNegocio.GetInscripcionesPorCurso())
+                                    .OrderBy(insCur => insCur.Key)
+                                        .ToDictionary(insCur => insCur.Key, insCur => insCur.Value);
+
+        _config = new BarConfig
+            {
+                Options = new BarOptions
+                {
+                    Responsive = true,
+                    Title = new OptionsTitle
+                    {
+                        Display = true,
+                        Text = "Inscripciones por Curso"
+                    },
+                    Scales = new BarScales
+                    {
+                        YAxes = new List<CartesianAxis>
+                        {
+                            new BarLinearCartesianAxis
+                            {
+                                Ticks = new LinearCartesianTicks
+                                {
+                                    BeginAtZero = true,
+                                    StepSize = 1
+                                }
+                            }
+                        
+                        }
+                    }
+                }
+            };
+
+        foreach (string label in inscripcionesPorCurso.Keys.ToList())
+        {
+            _config.Data.Labels.Add(label);
+        }
+
+        BarDataset<int> dataset = new BarDataset<int>(inscripcionesPorCurso.Values.ToArray())
+            {
+                Label = "Cantidad de Inscripciones",
+                BackgroundColor = "rgba(7, 22, 60, 0.85)",
+                BorderColor = "rgba(7, 22, 60, 1)",
+                BorderWidth = 2
+            };
+        
+        _config.Data.Datasets.Add(dataset);
+    }
+}

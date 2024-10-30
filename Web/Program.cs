@@ -4,7 +4,7 @@ namespace Web
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
     using CurrieTechnologies.Razor.SweetAlert2;
-    
+
     public class Program
     {
         public static async Task Main(string[] args)
