@@ -20,7 +20,7 @@
                 <InputText class="form-control" @bind-Value="persona.Nombre" @oninput="ValidarNombre"></InputText>
                 @if (errorNombreInvalido)
                 {
-                    <div class="text-danger mt-2">El nombre debe tener entre de 5 y 30 caracteres.</div>
+                    <div class="text-danger mt-2">El nombre debe tener entre de 2 y 30 caracteres.</div>
                 }
             </div>
 
@@ -29,7 +29,7 @@
                 <InputText class="form-control" @bind-Value="persona.Apellido" @oninput="ValidarApellido"></InputText>
                 @if (errorApellidoInvalido)
                 {
-                    <div class="text-danger mt-2">El apellido debe tener entre de 2 y 20 caracteres.</div>
+                    <div class="text-danger mt-2">El apellido debe tener entre de 2 y 50 caracteres.</div>
                 }
             </div>
 
@@ -38,7 +38,7 @@
                 <InputText class="form-control" @bind-Value="persona.Direccion" @oninput="ValidarDireccion"></InputText>
                 @if (errorDireccionInvalida)
                 {
-                    <div class="text-danger mt-2">La dirección debe tener entre de 5 y 20 caracteres.</div>
+                    <div class="text-danger mt-2">La dirección debe tener entre de 5 y 30 caracteres.</div>
                 }
             </div>
 
@@ -214,7 +214,7 @@ else
 
         string? nombre = e.Value?.ToString();
 
-        if (nombre == null || nombre.Length < 5 || nombre.Length > 30)
+        if (nombre == null || nombre.Length < 2 || nombre.Length > 30)
         {
             errorNombreInvalido = true;
         }
@@ -232,7 +232,7 @@ else
 
         string? apellido = e.Value?.ToString();
 
-        if (apellido == null || apellido.Length < 2 || apellido.Length > 20)
+        if (apellido == null || apellido.Length < 2 || apellido.Length > 50)
         {
             errorApellidoInvalido = true;
         }
@@ -250,7 +250,7 @@ else
 
         string? direccion = e.Value?.ToString();
 
-        if (direccion == null || direccion.Length < 5 || direccion.Length > 20)
+        if (direccion == null || direccion.Length < 5 || direccion.Length > 30)
         {
             errorDireccionInvalida = true;
         }

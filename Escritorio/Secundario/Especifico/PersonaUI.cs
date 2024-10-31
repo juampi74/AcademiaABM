@@ -1,6 +1,7 @@
 ﻿namespace Escritorio
 {
     using System.Net;
+    using System.Text.RegularExpressions;
 
     using Entidades;
     using Negocio;
@@ -71,7 +72,7 @@
 
         private async void GuardarButton_Click(object sender, EventArgs e)
         {
-            if (ComprobarCamposRequeridos())
+            if (ValidarDatosIngresados())
             {
                 if (GuardarButton.Text == "Modificar")
                 {
@@ -106,26 +107,92 @@
             }
         }
 
-        private bool ComprobarCamposRequeridos()
+        private bool ValidarDatosIngresados()
         {
-            foreach (Control control in this.Controls.Cast<Control>().OrderBy(c => c.TabIndex))
+            if (NombreTextBox.Text.Length < 2 || NombreTextBox.Text.Length > 30)
             {
-                if (control is TextBox textBox)
-                {
-                    if (string.IsNullOrEmpty(textBox.Text))
-                    {
-                        CampoRequerido campoRequerido = new CampoRequerido();
-                        campoRequerido.CampoRequeridoLabel.Text = campoRequerido.CampoRequeridoLabel.Text.Replace("${campo}", textBox.Name.Replace("TextBox", ""));
-                        campoRequerido.ShowDialog(this);
+                MessageBox.Show($"El nombre debe tener entre de 2 y 30 caracteres", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                        DialogResult = DialogResult.None;
-                        return false;
-                    }
-                }
+                DialogResult = DialogResult.None;
+                return false;
+
             }
 
-            return true;
+            if (ApellidoTextBox.Text.Length < 2 || ApellidoTextBox.Text.Length > 50)
+            {
+                MessageBox.Show($"El apellido debe tener entre de 2 y 50 caracteres", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                DialogResult = DialogResult.None;
+                return false;
+
+            }
+
+            if (DireccionTextBox.Text.Length < 5 || ApellidoTextBox.Text.Length > 30)
+            {
+                MessageBox.Show($"La dirección debe tener entre de 5 y 30 caracteres", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                DialogResult = DialogResult.None;
+                return false;
+
+            }
+
+            if (!Regex.IsMatch(EmailTextBox.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                MessageBox.Show($"El email ingresado es inválido", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                DialogResult = DialogResult.None;
+                return false;
+
+            }
+
+            if (!Regex.IsMatch(TelefonoTextBox.Text, @"^\d{10,20}$"))
+            {
+                MessageBox.Show($"El teléfono debe estar conformado por entre 10 y 20 números", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                DialogResult = DialogResult.None;
+                return false;
+
+            }
+
+            if (DateTime.TryParse(FechaNacimientoDatePicker.Value.ToString(), out DateTime fechaNacimiento))
+            {
+                if (fechaNacimiento >= DateTime.Today || fechaNacimiento < new DateTime(1900, 1, 1))
+                {
+                    MessageBox.Show($"La fecha de nacimiento debe ser mayor o igual al año 1900 y menor a la actual", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    DialogResult = DialogResult.None;
+                    return false;
+                }
+            }
+            else
+            {
+                MessageBox.Show($"La fecha de nacimiento debe ser mayor o igual al año 1900 y menor a la actual", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                DialogResult = DialogResult.None;
+                return false;
+            }
+
+            if (int.TryParse(LegajoTextBox.Text, out int legajo))
+            {
+                if (!Regex.IsMatch(legajo.ToString(), @"^\d{5,6}$"))
+                {
+                    MessageBox.Show($"El legajo debe estar conformado por 5 o 6 números", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    DialogResult = DialogResult.None;
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                MessageBox.Show($"El legajo debe estar conformado por 5 o 6 números", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                DialogResult = DialogResult.None;
+                return false;
+            }
         }
 
         private PersonaDTO EstablecerDatosPersonaAModificar()

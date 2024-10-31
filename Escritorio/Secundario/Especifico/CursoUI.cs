@@ -67,7 +67,7 @@
 
         private async void GuardarButton_Click(object sender, EventArgs e)
         {
-            if (ComprobarCamposRequeridos())
+            if (ValidarDatosIngresados())
             {
                 if (GuardarButton.Text == "Modificar")
                 {
@@ -102,26 +102,49 @@
             }
         }
 
-        private bool ComprobarCamposRequeridos()
+        private bool ValidarDatosIngresados()
         {
-            foreach (Control control in this.Controls.Cast<Control>().OrderBy(c => c.TabIndex))
+            if (int.TryParse(AnioCalendarioTextBox.Text, out int anio))
             {
-                if (control is TextBox textBox)
-                {
-                    if (string.IsNullOrEmpty(textBox.Text))
-                    {
-                        CampoRequerido campoRequerido = new CampoRequerido();
-                        campoRequerido.CampoRequeridoLabel.Text = campoRequerido.CampoRequeridoLabel.Text.Replace("${campo}", textBox.Name.Replace("TextBox", ""));
-                        campoRequerido.ShowDialog(this);
+                int anioActual = DateTime.Now.Year;
 
-                        DialogResult = DialogResult.None;
-                        return false;
-                    }
+                if (anio != anioActual && anio != (anioActual + 1))
+                {
+                    MessageBox.Show($"El año debe corresponder al actual o al siguiente", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    DialogResult = DialogResult.None;
+                    return false;
                 }
             }
+            else
+            {
+                MessageBox.Show($"El año debe corresponder al actual o al siguiente", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            return true;
+                DialogResult = DialogResult.None;
+                return false;
+            }
 
+            if (int.TryParse(CupoTextBox.Text, out int cupo))
+            {
+                if (cupo < 20 || cupo > 100)
+                {
+                    MessageBox.Show($"El cupo debe ser un número entre 20 y 100", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    DialogResult = DialogResult.None;
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                MessageBox.Show($"El cupo debe ser un número entre 20 y 100", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                DialogResult = DialogResult.None;
+                return false;
+            }
         }
 
         private CursoDTO EstablecerDatosCursoAModificar()

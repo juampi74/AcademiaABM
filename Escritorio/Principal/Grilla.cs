@@ -34,7 +34,7 @@ namespace Escritorio
 
         public void ConfigurarIntefaz()
         {
-            List<Button> botonesAOcultarAlumno = new List<Button> { btnMostrarDictados, btnMostrarMaterias, btnMostrarUsuarios };
+            List<Button> botonesAOcultarAlumno = new List<Button> { btnMostrarDictados, btnMostrarMaterias };
             List<Button> botonesAOcultarDocente = new List<Button> { btnMostrarInscripciones, btnMostrarPersonas, btnMostrarUsuarios };
 
             if (usuarioAutenticado.Persona.Tipo_persona == 0)
@@ -260,7 +260,7 @@ namespace Escritorio
                         } else if (result == DialogResult.Abort)
                         {
                             ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
-                            errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "El curso no tiene más cupos disponibles");
+                            errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", nuevaInscripcion.Mensaje);
                             errorBD.ShowDialog(this);
                         }
                         btnMostrarInscripciones_Click(sender, e);

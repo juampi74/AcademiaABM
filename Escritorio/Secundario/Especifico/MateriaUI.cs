@@ -53,7 +53,7 @@
 
         private async void GuardarButton_Click(object sender, EventArgs e)
         {
-            if (ComprobarCamposRequeridos())
+            if (ValidarDatosIngresados())
             {
                 if (GuardarButton.Text == "Modificar")
                 {
@@ -88,26 +88,56 @@
             }
         }
 
-        private bool ComprobarCamposRequeridos()
+        private bool ValidarDatosIngresados()
         {
-            foreach (Control control in this.Controls.Cast<Control>().OrderBy(c => c.TabIndex))
+            if (DescripcionTextBox.Text.Length < 10)
             {
-                if (control is TextBox textBox)
-                {
-                    if (string.IsNullOrEmpty(textBox.Text))
-                    {
-                        CampoRequerido campoRequerido = new CampoRequerido();
-                        campoRequerido.CampoRequeridoLabel.Text = campoRequerido.CampoRequeridoLabel.Text.Replace("${campo}", textBox.Name.Replace("TextBox", ""));
-                        campoRequerido.ShowDialog(this);
+                MessageBox.Show($"La descripción debe tener más de 10 caracteres", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                        DialogResult = DialogResult.None;
-                        return false;
-                    }
-                }
+                DialogResult = DialogResult.None;
+                return false;
+
             }
 
-            return true;
+            if (int.TryParse(HsSemanalesTextBox.Text, out int hsSemanales))
+            {
+                if (hsSemanales < 3 || hsSemanales > 6)
+                {
+                    MessageBox.Show($"La cantidad de horas semanales debe ser un número entre 3 y 6", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                    DialogResult = DialogResult.None;
+                    return false;
+                }
+            }
+            else
+            {
+                MessageBox.Show($"La cantidad de horas semanales debe ser un número entre 3 y 6", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                DialogResult = DialogResult.None;
+                return false;
+            }
+
+            if (int.TryParse(HsTotalesTextBox.Text, out int hsTotales))
+            {
+                if (hsTotales < 90 || hsTotales > 190)
+                {
+                    MessageBox.Show($"La cantidad de horas totales debe ser un número entre 90 y 190", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    DialogResult = DialogResult.None;
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                MessageBox.Show($"La cantidad de horas totales debe ser un número entre 90 y 190", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                DialogResult = DialogResult.None;
+                return false;
+            }
         }
 
         private MateriaDTO EstablecerDatosMateriaAModificar()

@@ -51,7 +51,7 @@
 
         private async void GuardarButton_Click(object sender, EventArgs e)
         {
-            if (ComprobarCamposRequeridos())
+            if (ValidarDatosIngresados())
             {
                 if (GuardarButton.Text == "Modificar")
                 {
@@ -86,26 +86,17 @@
             }
         }
 
-        private bool ComprobarCamposRequeridos()
+        private bool ValidarDatosIngresados()
         {
-            foreach (Control control in this.Controls.Cast<Control>().OrderBy(c => c.TabIndex))
+            if (DescPlanTextBox.Text.Length < 10)
             {
-                if (control is TextBox textBox)
-                {
-                    if (string.IsNullOrEmpty(textBox.Text))
-                    {
-                        CampoRequerido campoRequerido = new CampoRequerido();
-                        campoRequerido.CampoRequeridoLabel.Text = campoRequerido.CampoRequeridoLabel.Text.Replace("${campo}", textBox.Name.Replace("TextBox", ""));
-                        campoRequerido.ShowDialog(this);
+                MessageBox.Show($"La descripción debe tener más de 10 caracteres", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                        DialogResult = DialogResult.None;
-                        return false;
-                    }
-                }
+                DialogResult = DialogResult.None;
+                return false;
             }
 
             return true;
-
         }
 
         private PlanDTO EstablecerDatosPlanAModificar()
