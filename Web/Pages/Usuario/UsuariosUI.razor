@@ -51,7 +51,9 @@
                             <td style="vertical-align: middle;">@usuario.Clave</td>
                             <td style="vertical-align: middle;">@(usuario.Habilitado == 1 ? "Si" : "No")</td>
                             <td style="vertical-align: middle;">@(usuario.Cambia_clave == 0 ? "No" : "Si")</td>
-                            <td style="vertical-align: middle;">@usuario.Persona.Apellido, @usuario.Persona.Nombre</td>
+                            <td style="vertical-align: middle;">
+                                @(usuario.Persona == null ? "-" : (usuario.Persona.Apellido + ", " + usuario.Persona.Nombre))
+                            </td>
                             <td class="d-flex justify-content-end">
                                 <a class="btn btn-primary btn-sm" href="usuario/@usuario.Id_usuario">
                                     <i class="bi bi-pencil-square fs-5"></i>
@@ -112,9 +114,10 @@ else
         }
 
         return usuarios?.Where(usu =>
-               usu.Nombre_usuario.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
-              (usu.Persona.Apellido + ", " + usu.Persona.Nombre).Contains(busqueda, StringComparison.OrdinalIgnoreCase))
-            ?? new List<Usuario>();
+           usu.Nombre_usuario.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+           (usu.Persona != null &&
+           (usu.Persona.Apellido + ", " + usu.Persona.Nombre).Contains(busqueda, StringComparison.OrdinalIgnoreCase)))
+        ?? new List<Usuario>();
     }
 
     private async Task EliminarUsuario(Usuario usuario)

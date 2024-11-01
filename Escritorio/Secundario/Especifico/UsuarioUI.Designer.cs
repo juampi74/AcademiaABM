@@ -41,6 +41,7 @@
             GuardarButton = new Button();
             CambiaClaveComboBox = new ComboBox();
             HabilitadoComboBox = new ComboBox();
+            AdministradorCheckBox = new CheckBox();
             SuspendLayout();
             // 
             // TituloLabel
@@ -50,7 +51,7 @@
             TituloLabel.Location = new Point(56, 11);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(108, 37);
-            TituloLabel.TabIndex = 12;
+            TituloLabel.TabIndex = 13;
             TituloLabel.Text = "Usuario";
             // 
             // NombreUsuarioLabel
@@ -59,7 +60,7 @@
             NombreUsuarioLabel.Location = new Point(22, 67);
             NombreUsuarioLabel.Name = "NombreUsuarioLabel";
             NombreUsuarioLabel.Size = new Size(113, 15);
-            NombreUsuarioLabel.TabIndex = 11;
+            NombreUsuarioLabel.TabIndex = 12;
             NombreUsuarioLabel.Text = "Nombre de Usuario:";
             // 
             // NombreUsuarioTextBox
@@ -77,7 +78,7 @@
             ClaveLabel.Location = new Point(96, 101);
             ClaveLabel.Name = "ClaveLabel";
             ClaveLabel.Size = new Size(39, 15);
-            ClaveLabel.TabIndex = 10;
+            ClaveLabel.TabIndex = 11;
             ClaveLabel.Text = "Clave:";
             // 
             // ClaveTextBox
@@ -95,7 +96,7 @@
             HabilitadoLabel.Location = new Point(70, 137);
             HabilitadoLabel.Name = "HabilitadoLabel";
             HabilitadoLabel.Size = new Size(65, 15);
-            HabilitadoLabel.TabIndex = 9;
+            HabilitadoLabel.TabIndex = 10;
             HabilitadoLabel.Text = "Habilitado:";
             // 
             // CambiaClaveLabel
@@ -104,16 +105,16 @@
             CambiaClaveLabel.Location = new Point(52, 171);
             CambiaClaveLabel.Name = "CambiaClaveLabel";
             CambiaClaveLabel.Size = new Size(83, 15);
-            CambiaClaveLabel.TabIndex = 8;
+            CambiaClaveLabel.TabIndex = 9;
             CambiaClaveLabel.Text = "Cambia Clave:";
             // 
             // PersonaLabel
             // 
             PersonaLabel.AutoSize = true;
-            PersonaLabel.Location = new Point(83, 207);
+            PersonaLabel.Location = new Point(83, 241);
             PersonaLabel.Name = "PersonaLabel";
             PersonaLabel.Size = new Size(52, 15);
-            PersonaLabel.TabIndex = 7;
+            PersonaLabel.TabIndex = 8;
             PersonaLabel.Text = "Persona:";
             // 
             // PersonaComboBox
@@ -121,19 +122,19 @@
             PersonaComboBox.BackColor = SystemColors.GrayText;
             PersonaComboBox.ForeColor = SystemColors.Window;
             PersonaComboBox.FormattingEnabled = true;
-            PersonaComboBox.Location = new Point(140, 204);
+            PersonaComboBox.Location = new Point(140, 238);
             PersonaComboBox.Name = "PersonaComboBox";
             PersonaComboBox.Size = new Size(127, 23);
-            PersonaComboBox.TabIndex = 4;
+            PersonaComboBox.TabIndex = 5;
             // 
             // CancelarButton
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(34, 244);
+            CancelarButton.Location = new Point(34, 278);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
-            CancelarButton.TabIndex = 6;
+            CancelarButton.TabIndex = 7;
             CancelarButton.Text = "Cancelar";
             CancelarButton.UseVisualStyleBackColor = false;
             CancelarButton.Click += CancelarButton_Click;
@@ -142,10 +143,10 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(176, 244);
+            GuardarButton.Location = new Point(176, 278);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
-            GuardarButton.TabIndex = 5;
+            GuardarButton.TabIndex = 6;
             GuardarButton.Text = "Guardar";
             GuardarButton.UseVisualStyleBackColor = false;
             GuardarButton.Click += GuardarButton_Click;
@@ -158,7 +159,7 @@
             CambiaClaveComboBox.Location = new Point(140, 168);
             CambiaClaveComboBox.Name = "CambiaClaveComboBox";
             CambiaClaveComboBox.Size = new Size(127, 23);
-            CambiaClaveComboBox.TabIndex = 13;
+            CambiaClaveComboBox.TabIndex = 3;
             // 
             // HabilitadoComboBox
             // 
@@ -168,14 +169,26 @@
             HabilitadoComboBox.Location = new Point(141, 134);
             HabilitadoComboBox.Name = "HabilitadoComboBox";
             HabilitadoComboBox.Size = new Size(127, 23);
-            HabilitadoComboBox.TabIndex = 14;
+            HabilitadoComboBox.TabIndex = 2;
+            // 
+            // AdministradorCheckBox
+            // 
+            AdministradorCheckBox.AutoSize = true;
+            AdministradorCheckBox.Location = new Point(36, 206);
+            AdministradorCheckBox.Name = "AdministradorCheckBox";
+            AdministradorCheckBox.Size = new Size(102, 19);
+            AdministradorCheckBox.TabIndex = 4;
+            AdministradorCheckBox.Text = "Administrador";
+            AdministradorCheckBox.UseVisualStyleBackColor = true;
+            AdministradorCheckBox.CheckedChanged += AdministradorCheckBox_CheckedChanged;
             // 
             // UsuarioUI
             // 
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(298, 281);
+            ClientSize = new Size(298, 316);
+            Controls.Add(AdministradorCheckBox);
             Controls.Add(HabilitadoComboBox);
             Controls.Add(CambiaClaveComboBox);
             Controls.Add(TituloLabel);
@@ -212,5 +225,6 @@
         private Button GuardarButton;
         private ComboBox CambiaClaveComboBox;
         private ComboBox HabilitadoComboBox;
+        private CheckBox AdministradorCheckBox;
     }
 }

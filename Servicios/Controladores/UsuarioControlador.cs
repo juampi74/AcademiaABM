@@ -5,15 +5,19 @@
     using Datos;
     using Entidades;
 
+    using Microsoft.Extensions.Logging;
+
     [ApiController]
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
     {
         private readonly UniversidadContext _context;
+        private readonly ILogger<UsuarioController> _logger; // Logger para el controlador
 
-        public UsuarioController(UniversidadContext context)
+        public UsuarioController(UniversidadContext context, ILogger<UsuarioController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpGet(Name = "GetUsuario")]
@@ -57,7 +61,22 @@
         {
             try
             {
-                Usuario nuevoUsuario = new Usuario(usuarioDTO.Nombre_usuario, usuarioDTO.Clave, usuarioDTO.Habilitado, usuarioDTO.Cambia_clave, usuarioDTO.Id_persona);
+                _logger.LogInformation("Valor de usuarioDTO.Id_persona: {IdPersona}", usuarioDTO.Id_persona);
+
+                Usuario nuevoUsuario;
+
+                if (usuarioDTO.Id_persona == 0 || usuarioDTO.Id_persona == null)
+                {
+                    // Se le asigna Rol 2 (Administrador)
+                    nuevoUsuario = new Usuario(usuarioDTO.Nombre_usuario, usuarioDTO.Clave, usuarioDTO.Habilitado, usuarioDTO.Cambia_clave, 2);
+
+                } else
+                {
+                    // Corresponde a un Alumno o a un Docente, y se le asigna el rol correpsondiente al Tipo_persona de la Persona asociada al Usuario
+                    Persona persona = _context.Personas.Find(usuarioDTO.Id_persona);
+
+                    nuevoUsuario = new Usuario(usuarioDTO.Nombre_usuario, usuarioDTO.Clave, usuarioDTO.Habilitado, usuarioDTO.Cambia_clave, persona.Tipo_persona, persona.Id_persona);
+                }
 
                 _context.Usuarios.Add(nuevoUsuario);
                 _context.SaveChanges();

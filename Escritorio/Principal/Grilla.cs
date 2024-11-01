@@ -34,14 +34,17 @@ namespace Escritorio
 
         public void ConfigurarIntefaz()
         {
-            List<Button> botonesAOcultarAlumno = new List<Button> { btnMostrarDictados, btnMostrarMaterias };
-            List<Button> botonesAOcultarDocente = new List<Button> { btnMostrarInscripciones, btnMostrarPersonas, btnMostrarUsuarios };
+            // Agregar que se oculte btnMostrarCursos
+            List<Button> botonesAOcultarAlumno = new List<Button> { btnMostrarInscripciones, btnMostrarComisiones, btnMostrarDictados, btnMostrarEspecialidades, btnMostrarMaterias, btnMostrarPersonas, btnMostrarPlanes, btnMostrarUsuarios };
 
-            if (usuarioAutenticado.Persona.Tipo_persona == 0)
+            // Agregar que se oculte btnMostrarInscripciones
+            List<Button> botonesAOcultarDocente = new List<Button> { btnMostrarComisiones, btnMostrarCursos, btnMostrarDictados, btnMostrarEspecialidades, btnMostrarMaterias, btnMostrarPersonas, btnMostrarPlanes, btnMostrarUsuarios };
+
+            if (usuarioAutenticado.Rol == 0)
             {
                 OcultarBotones(botonesAOcultarAlumno);
 
-            } else
+            } else if (usuarioAutenticado.Rol == 1)
             {
                 OcultarBotones(botonesAOcultarDocente);
             }

@@ -15,7 +15,7 @@
 
             <div class="mt-4">
                 <label class="form-label fw-bold">Nombre de Usuario</label>
-                <InputText class="form-control" @bind-Value="usuario.Nombre_usuario" @oninput="ValidarNombreUsuario"></InputText>
+                <InputText class="form-control" @bind-Value="usuario.Nombre_usuario" @oninput="ValidarNombreUsuario" disabled="@camposDeshabilitados"></InputText>
                 @if (errorNombreUsuarioInvalido)
                 {
                     <div class="text-danger mt-2">El nombre de usuario debe tener entre de 5 y 20 caracteres.</div>
@@ -49,18 +49,29 @@
                 <ValidationMessage For="@(() => usuario.Cambia_clave)"></ValidationMessage>
             </div>
 
-            <div class="mt-4">
-                <label class="form-label fw-bold">Persona</label>
-                <InputSelect class="form-select" @bind-Value="usuario.Id_persona">
-                    @foreach (var persona in personas)
-                    {
-                        <option value="@persona.Id_persona">@persona.Apellido, @persona.Nombre</option>
-                    }
-                </InputSelect>
-                <ValidationMessage For="@(() => usuario.Id_persona)"></ValidationMessage>
-            </div>
+            @if (mostrarCheckboxAdministrador)
+            {
+                <div class="mt-4 form-check">
+                    <InputCheckbox @bind-Value="esAdministrador" id="esAdministrador" @onchange="OnAdminCheckboxChanged" disabled="@checkboxDeshabilitado" />
+                    <label class="form-check-label" for="esAdministrador">Administrador</label>
+                </div>
+            }
 
-            <div class="d-flex align-items-center justify-content-end mt-3">
+            @if (!esAdministrador)
+            {
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Persona</label>
+                    <InputSelect class="form-select" @bind-Value="usuario.Id_persona" disabled="@camposDeshabilitados">
+                        @foreach (var persona in personas)
+                        {
+                            <option value="@persona.Id_persona">@persona.Apellido, @persona.Nombre</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => usuario.Id_persona)"></ValidationMessage>
+                </div>
+            }
+
+            <div class="d-flex align-items-center justify-content-end my-3">
                 <a class="btn btn-warning" href="usuarios">Volver</a>
 
                 <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
@@ -112,6 +123,13 @@ else
     bool nombreUsuarioModificado = false;
     bool claveModificada = false;
 
+    bool esAdministrador = false;
+    bool checkboxDeshabilitado = false;
+    bool mostrarCheckboxAdministrador = true;
+
+    bool camposDeshabilitados = false;
+
+
     protected override async Task OnInitializedAsync()
     {
         if (idUsuario != 0)
@@ -124,6 +142,16 @@ else
                 usuario = await UsuarioNegocio.GetOne(idUsuario);
 
                 personas = (List<Persona>) await PersonaNegocio.GetAll();
+
+                camposDeshabilitados = true;
+
+                if (usuario.Rol == 2)
+                {
+                    esAdministrador = true;
+                    checkboxDeshabilitado = true; 
+                }
+
+                mostrarCheckboxAdministrador = usuario.Id_persona == null;
 
             }
             catch (Exception)
@@ -157,6 +185,16 @@ else
         {
             errorFaltanEntidades = true;
         }
+    }
+
+    private void OnAdminCheckboxChanged(ChangeEventArgs e)
+    {
+        esAdministrador = (bool) e.Value;
+        if (esAdministrador)
+        {
+            usuario.Id_persona = 0;
+        }
+        ActualizarEstadoBoton();
     }
 
     private void ValidarNombreUsuario(ChangeEventArgs e)
@@ -204,7 +242,8 @@ else
         else
         {
             botonDeshabilitado = errorNombreUsuarioInvalido || errorClaveInvalida ||
-                             !nombreUsuarioModificado || !claveModificada;
+                             !nombreUsuarioModificado || !claveModificada ||
+                             (esAdministrador && usuario.Id_persona != 0);
         }
     }
 
@@ -229,7 +268,7 @@ else
                 usuarioDTO.Clave = usuario.Clave;
                 usuarioDTO.Habilitado = usuario.Habilitado;
                 usuarioDTO.Cambia_clave = usuario.Cambia_clave;
-                usuarioDTO.Id_persona = usuario.Id_persona;
+                usuarioDTO.Id_persona = esAdministrador ? 0 : usuario.Id_persona;
 
                 HttpResponseMessage response = await UsuarioNegocio.Update(idUsuario, usuarioDTO);
 
@@ -256,7 +295,7 @@ else
                 {
                     usuario.Cambia_clave = 0;
                 }
-                if (usuario.Id_persona == 0)
+                if ((usuario.Id_persona == null || usuario.Id_persona == 0) && !esAdministrador)
                 {
                     usuario.Id_persona = personas.First().Id_persona;
                 }
@@ -266,6 +305,7 @@ else
                 if (response.StatusCode == HttpStatusCode.Created)
                 {
                     await Swal.FireAsync("Usuario creado", "El usuario ha sido creado correctamente", SweetAlertIcon.Success);
+                    navegacion.NavigateTo("usuarios");
                 }
                 else if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
@@ -276,7 +316,6 @@ else
                     await Swal.FireAsync("Error", "Error al conectarse a la base de datos!", SweetAlertIcon.Error);
                 }
             }
-            navegacion.NavigateTo("/usuarios");
         }
     }
 }

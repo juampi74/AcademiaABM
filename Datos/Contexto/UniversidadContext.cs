@@ -46,11 +46,12 @@
             modelBuilder.Entity<Usuario>()
                             .HasKey(usu => usu.Id_usuario);
 
-            // Relación 1:N entre Persona y Usuario
+            // Relación 0:N entre Persona y Usuario (opcional)
             modelBuilder.Entity<Usuario>()
                 .HasOne(usu => usu.Persona)
                 .WithMany()
                 .HasForeignKey(usu => usu.Id_persona)
+                .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relación 1:N entre Especialidad y Plan
@@ -122,6 +123,18 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Configura la cadena de conexión a SQL Server
+            optionsBuilder.UseSqlServer(@"Server=DESKTOP-I6LRHO6\SQLEXPRESS;Initial Catalog=universidad;Integrated Security=true;Encrypt=False;Connection Timeout=5");
+        }
+
+        public UniversidadContext()
+        {
+            // Asegura que la base de datos se cree si no existe
+            Database.EnsureCreated();
         }
     }
 }
