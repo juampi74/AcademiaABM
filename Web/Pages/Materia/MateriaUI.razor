@@ -1,0 +1,322 @@
+﻿@page "/materia"
+@page "/materia/{idMateria:int}"
+
+@using Web.Pages.Autenticacion;
+
+@inject SweetAlertService Swal;
+@inject NavigationManager navegacion;
+
+@inject AuthService AuthService;
+
+@if (cargando)
+{
+    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+}
+else if (!rolAutorizado)
+{
+    <Unauthorized />
+}
+else
+{
+    <h2 class="mt-2">@titulo</h2>
+
+    @if (!errorBD)
+    {
+        @if (!errorFaltanEntidades)
+        {
+            <EditForm Model="materia" OnValidSubmit="GuardarMateria">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Descripcion</label>
+                    <InputText class="form-control" @bind-Value="materia.Desc_materia" @oninput="ValidarDescripcion"></InputText>
+                    @if (errorDescripcionInvalida)
+                    {
+                        <div class="text-danger mt-2">La descripción debe tener más de 10 caracteres.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Horas Semanales</label>
+                    <InputNumber class="form-control" @bind-Value="materia.Hs_semanales" @oninput="ValidarHorasSemanales"></InputNumber>
+                    @if (errorHorasSemanalesInvalidas)
+                    {
+                        <div class="text-danger mt-2">La cantidad de horas semanales debe ser un número entre 3 y 6.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Horas Totales</label>
+                    <InputNumber class="form-control" @bind-Value="materia.Hs_totales" @oninput="ValidarHorasTotales"></InputNumber>
+                    @if (errorHorasTotalesInvalidas)
+                    {
+                        <div class="text-danger mt-2">La cantidad de horas totales debe ser un número entre 100 y 250.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Plan</label>
+                    <InputSelect class="form-select" @bind-Value="materia.Id_plan" disabled="@camposDeshabilitados">
+                        @foreach (var plan in planes)
+                        {
+                            <option value="@plan.Id_plan">@plan.Desc_plan ➡️ @plan.Especialidad.Desc_especialidad</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => materia.Id_plan)"></ValidationMessage>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-end mt-3">
+                    <a class="btn btn-warning" href="materias">Volver</a>
+
+                    <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
+                        @btnTexto
+                    </button>
+                </div>
+
+            </EditForm>
+        }
+        else
+        {
+            <div class="alert alert-warning fw-bold my-3" role="alert">
+                Debe haber al menos un plan registrado previamente!
+            </div>
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-dark" href="materias">Volver</a>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-danger fw-bold my-3" role="alert">
+            Error al conectarse a la base de datos!
+        </div>
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-dark" href="materias">Volver</a>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public int idMateria { get; set; } = 0;
+
+    bool cargando = true;
+    bool rolAutorizado = false;
+
+    string titulo = string.Empty;
+    string btnTexto = string.Empty;
+
+    Materia materia = new Materia();
+    List<Plan> planes = new List<Plan>();
+
+    bool errorBD = false;
+    bool errorFaltanEntidades = false;
+
+    bool errorDescripcionInvalida = false;
+    bool errorHorasSemanalesInvalidas = false;
+    bool errorHorasTotalesInvalidas = false;
+
+    bool botonDeshabilitado = false;
+
+    bool descripcionModificada = false;
+    bool horasSemanalesModificadas = false;
+    bool horasTotalesModificadas = false;
+
+    bool camposDeshabilitados = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authResult = await AuthService.IsAuthenticatedAsync();
+
+        if (!authResult.IsAuthenticated)
+        {
+            navegacion.NavigateTo("/login");
+        }
+        else
+        {
+            if (authResult.Rol != "2")
+            {
+                rolAutorizado = false;
+            }
+            else
+            {
+                rolAutorizado = true;
+
+                if (idMateria != 0)
+                {
+                    titulo = "Editar Materia";
+                    btnTexto = "Actualizar";
+
+                    try
+                    {
+                        materia = await MateriaNegocio.GetOne(idMateria);
+
+                        planes = (List<Plan>) await PlanNegocio.GetAll();
+
+                        camposDeshabilitados = true;
+                    }
+                    catch (Exception)
+                    {
+                        errorBD = true;
+                    }
+                }
+                else
+                {
+                    titulo = "Nueva Materia";
+                    btnTexto = "Guardar";
+
+                    botonDeshabilitado = true;
+
+                    try
+                    {
+                        planes = (List<Plan>) await PlanNegocio.GetAll();
+                    }
+                    catch (Exception)
+                    {
+                        errorBD = true;
+                    }
+
+                    if (planes.Any())
+                    {
+                        planes = planes.OrderBy(plan => plan.Desc_plan).ThenBy(plan => plan.Especialidad.Desc_especialidad).ToList();
+
+                        materia.Id_plan = planes.First().Id_plan;
+                    }
+                    else
+                    {
+                        errorFaltanEntidades = true;
+                    }
+                }
+            }
+
+            cargando = false;
+        }
+    }
+
+    private void ValidarDescripcion(ChangeEventArgs e)
+    {
+        descripcionModificada = true;
+
+        string? descripcion = e.Value?.ToString();
+
+        if (descripcion == null || descripcion.Length < 10)
+        {
+            errorDescripcionInvalida = true;
+        }
+        else
+        {
+            errorDescripcionInvalida = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarHorasSemanales(ChangeEventArgs e)
+    {
+        horasSemanalesModificadas = true;
+
+        if (int.TryParse(e.Value?.ToString(), out int horasSemanales))
+        {
+            errorHorasSemanalesInvalidas = horasSemanales < 3 || horasSemanales > 6;
+        }
+        else
+        {
+            errorHorasSemanalesInvalidas = true;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarHorasTotales(ChangeEventArgs e)
+    {
+        horasTotalesModificadas = true;
+
+        if (int.TryParse(e.Value?.ToString(), out int horasTotales))
+        {
+            errorHorasTotalesInvalidas = horasTotales < 100 || horasTotales > 250;
+        }
+        else
+        {
+            errorHorasTotalesInvalidas = true;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ActualizarEstadoBoton()
+    {
+        if (idMateria != 0)
+        {
+            botonDeshabilitado = errorDescripcionInvalida || errorHorasSemanalesInvalidas || errorHorasTotalesInvalidas;
+        }
+        else
+        {
+            botonDeshabilitado = errorDescripcionInvalida || errorHorasSemanalesInvalidas || errorHorasTotalesInvalidas ||
+                                 !descripcionModificada || !horasSemanalesModificadas || !horasTotalesModificadas;
+        }
+    }
+
+    private async Task GuardarMateria()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¿Está seguro?",
+                Text = "Se guardarán los cambios realizados",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
+
+        if (result.IsConfirmed)
+        {
+            if (idMateria != 0)
+            {
+                MateriaDTO materiaDTO = new MateriaDTO();
+
+                materiaDTO.Desc_materia = materia.Desc_materia;
+                materiaDTO.Hs_semanales = materia.Hs_semanales;
+                materiaDTO.Hs_totales = materia.Hs_totales;
+                materiaDTO.Id_plan = materia.Id_plan;
+
+                HttpResponseMessage response = await MateriaNegocio.Update(idMateria, materiaDTO);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    await Swal.FireAsync("Materia actualizada", "La materia ha sido actualizada correctamente", SweetAlertIcon.Success);
+                }
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    await Swal.FireAsync("Error", "La operación no se ha podido llevar a cabo", SweetAlertIcon.Error);
+                }
+                else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+                {
+                    await Swal.FireAsync("Error", "Error al conectarse a la base de datos!", SweetAlertIcon.Error);
+                }
+            }
+            else
+            {
+                if (materia.Id_plan == 0)
+                {
+                    materia.Id_plan = planes.First().Id_plan;
+                }
+
+                HttpResponseMessage response = await MateriaNegocio.Add(materia);
+
+                if (response.StatusCode == HttpStatusCode.Created)
+                {
+                    await Swal.FireAsync("Materia creada", "La materia ha sido creada correctamente", SweetAlertIcon.Success);
+                }
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    await Swal.FireAsync("Error", "La operación no se ha podido llevar a cabo", SweetAlertIcon.Error);
+                }
+                else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+                {
+                    await Swal.FireAsync("Error", "Error al conectarse a la base de datos!", SweetAlertIcon.Error);
+                }
+            }
+            navegacion.NavigateTo("/materias");
+        }
+    }
+}

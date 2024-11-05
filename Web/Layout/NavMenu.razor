@@ -1,0 +1,152 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Academia</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="sidebar nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                <div class="d-flex align-items-center">
+                    <img class="mx-2" src="/assets/home.png" />
+                    Inicio
+                </div>
+            </NavLink>
+        </div>
+
+        @if (Role == "0")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="inscripciones-alumno">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/student.png" />
+                        Tus inscripciones
+                    </div>
+                </NavLink>
+            </div>
+        }
+        else if (Role == "1")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="inscripciones-cursos-docente">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/student.png" />
+                        Inscripciones a tus cursos
+                    </div>
+                </NavLink>
+            </div>
+        }
+
+        @if (Role == "2")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="especialidades">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/award-fill.png" />
+                        Especialidades
+                    </div>
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="planes">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/calendar.png" />
+                        Planes
+                    </div>
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="comisiones">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/group-of-people.png" />
+                        Comisiones
+                    </div>
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="materias">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/book.png" />
+                        Materias
+                    </div>
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="cursos">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/course.png" />
+                        Cursos
+                    </div>
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="personas">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/person.png" />
+                        Personas
+                    </div>
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="inscripciones">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/student.png" />
+                        Inscripciones
+                    </div>
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="dictados">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/teacher.png" />
+                        Dictados
+                    </div>
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="usuarios">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/user.png" />
+                        Usuarios
+                    </div>
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="inscripciones-por-curso">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/bar-chart.png" />
+                        Inscripciones por Curso
+                    </div>
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="alumnos-por-plan">
+                    <div class="d-flex align-items-center">
+                        <img class="mx-2" src="/assets/pie-chart.png" />
+                        Alumnos por Plan
+                    </div>
+                </NavLink>
+            </div>
+
+        }
+    </nav>
+</div>
+
+@code {
+    [Parameter]
+    public string Role { get; set; }
+
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
