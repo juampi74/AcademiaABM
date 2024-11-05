@@ -52,7 +52,7 @@
             // DescripcionLabel
             // 
             DescripcionLabel.AutoSize = true;
-            DescripcionLabel.Location = new Point(36, 66);
+            DescripcionLabel.Location = new Point(40, 66);
             DescripcionLabel.Name = "DescripcionLabel";
             DescripcionLabel.Size = new Size(72, 15);
             DescripcionLabel.TabIndex = 7;
@@ -62,24 +62,24 @@
             // 
             DescripcionTextBox.BackColor = SystemColors.ControlDarkDark;
             DescripcionTextBox.ForeColor = SystemColors.Menu;
-            DescripcionTextBox.Location = new Point(120, 64);
+            DescripcionTextBox.Location = new Point(124, 64);
             DescripcionTextBox.Name = "DescripcionTextBox";
-            DescripcionTextBox.Size = new Size(250, 23);
+            DescripcionTextBox.Size = new Size(245, 23);
             DescripcionTextBox.TabIndex = 0;
             // 
             // AnioEspecialidadTextBox
             // 
             AnioEspecialidadTextBox.BackColor = SystemColors.ControlDarkDark;
             AnioEspecialidadTextBox.ForeColor = SystemColors.Menu;
-            AnioEspecialidadTextBox.Location = new Point(122, 100);
+            AnioEspecialidadTextBox.Location = new Point(124, 100);
             AnioEspecialidadTextBox.Name = "AnioEspecialidadTextBox";
-            AnioEspecialidadTextBox.Size = new Size(248, 23);
+            AnioEspecialidadTextBox.Size = new Size(245, 23);
             AnioEspecialidadTextBox.TabIndex = 1;
             // 
             // AnioEspecialidadLabel
             // 
             AnioEspecialidadLabel.AutoSize = true;
-            AnioEspecialidadLabel.Location = new Point(9, 103);
+            AnioEspecialidadLabel.Location = new Point(13, 103);
             AnioEspecialidadLabel.Name = "AnioEspecialidadLabel";
             AnioEspecialidadLabel.Size = new Size(100, 15);
             AnioEspecialidadLabel.TabIndex = 6;
@@ -88,7 +88,7 @@
             // PlanLabel
             // 
             PlanLabel.AutoSize = true;
-            PlanLabel.Location = new Point(80, 140);
+            PlanLabel.Location = new Point(80, 138);
             PlanLabel.Name = "PlanLabel";
             PlanLabel.Size = new Size(33, 15);
             PlanLabel.TabIndex = 5;
@@ -99,9 +99,9 @@
             PlanComboBox.BackColor = SystemColors.GrayText;
             PlanComboBox.ForeColor = SystemColors.Window;
             PlanComboBox.FormattingEnabled = true;
-            PlanComboBox.Location = new Point(124, 137);
+            PlanComboBox.Location = new Point(124, 136);
             PlanComboBox.Name = "PlanComboBox";
-            PlanComboBox.Size = new Size(246, 23);
+            PlanComboBox.Size = new Size(245, 23);
             PlanComboBox.TabIndex = 2;
             // 
             // CancelarButton

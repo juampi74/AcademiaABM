@@ -110,7 +110,11 @@
                 Usuario.Clave = usuarioDTO.Clave;
                 Usuario.Habilitado = usuarioDTO.Habilitado;
                 Usuario.Cambia_clave = usuarioDTO.Cambia_clave;
-                Usuario.Id_persona = usuarioDTO.Id_persona;
+
+                if (usuarioDTO.Id_persona != 0 && usuarioDTO.Id_persona != null)
+                {
+                    Usuario.Id_persona = usuarioDTO.Id_persona;
+                }
 
                 _context.Entry(Usuario).State = EntityState.Modified;
                 _context.SaveChanges();

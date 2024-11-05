@@ -33,15 +33,17 @@
             tlSysacad = new TableLayoutPanel();
             dgvSysacad = new DataGridView();
             fLPBotonesOpciones = new FlowLayoutPanel();
-            btnMostrarPersonas = new Button();
-            btnMostrarComisiones = new Button();
-            btnMostrarCursos = new Button();
             btnMostrarEspecialidades = new Button();
-            btnMostrarMaterias = new Button();
             btnMostrarPlanes = new Button();
-            btnMostrarUsuarios = new Button();
-            btnMostrarDictados = new Button();
+            btnMostrarComisiones = new Button();
+            btnMostrarMaterias = new Button();
+            btnMostrarCursos = new Button();
+            btnMostrarPersonas = new Button();
             btnMostrarInscripciones = new Button();
+            btnMostrarDictados = new Button();
+            btnMostrarUsuarios = new Button();
+            btnMostrarTusInscripciones = new Button();
+            btnMostrarInscripcionesATusCursos = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
             btnSalir = new Button();
             tsSysacad = new ToolStrip();
@@ -112,53 +114,25 @@
             // 
             // fLPBotonesOpciones
             // 
-            fLPBotonesOpciones.Controls.Add(btnMostrarComisiones);
-            fLPBotonesOpciones.Controls.Add(btnMostrarCursos);
-            fLPBotonesOpciones.Controls.Add(btnMostrarDictados);
             fLPBotonesOpciones.Controls.Add(btnMostrarEspecialidades);
-            fLPBotonesOpciones.Controls.Add(btnMostrarInscripciones);
-            fLPBotonesOpciones.Controls.Add(btnMostrarMaterias);
-            fLPBotonesOpciones.Controls.Add(btnMostrarPersonas);
             fLPBotonesOpciones.Controls.Add(btnMostrarPlanes);
+            fLPBotonesOpciones.Controls.Add(btnMostrarComisiones);
+            fLPBotonesOpciones.Controls.Add(btnMostrarMaterias);
+            fLPBotonesOpciones.Controls.Add(btnMostrarCursos);
+            fLPBotonesOpciones.Controls.Add(btnMostrarPersonas);
+            fLPBotonesOpciones.Controls.Add(btnMostrarInscripciones);
+            fLPBotonesOpciones.Controls.Add(btnMostrarDictados);
             fLPBotonesOpciones.Controls.Add(btnMostrarUsuarios);
+            fLPBotonesOpciones.Controls.Add(btnMostrarTusInscripciones);
+            fLPBotonesOpciones.Controls.Add(btnMostrarInscripcionesATusCursos);
             fLPBotonesOpciones.Location = new Point(3, 390);
             fLPBotonesOpciones.Name = "fLPBotonesOpciones";
             fLPBotonesOpciones.Size = new Size(672, 29);
             fLPBotonesOpciones.TabIndex = 5;
             // 
-            // btnMostrarPersonas
-            // 
-            btnMostrarPersonas.Location = new Point(482, 3);
-            btnMostrarPersonas.Name = "btnMostrarPersonas";
-            btnMostrarPersonas.Size = new Size(62, 23);
-            btnMostrarPersonas.TabIndex = 0;
-            btnMostrarPersonas.Text = "Personas";
-            btnMostrarPersonas.UseVisualStyleBackColor = true;
-            btnMostrarPersonas.Click += btnMostrarPersonas_Click;
-            // 
-            // btnMostrarComisiones
-            // 
-            btnMostrarComisiones.Location = new Point(3, 3);
-            btnMostrarComisiones.Name = "btnMostrarComisiones";
-            btnMostrarComisiones.Size = new Size(77, 23);
-            btnMostrarComisiones.TabIndex = 1;
-            btnMostrarComisiones.Text = "Comisiones";
-            btnMostrarComisiones.UseVisualStyleBackColor = true;
-            btnMostrarComisiones.Click += btnMostrarComisiones_Click;
-            // 
-            // btnMostrarCursos
-            // 
-            btnMostrarCursos.Location = new Point(86, 3);
-            btnMostrarCursos.Name = "btnMostrarCursos";
-            btnMostrarCursos.Size = new Size(54, 23);
-            btnMostrarCursos.TabIndex = 2;
-            btnMostrarCursos.Text = "Cursos";
-            btnMostrarCursos.UseVisualStyleBackColor = true;
-            btnMostrarCursos.Click += btnMostrarCursos_Click;
-            // 
             // btnMostrarEspecialidades
             // 
-            btnMostrarEspecialidades.Location = new Point(214, 3);
+            btnMostrarEspecialidades.Location = new Point(3, 3);
             btnMostrarEspecialidades.Name = "btnMostrarEspecialidades";
             btnMostrarEspecialidades.Size = new Size(95, 23);
             btnMostrarEspecialidades.TabIndex = 3;
@@ -166,9 +140,29 @@
             btnMostrarEspecialidades.UseVisualStyleBackColor = true;
             btnMostrarEspecialidades.Click += btnMostrarEspecialidades_Click;
             // 
+            // btnMostrarPlanes
+            // 
+            btnMostrarPlanes.Location = new Point(104, 3);
+            btnMostrarPlanes.Name = "btnMostrarPlanes";
+            btnMostrarPlanes.Size = new Size(53, 23);
+            btnMostrarPlanes.TabIndex = 4;
+            btnMostrarPlanes.Text = "Planes";
+            btnMostrarPlanes.UseVisualStyleBackColor = true;
+            btnMostrarPlanes.Click += btnMostrarPlanes_Click;
+            // 
+            // btnMostrarComisiones
+            // 
+            btnMostrarComisiones.Location = new Point(163, 3);
+            btnMostrarComisiones.Name = "btnMostrarComisiones";
+            btnMostrarComisiones.Size = new Size(77, 23);
+            btnMostrarComisiones.TabIndex = 1;
+            btnMostrarComisiones.Text = "Comisiones";
+            btnMostrarComisiones.UseVisualStyleBackColor = true;
+            btnMostrarComisiones.Click += btnMostrarComisiones_Click;
+            // 
             // btnMostrarMaterias
             // 
-            btnMostrarMaterias.Location = new Point(408, 3);
+            btnMostrarMaterias.Location = new Point(246, 3);
             btnMostrarMaterias.Name = "btnMostrarMaterias";
             btnMostrarMaterias.Size = new Size(68, 23);
             btnMostrarMaterias.TabIndex = 5;
@@ -176,15 +170,45 @@
             btnMostrarMaterias.UseVisualStyleBackColor = true;
             btnMostrarMaterias.Click += btnMostrarMaterias_Click;
             // 
-            // btnMostrarPlanes
+            // btnMostrarCursos
             // 
-            btnMostrarPlanes.Location = new Point(550, 3);
-            btnMostrarPlanes.Name = "btnMostrarPlanes";
-            btnMostrarPlanes.Size = new Size(53, 23);
-            btnMostrarPlanes.TabIndex = 4;
-            btnMostrarPlanes.Text = "Planes";
-            btnMostrarPlanes.UseVisualStyleBackColor = true;
-            btnMostrarPlanes.Click += btnMostrarPlanes_Click;
+            btnMostrarCursos.Location = new Point(320, 3);
+            btnMostrarCursos.Name = "btnMostrarCursos";
+            btnMostrarCursos.Size = new Size(54, 23);
+            btnMostrarCursos.TabIndex = 2;
+            btnMostrarCursos.Text = "Cursos";
+            btnMostrarCursos.UseVisualStyleBackColor = true;
+            btnMostrarCursos.Click += btnMostrarCursos_Click;
+            // 
+            // btnMostrarPersonas
+            // 
+            btnMostrarPersonas.Location = new Point(380, 3);
+            btnMostrarPersonas.Name = "btnMostrarPersonas";
+            btnMostrarPersonas.Size = new Size(62, 23);
+            btnMostrarPersonas.TabIndex = 0;
+            btnMostrarPersonas.Text = "Personas";
+            btnMostrarPersonas.UseVisualStyleBackColor = true;
+            btnMostrarPersonas.Click += btnMostrarPersonas_Click;
+            // 
+            // btnMostrarInscripciones
+            // 
+            btnMostrarInscripciones.Location = new Point(448, 3);
+            btnMostrarInscripciones.Name = "btnMostrarInscripciones";
+            btnMostrarInscripciones.Size = new Size(87, 23);
+            btnMostrarInscripciones.TabIndex = 8;
+            btnMostrarInscripciones.Text = "Inscripciones";
+            btnMostrarInscripciones.UseVisualStyleBackColor = true;
+            btnMostrarInscripciones.Click += btnMostrarInscripciones_Click;
+            // 
+            // btnMostrarDictados
+            // 
+            btnMostrarDictados.Location = new Point(541, 3);
+            btnMostrarDictados.Name = "btnMostrarDictados";
+            btnMostrarDictados.Size = new Size(62, 23);
+            btnMostrarDictados.TabIndex = 7;
+            btnMostrarDictados.Text = "Dictados";
+            btnMostrarDictados.UseVisualStyleBackColor = true;
+            btnMostrarDictados.Click += btnMostrarDictados_Click;
             // 
             // btnMostrarUsuarios
             // 
@@ -196,25 +220,25 @@
             btnMostrarUsuarios.UseVisualStyleBackColor = true;
             btnMostrarUsuarios.Click += btnMostrarUsuarios_Click;
             // 
-            // btnMostrarDictados
+            // btnMostrarTusInscripciones
             // 
-            btnMostrarDictados.Location = new Point(146, 3);
-            btnMostrarDictados.Name = "btnMostrarDictados";
-            btnMostrarDictados.Size = new Size(62, 23);
-            btnMostrarDictados.TabIndex = 7;
-            btnMostrarDictados.Text = "Dictados";
-            btnMostrarDictados.UseVisualStyleBackColor = true;
-            btnMostrarDictados.Click += btnMostrarDictados_Click;
+            btnMostrarTusInscripciones.Location = new Point(3, 32);
+            btnMostrarTusInscripciones.Name = "btnMostrarTusInscripciones";
+            btnMostrarTusInscripciones.Size = new Size(110, 23);
+            btnMostrarTusInscripciones.TabIndex = 9;
+            btnMostrarTusInscripciones.Text = "Tus inscripciones";
+            btnMostrarTusInscripciones.UseVisualStyleBackColor = true;
+            btnMostrarTusInscripciones.Click += btnMostrarTusInscripciones_Click;
             // 
-            // btnMostrarInscripciones
+            // btnMostrarInscripcionesATusCursos
             // 
-            btnMostrarInscripciones.Location = new Point(315, 3);
-            btnMostrarInscripciones.Name = "btnMostrarInscripciones";
-            btnMostrarInscripciones.Size = new Size(87, 23);
-            btnMostrarInscripciones.TabIndex = 8;
-            btnMostrarInscripciones.Text = "Inscripciones";
-            btnMostrarInscripciones.UseVisualStyleBackColor = true;
-            btnMostrarInscripciones.Click += btnMostrarInscripciones_Click;
+            btnMostrarInscripcionesATusCursos.Location = new Point(119, 32);
+            btnMostrarInscripcionesATusCursos.Name = "btnMostrarInscripcionesATusCursos";
+            btnMostrarInscripcionesATusCursos.Size = new Size(150, 23);
+            btnMostrarInscripcionesATusCursos.TabIndex = 10;
+            btnMostrarInscripcionesATusCursos.Text = "Inscripciones a tus cursos";
+            btnMostrarInscripcionesATusCursos.UseVisualStyleBackColor = true;
+            btnMostrarInscripcionesATusCursos.Click += btnMostrarInscripcionesATusCursos_Click;
             // 
             // flowLayoutPanel1
             // 
@@ -319,6 +343,8 @@
         private Button btnSalir;
         private FlowLayoutPanel fLPBotonesOpciones;
         private FlowLayoutPanel flowLayoutPanel1;
+        private Button btnMostrarTusInscripciones;
+        private Button btnMostrarInscripcionesATusCursos;
     }
 }
 

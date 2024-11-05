@@ -60,6 +60,20 @@
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
             return response;
         }
+
+        public async static Task<IEnumerable<Curso>> GetCursosParaPersona(string id_persona)
+        {
+            // Realizar una solicitud GET a la API para obtener los posibles cursos a los que se puede:
+            // - inscribir al alumno en base a su plan de estudios
+            // - asignar al docente en base a su plan de estudios
+            var response = await Conexion.Instancia.Cliente.GetStringAsync($"{defaultURL}Persona/{id_persona}");
+
+            // Deserializar la respuesta JSON en una colección de objetos Curso
+            var data = JsonConvert.DeserializeObject<IEnumerable<Curso>>(response);
+
+            // Devolver los datos obtenidos
+            return data;
+        }
     }
 }
 

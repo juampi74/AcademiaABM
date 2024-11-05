@@ -48,7 +48,7 @@
             // 
             TituloLabel.AutoSize = true;
             TituloLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TituloLabel.Location = new Point(56, 11);
+            TituloLabel.Location = new Point(56, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(108, 37);
             TituloLabel.TabIndex = 13;
@@ -57,7 +57,7 @@
             // NombreUsuarioLabel
             // 
             NombreUsuarioLabel.AutoSize = true;
-            NombreUsuarioLabel.Location = new Point(22, 67);
+            NombreUsuarioLabel.Location = new Point(22, 68);
             NombreUsuarioLabel.Name = "NombreUsuarioLabel";
             NombreUsuarioLabel.Size = new Size(113, 15);
             NombreUsuarioLabel.TabIndex = 12;
@@ -75,7 +75,7 @@
             // ClaveLabel
             // 
             ClaveLabel.AutoSize = true;
-            ClaveLabel.Location = new Point(96, 101);
+            ClaveLabel.Location = new Point(96, 104);
             ClaveLabel.Name = "ClaveLabel";
             ClaveLabel.Size = new Size(39, 15);
             ClaveLabel.TabIndex = 11;
@@ -85,7 +85,7 @@
             // 
             ClaveTextBox.BackColor = SystemColors.ControlDarkDark;
             ClaveTextBox.ForeColor = SystemColors.Menu;
-            ClaveTextBox.Location = new Point(140, 98);
+            ClaveTextBox.Location = new Point(140, 100);
             ClaveTextBox.Name = "ClaveTextBox";
             ClaveTextBox.Size = new Size(129, 23);
             ClaveTextBox.TabIndex = 1;
@@ -93,7 +93,7 @@
             // HabilitadoLabel
             // 
             HabilitadoLabel.AutoSize = true;
-            HabilitadoLabel.Location = new Point(70, 137);
+            HabilitadoLabel.Location = new Point(70, 139);
             HabilitadoLabel.Name = "HabilitadoLabel";
             HabilitadoLabel.Size = new Size(65, 15);
             HabilitadoLabel.TabIndex = 10;
@@ -102,7 +102,7 @@
             // CambiaClaveLabel
             // 
             CambiaClaveLabel.AutoSize = true;
-            CambiaClaveLabel.Location = new Point(52, 171);
+            CambiaClaveLabel.Location = new Point(52, 174);
             CambiaClaveLabel.Name = "CambiaClaveLabel";
             CambiaClaveLabel.Size = new Size(83, 15);
             CambiaClaveLabel.TabIndex = 9;
@@ -111,7 +111,7 @@
             // PersonaLabel
             // 
             PersonaLabel.AutoSize = true;
-            PersonaLabel.Location = new Point(83, 241);
+            PersonaLabel.Location = new Point(83, 247);
             PersonaLabel.Name = "PersonaLabel";
             PersonaLabel.Size = new Size(52, 15);
             PersonaLabel.TabIndex = 8;
@@ -122,7 +122,7 @@
             PersonaComboBox.BackColor = SystemColors.GrayText;
             PersonaComboBox.ForeColor = SystemColors.Window;
             PersonaComboBox.FormattingEnabled = true;
-            PersonaComboBox.Location = new Point(140, 238);
+            PersonaComboBox.Location = new Point(140, 244);
             PersonaComboBox.Name = "PersonaComboBox";
             PersonaComboBox.Size = new Size(127, 23);
             PersonaComboBox.TabIndex = 5;
@@ -131,7 +131,7 @@
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(34, 278);
+            CancelarButton.Location = new Point(34, 290);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
             CancelarButton.TabIndex = 7;
@@ -143,7 +143,7 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(176, 278);
+            GuardarButton.Location = new Point(176, 290);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
             GuardarButton.TabIndex = 6;
@@ -156,7 +156,7 @@
             CambiaClaveComboBox.BackColor = SystemColors.GrayText;
             CambiaClaveComboBox.ForeColor = SystemColors.Window;
             CambiaClaveComboBox.FormattingEnabled = true;
-            CambiaClaveComboBox.Location = new Point(140, 168);
+            CambiaClaveComboBox.Location = new Point(140, 172);
             CambiaClaveComboBox.Name = "CambiaClaveComboBox";
             CambiaClaveComboBox.Size = new Size(127, 23);
             CambiaClaveComboBox.TabIndex = 3;
@@ -166,7 +166,7 @@
             HabilitadoComboBox.BackColor = SystemColors.GrayText;
             HabilitadoComboBox.ForeColor = SystemColors.Window;
             HabilitadoComboBox.FormattingEnabled = true;
-            HabilitadoComboBox.Location = new Point(141, 134);
+            HabilitadoComboBox.Location = new Point(141, 136);
             HabilitadoComboBox.Name = "HabilitadoComboBox";
             HabilitadoComboBox.Size = new Size(127, 23);
             HabilitadoComboBox.TabIndex = 2;
@@ -174,7 +174,7 @@
             // AdministradorCheckBox
             // 
             AdministradorCheckBox.AutoSize = true;
-            AdministradorCheckBox.Location = new Point(36, 206);
+            AdministradorCheckBox.Location = new Point(36, 208);
             AdministradorCheckBox.Name = "AdministradorCheckBox";
             AdministradorCheckBox.Size = new Size(102, 19);
             AdministradorCheckBox.TabIndex = 4;
@@ -187,7 +187,7 @@
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(298, 316);
+            ClientSize = new Size(298, 334);
             Controls.Add(AdministradorCheckBox);
             Controls.Add(HabilitadoComboBox);
             Controls.Add(CambiaClaveComboBox);

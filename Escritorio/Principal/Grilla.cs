@@ -26,27 +26,42 @@ namespace Escritorio
         public Grilla(Usuario usuarioAutenticado)
         {
             InitializeComponent();
-        
+
             this.usuarioAutenticado = usuarioAutenticado;
 
-            ConfigurarIntefaz();
+            ConfigurarInterfaz();
         }
 
-        public void ConfigurarIntefaz()
+        public void ConfigurarInterfaz()
         {
-            // Agregar que se oculte btnMostrarCursos
-            List<Button> botonesAOcultarAlumno = new List<Button> { btnMostrarInscripciones, btnMostrarComisiones, btnMostrarDictados, btnMostrarEspecialidades, btnMostrarMaterias, btnMostrarPersonas, btnMostrarPlanes, btnMostrarUsuarios };
+            List<Button> botonesAOcultarAlumno = new List<Button> { btnMostrarComisiones, btnMostrarCursos, btnMostrarDictados, btnMostrarEspecialidades, btnMostrarInscripciones, btnMostrarMaterias, btnMostrarPersonas, btnMostrarPlanes, btnMostrarUsuarios, btnMostrarInscripcionesATusCursos };
 
-            // Agregar que se oculte btnMostrarInscripciones
-            List<Button> botonesAOcultarDocente = new List<Button> { btnMostrarComisiones, btnMostrarCursos, btnMostrarDictados, btnMostrarEspecialidades, btnMostrarMaterias, btnMostrarPersonas, btnMostrarPlanes, btnMostrarUsuarios };
+            List<Button> botonesAOcultarDocente = new List<Button> { btnMostrarComisiones, btnMostrarCursos, btnMostrarDictados, btnMostrarEspecialidades, btnMostrarInscripciones, btnMostrarMaterias, btnMostrarPersonas, btnMostrarPlanes, btnMostrarUsuarios, btnMostrarTusInscripciones };
+
+            List<Button> botonesAOcultarAdministrador = new List<Button> { btnMostrarTusInscripciones, btnMostrarInscripcionesATusCursos };
 
             if (usuarioAutenticado.Rol == 0)
             {
+
+                tsbEditar.Visible = false;
+
                 OcultarBotones(botonesAOcultarAlumno);
 
-            } else if (usuarioAutenticado.Rol == 1)
+            }
+            else if (usuarioAutenticado.Rol == 1)
             {
+
+                tsbNuevo.Visible = false;
+                tsbEliminar.Visible = false;
+
                 OcultarBotones(botonesAOcultarDocente);
+            
+            }
+            else if (usuarioAutenticado.Rol == 2)
+            {
+
+                OcultarBotones(botonesAOcultarAdministrador);
+
             }
         }
 
@@ -66,55 +81,77 @@ namespace Escritorio
                 {
                     this.listadoComisiones = ComisionNegocio.GetAll();
                     entidadListada = "Comision";
-                    return (IEnumerable<T>) this.listadoComisiones.Result;
+                    return (IEnumerable<T>)this.listadoComisiones.Result;
                 }
                 else if (typeof(T) == typeof(Curso))
                 {
-                    this.listadoCursos = CursoNegocio.GetAll();
+                    if (usuarioAutenticado.Rol == 0 || usuarioAutenticado.Rol == 1)
+                    {
+                        this.listadoCursos = CursoNegocio.GetCursosParaPersona(usuarioAutenticado.Persona?.Id_persona.ToString() ?? "0");
+                    }
+                    else if (usuarioAutenticado.Rol == 2)
+                    {
+                        this.listadoCursos = CursoNegocio.GetAll();
+                    }
+
                     entidadListada = "Curso";
-                    return (IEnumerable<T>) this.listadoCursos.Result;
+                    return (IEnumerable<T>)this.listadoCursos.Result;
                 }
                 else if (typeof(T) == typeof(Docente_Curso))
                 {
                     this.listadoDictados = DictadoNegocio.GetAll();
                     entidadListada = "Dictado";
-                    return (IEnumerable<T>) this.listadoDictados.Result;
+                    return (IEnumerable<T>)this.listadoDictados.Result;
                 }
                 else if (typeof(T) == typeof(Especialidad))
                 {
                     this.listadoEspecialidades = EspecialidadNegocio.GetAll();
                     entidadListada = "Especialidad";
-                    return (IEnumerable<T>) this.listadoEspecialidades.Result;
+                    return (IEnumerable<T>)this.listadoEspecialidades.Result;
                 }
                 else if (typeof(T) == typeof(Alumno_Inscripcion))
                 {
-                    this.listadoInscripciones = InscripcionNegocio.GetAll();
-                    entidadListada = "Inscripcion";
-                    return (IEnumerable<T>) this.listadoInscripciones.Result;
+                    if (usuarioAutenticado.Rol == 0)
+                    {
+                        this.listadoInscripciones = InscripcionNegocio.GetInscripcionesPorAlumno(usuarioAutenticado.Persona?.Id_persona.ToString() ?? "0");
+                        entidadListada = "InscripcionAlumno";
+                    }
+                    else if (usuarioAutenticado.Rol == 1)
+                    {
+                        this.listadoInscripciones = InscripcionNegocio.GetInscripcionesCursosDocente(usuarioAutenticado.Persona?.Id_persona.ToString() ?? "0");
+                        entidadListada = "InscripcionCursoDocente";
+                    }
+                    else
+                    {
+                        this.listadoInscripciones = InscripcionNegocio.GetAll();
+                        entidadListada = "Inscripcion";
+                    }
+
+                    return (IEnumerable<T>)this.listadoInscripciones.Result;
                 }
                 else if (typeof(T) == typeof(Materia))
                 {
                     this.listadoMaterias = MateriaNegocio.GetAll();
                     entidadListada = "Materia";
-                    return (IEnumerable<T>) this.listadoMaterias.Result;
+                    return (IEnumerable<T>)this.listadoMaterias.Result;
                 }
                 else if (typeof(T) == typeof(Persona))
                 {
                     this.listadoPersonas = PersonaNegocio.GetAll();
                     entidadListada = "Persona";
-                    return (IEnumerable<T>) this.listadoPersonas.Result;
+                    return (IEnumerable<T>)this.listadoPersonas.Result;
                 }
                 else if (typeof(T) == typeof(Plan))
                 {
                     this.listadoPlanes = PlanNegocio.GetAll();
                     entidadListada = "Plan";
-                    return (IEnumerable<T>) this.listadoPlanes.Result;
+                    return (IEnumerable<T>)this.listadoPlanes.Result;
                 }
                 else if (typeof(T) == typeof(Usuario))
                 {
                     this.listadoUsuarios = UsuarioNegocio.GetAll();
                     entidadListada = "Usuario";
-                    return (IEnumerable<T>) this.listadoUsuarios.Result;
+                    return (IEnumerable<T>)this.listadoUsuarios.Result;
                 }
                 else
                 {
@@ -175,23 +212,15 @@ namespace Escritorio
 
                 if (comisiones != null)
                 {
-                    Task<IEnumerable<Materia>> task2 = new Task<IEnumerable<Materia>>(LeerEntidades<Materia>);
-                    task2.Start();
-                    IEnumerable<Materia> materias = await task2;
+                    List<(int Id, string Descripcion)> opcionesComision = comisiones.Select(comision => (comision.Id_comision, comision.Desc_comision)).ToList();
 
-                    if (materias != null)
+                    CursoUI nuevoCurso = new CursoUI(opcionesComision);
+                    if (nuevoCurso.ShowDialog(this) == DialogResult.OK)
                     {
-                        List<(int Id, string Descripcion)> opcionesComision = comisiones.Select(comision => (comision.Id_comision, comision.Desc_comision)).ToList();
-                        List<(int Id, string Descripcion)> opcionesMateria = materias.Select(materia => (materia.Id_materia, materia.Desc_materia)).ToList();
-
-                        CursoUI nuevoCurso = new CursoUI(opcionesComision, opcionesMateria);
-                        if (nuevoCurso.ShowDialog(this) == DialogResult.OK)
-                        {
-                            OperacionExitosa operacionExitosa = new OperacionExitosa();
-                            operacionExitosa.ShowDialog(this);
-                        }
-                        btnMostrarCursos_Click(sender, e);
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
                     }
+                    btnMostrarCursos_Click(sender, e);
                 }
             }
             else if (entidadListada == "Dictado")
@@ -202,25 +231,23 @@ namespace Escritorio
 
                 if (docentes != null)
                 {
-                    Task<IEnumerable<Curso>> task2 = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
-                    task2.Start();
-                    IEnumerable<Curso> cursos = await task2;
+                    List<(int Id, string ApellidoYNombre)> opcionesDocente = docentes.Where(docente => docente.Tipo_persona == 1)
+                                                                                        .Select(docente => (docente.Id_persona, docente.Apellido + ", " + docente.Nombre)).ToList();
 
-                    if (cursos != null)
+                    DictadoUI nuevoDictado = new DictadoUI(opcionesDocente);
+                    var result = nuevoDictado.ShowDialog(this);
+                    if (result == DialogResult.OK)
                     {
-                        List<(int Id, string ApellidoYNombre)> opcionesDocente = docentes.Where(docente => docente.Tipo_persona == 1)
-                                                                                         .Select(docente => (docente.Id_persona, docente.Apellido + ", " + docente.Nombre)).ToList();
-
-                        List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
-
-                        DictadoUI nuevoDictado = new DictadoUI(opcionesDocente, opcionesCurso);
-                        if (nuevoDictado.ShowDialog(this) == DialogResult.OK)
-                        {
-                            OperacionExitosa operacionExitosa = new OperacionExitosa();
-                            operacionExitosa.ShowDialog(this);
-                        }
-                        btnMostrarDictados_Click(sender, e);
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
                     }
+                    else if (result == DialogResult.Abort)
+                    {
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", nuevoDictado.Mensaje);
+                        errorBD.ShowDialog(this);
+                    }
+                    btnMostrarDictados_Click(sender, e);
                 }
             }
             else if (entidadListada == "Especialidad")
@@ -241,33 +268,24 @@ namespace Escritorio
 
                 if (alumnos != null)
                 {
-                    Task<IEnumerable<Curso>> task2 = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
-                    task2.Start();
-                    IEnumerable<Curso> cursos = await task2;
+                    List<(int Id, string ApellidoYNombre)> opcionesAlumno = alumnos.Where(alumno => alumno.Tipo_persona == 0)
+                                                                                    .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
 
-                    if (cursos != null)
+                    InscripcionUI nuevaInscripcion = new InscripcionUI(opcionesAlumno);
+
+                    var result = nuevaInscripcion.ShowDialog(this);
+                    if (result == DialogResult.OK)
                     {
-                        List<(int Id, string ApellidoYNombre)> opcionesAlumno = alumnos.Where(alumno => alumno.Tipo_persona == 0)
-                                                                                       .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
-
-                        List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
-
-                        InscripcionUI nuevaInscripcion = new InscripcionUI(opcionesAlumno, opcionesCurso);
-
-                        var result = nuevaInscripcion.ShowDialog(this);
-                        if (result == DialogResult.OK)
-                        {
-                            OperacionExitosa operacionExitosa = new OperacionExitosa();
-                            operacionExitosa.ShowDialog(this);
-
-                        } else if (result == DialogResult.Abort)
-                        {
-                            ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
-                            errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", nuevaInscripcion.Mensaje);
-                            errorBD.ShowDialog(this);
-                        }
-                        btnMostrarInscripciones_Click(sender, e);
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
                     }
+                    else if (result == DialogResult.Abort)
+                    {
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", nuevaInscripcion.Mensaje);
+                        errorBD.ShowDialog(this);
+                    }
+                    btnMostrarInscripciones_Click(sender, e);
                 }
             }
             else if (entidadListada == "Materia")
@@ -344,6 +362,39 @@ namespace Escritorio
                         operacionExitosa.ShowDialog(this);
                     }
                     btnMostrarUsuarios_Click(sender, e);
+                }
+            }
+            else if (entidadListada == "InscripcionAlumno")
+            {
+                Task<IEnumerable<Curso>> task = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
+                task.Start();
+                IEnumerable<Curso> cursosParaAlumno = await task;
+
+                if (cursosParaAlumno != null)
+                {
+                    List<(int Id, string MateriaYComision)> opcionesCursoParaAlumno = cursosParaAlumno.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
+
+                    InscripcionAlumnoUI nuevaInscripcion = new InscripcionAlumnoUI(usuarioAutenticado.Persona.Id_persona, opcionesCursoParaAlumno);
+
+                    var result = nuevaInscripcion.ShowDialog(this);
+                    if (result == DialogResult.OK)
+                    {
+                        OperacionExitosa operacionExitosa = new OperacionExitosa();
+                        operacionExitosa.ShowDialog(this);
+
+                    }
+                    else if (result == DialogResult.Abort)
+                    {
+                        if (nuevaInscripcion.Mensaje != "El curso no tiene más cupos disponibles")
+                        {
+                            nuevaInscripcion.Mensaje = "Ya estás inscripto al curso";
+                        }
+
+                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", nuevaInscripcion.Mensaje);
+                        errorBD.ShowDialog(this);
+                    }
+                    btnMostrarTusInscripciones_Click(sender, e);
                 }
             }
         }
@@ -569,6 +620,38 @@ namespace Escritorio
                     btnMostrarUsuarios_Click(sender, e);
                 }
             }
+            else if (entidadListada == "InscripcionCursoDocente")
+            {
+                Task<IEnumerable<Persona>> task1 = new Task<IEnumerable<Persona>>(LeerEntidades<Persona>);
+                task1.Start();
+                IEnumerable<Persona> alumnos = await task1;
+
+                if (alumnos != null)
+                {
+                    Task<IEnumerable<Curso>> task2 = new Task<IEnumerable<Curso>>(LeerEntidades<Curso>);
+                    task2.Start();
+                    IEnumerable<Curso> cursos = await task2;
+
+                    if (cursos != null)
+                    {
+                        List<(int Id, string ApellidoYNombre)> opcionesAlumno = alumnos.Where(alumno => alumno.Tipo_persona == 0)
+                                                                                       .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
+
+                        List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
+
+                        int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
+
+                        InscripcionCursoDocenteUI editarInscripcion = new InscripcionCursoDocenteUI(opcionesAlumno, opcionesCurso, listadoInscripciones.Result.ToList()[filaSeleccionada]);
+
+                        if (editarInscripcion.ShowDialog(this) == DialogResult.OK)
+                        {
+                            OperacionExitosa operacionExitosa = new OperacionExitosa();
+                            operacionExitosa.ShowDialog(this);
+                        }
+                        btnMostrarInscripcionesATusCursos_Click(sender, e);
+                    }
+                }
+            }
         }
 
         private async void tsbEliminar_Click(object sender, EventArgs e)
@@ -586,10 +669,11 @@ namespace Escritorio
                     {
                         OperacionExitosa operacionExitosa = new OperacionExitosa();
                         operacionExitosa.ShowDialog(this);
-                        
+
                         btnMostrarComisiones_Click(sender, e);
 
-                    } else
+                    }
+                    else
                     {
                         ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
                         errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La comisión tiene cursos asociados");
@@ -675,26 +759,37 @@ namespace Escritorio
             }
             else if (entidadListada == "Inscripcion")
             {
-                ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
-                if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
+
+                Alumno_Inscripcion inscripcion = listadoInscripciones.Result.ToList()[filaSeleccionada];
+
+                if (inscripcion.Condicion != "Inscripto")
                 {
-                    int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
-
-                    var response = await InscripcionNegocio.Delete(listadoInscripciones.Result.ToList()[filaSeleccionada]);
-
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                    errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La inscripción no se puede eliminar porque ya fue modificada");
+                    errorBD.ShowDialog(this);
+                }
+                else
+                {
+                    ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                    if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
                     {
-                        OperacionExitosa operacionExitosa = new OperacionExitosa();
-                        operacionExitosa.ShowDialog(this);
+                        var response = await InscripcionNegocio.Delete(inscripcion);
 
-                        btnMostrarInscripciones_Click(sender, e);
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            OperacionExitosa operacionExitosa = new OperacionExitosa();
+                            operacionExitosa.ShowDialog(this);
 
-                    }
-                    else
-                    {
-                        ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
-                        errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
-                        errorBD.ShowDialog(this);
+                            btnMostrarInscripciones_Click(sender, e);
+
+                        }
+                        else
+                        {
+                            ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                            errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
+                            errorBD.ShowDialog(this);
+                        }
                     }
                 }
             }
@@ -798,6 +893,42 @@ namespace Escritorio
                     }
                 }
             }
+            else if (entidadListada == "InscripcionAlumno")
+            {
+                int filaSeleccionada = dgvSysacad.SelectedRows[0].Index;
+
+                Alumno_Inscripcion inscripcion = listadoInscripciones.Result.ToList()[filaSeleccionada];
+
+                if (inscripcion.Condicion != "Inscripto")
+                {
+                    ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                    errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La inscripción no se puede eliminar porque ya fue modificada");
+                    errorBD.ShowDialog(this);
+                }
+                else
+                {
+                    ConfirmarOperacion confirmarOperacion = new ConfirmarOperacion();
+                    if (confirmarOperacion.ShowDialog(this) == DialogResult.OK)
+                    {
+                        var response = await InscripcionNegocio.Delete(inscripcion);
+
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            OperacionExitosa operacionExitosa = new OperacionExitosa();
+                            operacionExitosa.ShowDialog(this);
+
+                            btnMostrarInscripciones_Click(sender, e);
+
+                        }
+                        else
+                        {
+                            ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                            errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
+                            errorBD.ShowDialog(this);
+                        }
+                    }
+                }
+            }
         }
 
         private async void btnMostrarComisiones_Click(object sender, EventArgs e)
@@ -835,7 +966,7 @@ namespace Escritorio
             dgvSysacad.DataSource = await task;
             SeleccionarPrimeraFila();
         }
-        
+
         private async void btnMostrarInscripciones_Click(object sender, EventArgs e)
         {
             Task<IEnumerable<Alumno_Inscripcion>> task = new Task<IEnumerable<Alumno_Inscripcion>>(LeerEntidades<Alumno_Inscripcion>);
@@ -875,6 +1006,24 @@ namespace Escritorio
         private async void btnMostrarUsuarios_Click(object sender, EventArgs e)
         {
             Task<IEnumerable<Usuario>> task = new Task<IEnumerable<Usuario>>(LeerEntidades<Usuario>);
+            task.Start();
+
+            dgvSysacad.DataSource = await task;
+            SeleccionarPrimeraFila();
+        }
+
+        private async void btnMostrarTusInscripciones_Click(object sender, EventArgs e)
+        {
+            Task<IEnumerable<Alumno_Inscripcion>> task = new Task<IEnumerable<Alumno_Inscripcion>>(LeerEntidades<Alumno_Inscripcion>);
+            task.Start();
+
+            dgvSysacad.DataSource = await task;
+            SeleccionarPrimeraFila();
+        }
+
+        private async void btnMostrarInscripcionesATusCursos_Click(object sender, EventArgs e)
+        {
+            Task<IEnumerable<Alumno_Inscripcion>> task = new Task<IEnumerable<Alumno_Inscripcion>>(LeerEntidades<Alumno_Inscripcion>);
             task.Start();
 
             dgvSysacad.DataSource = await task;

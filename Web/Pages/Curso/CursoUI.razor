@@ -1,93 +1,109 @@
 ﻿@page "/curso"
 @page "/curso/{idCurso:int}"
 
+@using Web.Pages.Autenticacion;
+
 @inject SweetAlertService Swal;
 @inject NavigationManager navegacion;
 
-<h2 class="mt-3">@titulo</h2>
+@inject AuthService AuthService;
 
-@if (!errorBD)
+@if (cargando)
 {
-    @if (!errorFaltanEntidades)
-    {
-        <EditForm Model="curso" OnValidSubmit="GuardarCurso">
-            <DataAnnotationsValidator></DataAnnotationsValidator>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Año Calendario</label>
-                <InputNumber class="form-control" @bind-Value="curso.Anio_calendario" @oninput="ValidarAnio"></InputNumber>
-                @if (errorAnioInvalido)
-                {
-                    <div class="text-danger mt-2">El año debe corresponder al actual o al siguiente.</div>
-                }
-            </div>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Cupo</label>
-                <InputNumber class="form-control" @bind-Value="curso.Cupo" @oninput="ValidarCupo"></InputNumber>
-                @if (errorCupoInvalido)
-                {
-                    <div class="text-danger mt-2">El cupo debe ser un número entre 20 y 100.</div>
-                }
-            </div>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Comision</label>
-                <InputSelect class="form-select" @bind-Value="curso.Id_comision">
-                    @foreach (var comision in comisiones)
-                    {
-                        <option value="@comision.Id_comision">@comision.Desc_comision</option>
-                    }
-                </InputSelect>
-                <ValidationMessage For="@(() => curso.Id_comision)"></ValidationMessage>
-            </div>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Materia</label>
-                <InputSelect class="form-select" @bind-Value="curso.Id_materia">
-                    @foreach (var materia in materias)
-                    {
-                        <option value="@materia.Id_materia">@materia.Desc_materia</option>
-                    }
-                </InputSelect>
-                <ValidationMessage For="@(() => curso.Id_materia)"></ValidationMessage>
-            </div>
-
-            <div class="d-flex align-items-center justify-content-end mt-3">
-                <a class="btn btn-warning" href="cursos">Volver</a>
-
-                <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
-                    @btnTexto
-                </button>
-            </div>
-
-        </EditForm>
-    }
-    else
-    {
-        <div class="alert alert-warning fw-bold my-4" role="alert">
-            Debe haber al menos una comisión y una materia registradas previamente!
-        </div>
-        <div class="d-flex justify-content-end">
-            <a class="btn btn-warning" href="cursos">Volver</a>
-        </div>
-    }
+    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+}
+else if (!rolAutorizado)
+{
+    <Unauthorized />
 }
 else
 {
-    <div class="alert alert-danger fw-bold my-4" role="alert">
-        Error al conectarse a la base de datos!
-    </div>
-    <div class="d-flex justify-content-end">
-        <a class="btn btn-warning" href="cursos">Volver</a>
-    </div>
+    <h2 class="mt-2">@titulo</h2>
+
+    @if (!errorBD)
+    {
+        @if (!errorFaltanEntidades)
+        {
+            <EditForm Model="curso" OnValidSubmit="GuardarCurso">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Año Calendario</label>
+                    <InputNumber class="form-control" @bind-Value="curso.Anio_calendario" @oninput="ValidarAnio" disabled="@camposDeshabilitados"></InputNumber>
+                    @if (errorAnioInvalido)
+                    {
+                        <div class="text-danger mt-2">El año debe corresponder al actual o al siguiente.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Cupo</label>
+                    <InputNumber class="form-control" @bind-Value="curso.Cupo" @oninput="ValidarCupo"></InputNumber>
+                    @if (errorCupoInvalido)
+                    {
+                        <div class="text-danger mt-2">El cupo debe ser un número entre 1 y 100.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Comision</label>
+                    <InputSelect class="form-select" @bind-Value="SelectedComisionID" disabled="@camposDeshabilitados">
+                        @foreach (var comision in comisiones)
+                        {
+                            <option value="@comision.Id_comision">@comision.Desc_comision</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => curso.Id_comision)"></ValidationMessage>
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Materia</label>
+                    <InputSelect class="form-select" @bind-Value="curso.Id_materia" disabled="@camposDeshabilitados">
+                        @foreach (var materia in materias)
+                        {
+                            <option value="@materia.Id_materia">@materia.Desc_materia</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => curso.Id_materia)"></ValidationMessage>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-end mt-3">
+                    <a class="btn btn-warning" href="cursos">Volver</a>
+
+                    <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
+                        @btnTexto
+                    </button>
+                </div>
+
+            </EditForm>
+        }
+        else
+        {
+            <div class="alert alert-warning fw-bold my-3" role="alert">
+                Debe haber al menos una comisión y una materia registradas previamente!
+            </div>
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-dark" href="cursos">Volver</a>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-danger fw-bold my-3" role="alert">
+            Error al conectarse a la base de datos!
+        </div>
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-dark" href="cursos">Volver</a>
+        </div>
+    }
 }
-
-
 
 @code {
     [Parameter]
     public int idCurso { get; set; } = 0;
+
+    bool cargando = true;
+    bool rolAutorizado = false;
 
     string titulo = string.Empty;
     string btnTexto = string.Empty;
@@ -107,55 +123,127 @@ else
     bool anioModificado = false;
     bool cupoModificado = false;
 
-    protected override async Task OnInitializedAsync()
+    bool camposDeshabilitados = false;
+
+    private int _selectedComisionID;
+    public int SelectedComisionID
     {
-        if (idCurso != 0)
+        get => _selectedComisionID;
+        set
         {
-            titulo = "Editar Curso";
-            btnTexto = "Actualizar";
-
-            try
+            if (_selectedComisionID != value)
             {
-                curso = await CursoNegocio.GetOne(idCurso);
-
-                comisiones = (List<Comision>) await ComisionNegocio.GetAll();
-                materias = (List<Materia>) await MateriaNegocio.GetAll();
-
+                _selectedComisionID = value;
+                OnComisionSelected().ConfigureAwait(false);
             }
-            catch (Exception)
-            {
-                errorBD = true;
-            }
-        }
-        else
-        {
-            titulo = "Nuevo Curso";
-            btnTexto = "Guardar";
-
-            botonDeshabilitado = true;
-
-            try
-            {
-                comisiones = (List<Comision>)await ComisionNegocio.GetAll();
-                materias = (List<Materia>)await MateriaNegocio.GetAll();
-
-            }
-            catch (Exception)
-            {
-                errorBD = true;
-            }
-        }
-
-        if (comisiones.Any() && materias.Any())
-        {
-            comisiones = comisiones.OrderBy(com => com.Desc_comision).ToList();
-            materias = materias.OrderBy(mat => mat.Desc_materia).ToList();
-        }
-        else
-        {
-            errorFaltanEntidades = true;
         }
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authResult = await AuthService.IsAuthenticatedAsync();
+
+        if (!authResult.IsAuthenticated)
+        {
+            navegacion.NavigateTo("/login");
+        }
+        else
+        {
+            if (authResult.Rol != "2")
+            {
+                rolAutorizado = false;
+            }
+            else
+            {
+                rolAutorizado = true;
+
+                if (idCurso != 0)
+                {
+                    titulo = "Editar Curso";
+                    btnTexto = "Actualizar";
+
+                    try
+                    {
+                        curso = await CursoNegocio.GetOne(idCurso);
+
+                        comisiones = (List<Comision>) await ComisionNegocio.GetAll();
+
+                        SelectedComisionID = curso.Id_comision;
+
+                        camposDeshabilitados = true;
+                    }
+                    catch (Exception)
+                    {
+                        errorBD = true;
+                    }
+                }
+                else
+                {
+                    titulo = "Nuevo Curso";
+                    btnTexto = "Guardar";
+
+                    botonDeshabilitado = true;
+
+                    try
+                    {
+                        comisiones = (List<Comision>) await ComisionNegocio.GetAll();
+
+                        if (comisiones.Any())
+                        {
+                            comisiones = comisiones.OrderBy(com => com.Desc_comision).ToList();
+
+                            SelectedComisionID = comisiones.First().Id_comision;
+                            curso.Id_comision = SelectedComisionID;
+                            materias = await CargarMaterias();
+
+                        }
+                        else
+                        {
+                            errorFaltanEntidades = true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        errorBD = true;
+                    }
+                }
+            }
+        
+            cargando = false;
+        }
+    }
+
+    private async Task OnComisionSelected()
+    {
+        curso.Id_comision = SelectedComisionID;
+        materias = await CargarMaterias();
+        StateHasChanged();
+    }
+
+    private async Task<List<Materia>> CargarMaterias()
+    {
+        var materias_plan = (List<Materia>) await MateriaNegocio.GetMateriasParaComision(curso.Id_comision.ToString());
+
+        if (materias_plan.Any())
+        {
+            materias_plan = materias_plan.OrderBy(mat => mat.Desc_materia).ToList();
+
+            if (idCurso != 0)
+            {
+                var materia = materias_plan.FirstOrDefault(mat => mat.Id_materia == curso.Id_materia);
+                
+                curso.Id_materia = materia.Id_materia;
+            
+            }
+            else
+            {
+                curso.Id_materia = materias_plan.First().Id_materia;
+            }
+        }
+
+        return materias_plan;
+    }
+
 
     private void ValidarAnio(ChangeEventArgs e)
     {
@@ -182,7 +270,7 @@ else
 
         if (int.TryParse(e.Value?.ToString(), out int cupo))
         {
-            errorCupoInvalido = cupo < 20 || cupo > 100;
+            errorCupoInvalido = cupo < 1 || cupo > 100;
         }
         else
         {
@@ -222,6 +310,7 @@ else
             if (idCurso != 0)
             {
                 CursoDTO cursoDTO = new CursoDTO();
+
                 cursoDTO.Anio_calendario = curso.Anio_calendario;
                 cursoDTO.Cupo = curso.Cupo;
                 cursoDTO.Id_comision = curso.Id_comision;
@@ -248,6 +337,7 @@ else
                 {
                     curso.Id_comision = comisiones.First().Id_comision;
                 }
+
                 if (curso.Id_materia == 0)
                 {
                     curso.Id_materia = materias.First().Id_materia;

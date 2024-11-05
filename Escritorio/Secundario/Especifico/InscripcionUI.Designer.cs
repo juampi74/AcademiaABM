@@ -45,7 +45,7 @@
             // 
             TituloLabel.AutoSize = true;
             TituloLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TituloLabel.Location = new Point(102, 8);
+            TituloLabel.Location = new Point(122, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(144, 37);
             TituloLabel.TabIndex = 10;
@@ -54,7 +54,7 @@
             // CursoLabel
             // 
             CursoLabel.AutoSize = true;
-            CursoLabel.Location = new Point(46, 61);
+            CursoLabel.Location = new Point(39, 103);
             CursoLabel.Name = "CursoLabel";
             CursoLabel.Size = new Size(41, 15);
             CursoLabel.TabIndex = 9;
@@ -65,15 +65,15 @@
             CursoComboBox.BackColor = SystemColors.GrayText;
             CursoComboBox.ForeColor = SystemColors.Window;
             CursoComboBox.FormattingEnabled = true;
-            CursoComboBox.Location = new Point(93, 59);
+            CursoComboBox.Location = new Point(93, 100);
             CursoComboBox.Name = "CursoComboBox";
-            CursoComboBox.Size = new Size(278, 23);
+            CursoComboBox.Size = new Size(320, 23);
             CursoComboBox.TabIndex = 0;
             // 
             // AlumnoLabel
             // 
             AlumnoLabel.AutoSize = true;
-            AlumnoLabel.Location = new Point(33, 103);
+            AlumnoLabel.Location = new Point(27, 67);
             AlumnoLabel.Name = "AlumnoLabel";
             AlumnoLabel.Size = new Size(53, 15);
             AlumnoLabel.TabIndex = 8;
@@ -84,15 +84,15 @@
             AlumnoComboBox.BackColor = SystemColors.GrayText;
             AlumnoComboBox.ForeColor = SystemColors.Window;
             AlumnoComboBox.FormattingEnabled = true;
-            AlumnoComboBox.Location = new Point(93, 101);
+            AlumnoComboBox.Location = new Point(93, 64);
             AlumnoComboBox.Name = "AlumnoComboBox";
-            AlumnoComboBox.Size = new Size(278, 23);
+            AlumnoComboBox.Size = new Size(320, 23);
             AlumnoComboBox.TabIndex = 1;
             // 
             // CondicionLabel
             // 
             CondicionLabel.AutoSize = true;
-            CondicionLabel.Location = new Point(21, 144);
+            CondicionLabel.Location = new Point(16, 175);
             CondicionLabel.Name = "CondicionLabel";
             CondicionLabel.Size = new Size(65, 15);
             CondicionLabel.TabIndex = 7;
@@ -102,15 +102,15 @@
             // 
             CondicionTextBox.BackColor = SystemColors.ControlDarkDark;
             CondicionTextBox.ForeColor = SystemColors.Menu;
-            CondicionTextBox.Location = new Point(92, 141);
+            CondicionTextBox.Location = new Point(93, 172);
             CondicionTextBox.Name = "CondicionTextBox";
-            CondicionTextBox.Size = new Size(281, 23);
+            CondicionTextBox.Size = new Size(320, 23);
             CondicionTextBox.TabIndex = 2;
             // 
             // NotaLabel
             // 
             NotaLabel.AutoSize = true;
-            NotaLabel.Location = new Point(49, 183);
+            NotaLabel.Location = new Point(45, 139);
             NotaLabel.Name = "NotaLabel";
             NotaLabel.Size = new Size(36, 15);
             NotaLabel.TabIndex = 6;
@@ -120,16 +120,16 @@
             // 
             NotaTextBox.BackColor = SystemColors.ControlDarkDark;
             NotaTextBox.ForeColor = SystemColors.Menu;
-            NotaTextBox.Location = new Point(92, 180);
+            NotaTextBox.Location = new Point(93, 136);
             NotaTextBox.Name = "NotaTextBox";
-            NotaTextBox.Size = new Size(281, 23);
+            NotaTextBox.Size = new Size(320, 23);
             NotaTextBox.TabIndex = 3;
             // 
             // CancelarButton
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(99, 221);
+            CancelarButton.Location = new Point(113, 217);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
             CancelarButton.TabIndex = 5;
@@ -141,7 +141,7 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(240, 221);
+            GuardarButton.Location = new Point(254, 217);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
             GuardarButton.TabIndex = 4;
@@ -154,7 +154,7 @@
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(408, 261);
+            ClientSize = new Size(447, 261);
             Controls.Add(TituloLabel);
             Controls.Add(CursoLabel);
             Controls.Add(CursoComboBox);

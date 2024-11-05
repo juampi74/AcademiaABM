@@ -22,11 +22,11 @@
             try
             {
                 return _context.Docentes_cursos
-                    .Include(insc => insc.Docente)
-                    .Include(insc => insc.Curso)
-                        .ThenInclude(cur => cur.Comision)
-                    .Include(insc => insc.Curso)
-                        .ThenInclude(cur => cur.Materia)
+                    .Include(dic => dic.Docente)
+                    .Include(dic => dic.Curso)
+                        .ThenInclude(dic => dic.Comision)
+                    .Include(dic => dic.Curso)
+                        .ThenInclude(dic => dic.Materia)
                     .ToList();
             }
             catch (Exception)
@@ -62,6 +62,15 @@
             try
             {
                 Docente_Curso nuevoDictado = new Docente_Curso(dictadoDTO.Cargo, dictadoDTO.Id_docente, dictadoDTO.Id_curso);
+
+                var existeDictado = _context.Docentes_cursos
+                    .Any(dic => dic.Id_docente == nuevoDictado.Id_docente
+                             && dic.Id_curso == nuevoDictado.Id_curso);
+
+                if (existeDictado)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, "El docente ya fue asignado al curso");
+                }
 
                 _context.Docentes_cursos.Add(nuevoDictado);
                 _context.SaveChanges();

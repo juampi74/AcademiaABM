@@ -45,7 +45,7 @@
             // 
             TituloLabel.AutoSize = true;
             TituloLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TituloLabel.Location = new Point(86, 9);
+            TituloLabel.Location = new Point(103, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(85, 37);
             TituloLabel.TabIndex = 10;
@@ -64,15 +64,15 @@
             // 
             AnioCalendarioTextBox.BackColor = SystemColors.ControlDarkDark;
             AnioCalendarioTextBox.ForeColor = SystemColors.Menu;
-            AnioCalendarioTextBox.Location = new Point(130, 63);
+            AnioCalendarioTextBox.Location = new Point(130, 64);
             AnioCalendarioTextBox.Name = "AnioCalendarioTextBox";
-            AnioCalendarioTextBox.Size = new Size(162, 23);
+            AnioCalendarioTextBox.Size = new Size(200, 23);
             AnioCalendarioTextBox.TabIndex = 0;
             // 
             // CupoLabel
             // 
             CupoLabel.AutoSize = true;
-            CupoLabel.Location = new Point(84, 104);
+            CupoLabel.Location = new Point(85, 103);
             CupoLabel.Name = "CupoLabel";
             CupoLabel.Size = new Size(39, 15);
             CupoLabel.TabIndex = 8;
@@ -84,13 +84,13 @@
             CupoTextBox.ForeColor = SystemColors.Menu;
             CupoTextBox.Location = new Point(130, 100);
             CupoTextBox.Name = "CupoTextBox";
-            CupoTextBox.Size = new Size(162, 23);
+            CupoTextBox.Size = new Size(200, 23);
             CupoTextBox.TabIndex = 1;
             // 
             // ComisionLabel
             // 
             ComisionLabel.AutoSize = true;
-            ComisionLabel.Location = new Point(65, 143);
+            ComisionLabel.Location = new Point(63, 140);
             ComisionLabel.Name = "ComisionLabel";
             ComisionLabel.Size = new Size(61, 15);
             ComisionLabel.TabIndex = 7;
@@ -101,15 +101,15 @@
             ComisionComboBox.BackColor = SystemColors.GrayText;
             ComisionComboBox.ForeColor = SystemColors.Window;
             ComisionComboBox.FormattingEnabled = true;
-            ComisionComboBox.Location = new Point(132, 140);
+            ComisionComboBox.Location = new Point(130, 136);
             ComisionComboBox.Name = "ComisionComboBox";
-            ComisionComboBox.Size = new Size(159, 23);
+            ComisionComboBox.Size = new Size(200, 23);
             ComisionComboBox.TabIndex = 2;
             // 
             // MateriaLabel
             // 
             MateriaLabel.AutoSize = true;
-            MateriaLabel.Location = new Point(75, 183);
+            MateriaLabel.Location = new Point(74, 175);
             MateriaLabel.Name = "MateriaLabel";
             MateriaLabel.Size = new Size(50, 15);
             MateriaLabel.TabIndex = 6;
@@ -120,16 +120,16 @@
             MateriaComboBox.BackColor = SystemColors.GrayText;
             MateriaComboBox.ForeColor = SystemColors.Window;
             MateriaComboBox.FormattingEnabled = true;
-            MateriaComboBox.Location = new Point(132, 180);
+            MateriaComboBox.Location = new Point(130, 172);
             MateriaComboBox.Name = "MateriaComboBox";
-            MateriaComboBox.Size = new Size(160, 23);
+            MateriaComboBox.Size = new Size(200, 23);
             MateriaComboBox.TabIndex = 3;
             // 
             // CancelarButton
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(51, 221);
+            CancelarButton.Location = new Point(66, 214);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
             CancelarButton.TabIndex = 5;
@@ -141,7 +141,7 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(193, 221);
+            GuardarButton.Location = new Point(208, 214);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
             GuardarButton.TabIndex = 4;
@@ -154,7 +154,7 @@
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(331, 256);
+            ClientSize = new Size(359, 256);
             Controls.Add(TituloLabel);
             Controls.Add(AnioCalendarioLabel);
             Controls.Add(AnioCalendarioTextBox);

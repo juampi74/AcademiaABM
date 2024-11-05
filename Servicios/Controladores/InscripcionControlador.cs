@@ -5,15 +5,19 @@
     using Datos;
     using Entidades;
 
+    using Microsoft.Extensions.Logging;
+
     [ApiController]
     [Route("api/[controller]")]
     public class InscripcionController : ControllerBase
     {
         private readonly UniversidadContext _context;
+        private readonly ILogger<UsuarioController> _logger; // Logger para el controlador
 
-        public InscripcionController(UniversidadContext context)
+        public InscripcionController(UniversidadContext context, ILogger<UsuarioController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpGet(Name = "GetInscripcion")]
@@ -155,6 +159,58 @@
             catch (DbUpdateException)
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
+        }
+
+        [HttpGet("Alumno/{id_persona}")]
+        public ActionResult<IEnumerable<Alumno_Inscripcion>> GetInscripcionesPorAlumno(string id_persona)
+        {
+            try
+            {
+                int id_persona_int = int.Parse(id_persona);
+
+                return _context.Alumnos_Inscripciones
+                            .Include(ins => ins.Alumno)
+                            .Include(ins => ins.Curso)
+                                .ThenInclude(cur => cur.Comision)
+                            .Include(ins => ins.Curso)
+                                .ThenInclude(cur => cur.Materia)
+                            .Where(ins => ins.Id_alumno == id_persona_int)
+                            .ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
+        }
+
+        [HttpGet("Docente/{id_persona}")]
+        public ActionResult<IEnumerable<Alumno_Inscripcion>> GetInscripcionesCursosDocente(string id_persona)
+        {
+            try
+            {
+                int id_persona_int = int.Parse(id_persona);
+
+                var dictadosDocente = _context.Docentes_cursos
+                                          .Include(dic => dic.Curso)
+                                          .Where(dic => dic.Id_docente == id_persona_int)
+                                          .ToList();
+
+                var cursosDocenteIDs = dictadosDocente.Select(dic => dic.Curso.Id_curso).ToList();
+
+                return _context.Alumnos_Inscripciones
+                            .Include(ins => ins.Alumno)
+                            .Include(ins => ins.Curso)
+                                .ThenInclude(cur => cur.Comision)
+                            .Include(ins => ins.Curso)
+                                .ThenInclude(cur => cur.Materia)
+                            .Where(ins => cursosDocenteIDs.Contains(ins.Curso.Id_curso))
+                            .ToList();
+
             }
             catch (Exception)
             {

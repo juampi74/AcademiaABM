@@ -83,6 +83,31 @@
 
             return resultado;
         }
+
+        public async static Task<IEnumerable<Alumno_Inscripcion>> GetInscripcionesPorAlumno(string id_persona)
+        {
+            // Realizar una solicitud GET a la API para obtener las inscripciones de un alumno en base a su Id_persona
+            var response = await Conexion.Instancia.Cliente.GetStringAsync($"{defaultURL}Alumno/{id_persona}");
+
+            // Deserializar la respuesta JSON en una colección de objetos Alumno_Inscripcion
+            var data = JsonConvert.DeserializeObject<IEnumerable<Alumno_Inscripcion>>(response);
+
+            // Devolver los datos obtenidos
+            return data;
+        }
+
+        public async static Task<IEnumerable<Alumno_Inscripcion>> GetInscripcionesCursosDocente(string id_persona)
+        {
+            // Realizar una solicitud GET a la API para obtener las inscripciones de alumnos a cursos de un docente
+            // en base a su Id_persona
+            var response = await Conexion.Instancia.Cliente.GetStringAsync($"{defaultURL}Docente/{id_persona}");
+
+            // Deserializar la respuesta JSON en una colección de objetos Alumno_Inscripcion
+            var data = JsonConvert.DeserializeObject<IEnumerable<Alumno_Inscripcion>>(response);
+
+            // Devolver los datos obtenidos
+            return data;
+        }
     }
 }
 

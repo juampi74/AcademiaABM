@@ -41,7 +41,7 @@
             // 
             TituloLabel.AutoSize = true;
             TituloLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TituloLabel.Location = new Point(101, 9);
+            TituloLabel.Location = new Point(95, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(68, 37);
             TituloLabel.TabIndex = 6;
@@ -50,7 +50,7 @@
             // DescPlanLabel
             // 
             DescPlanLabel.AutoSize = true;
-            DescPlanLabel.Location = new Point(37, 62);
+            DescPlanLabel.Location = new Point(28, 67);
             DescPlanLabel.Name = "DescPlanLabel";
             DescPlanLabel.Size = new Size(72, 15);
             DescPlanLabel.TabIndex = 5;
@@ -60,7 +60,7 @@
             // 
             DescPlanTextBox.BackColor = SystemColors.ControlDarkDark;
             DescPlanTextBox.ForeColor = SystemColors.Menu;
-            DescPlanTextBox.Location = new Point(127, 60);
+            DescPlanTextBox.Location = new Point(113, 64);
             DescPlanTextBox.Name = "DescPlanTextBox";
             DescPlanTextBox.Size = new Size(216, 23);
             DescPlanTextBox.TabIndex = 0;
@@ -68,7 +68,7 @@
             // EspecialidadLabel
             // 
             EspecialidadLabel.AutoSize = true;
-            EspecialidadLabel.Location = new Point(32, 106);
+            EspecialidadLabel.Location = new Point(25, 103);
             EspecialidadLabel.Name = "EspecialidadLabel";
             EspecialidadLabel.Size = new Size(75, 15);
             EspecialidadLabel.TabIndex = 4;
@@ -79,7 +79,7 @@
             EspecialidadComboBox.BackColor = SystemColors.ControlDarkDark;
             EspecialidadComboBox.ForeColor = SystemColors.Menu;
             EspecialidadComboBox.FormattingEnabled = true;
-            EspecialidadComboBox.Location = new Point(127, 104);
+            EspecialidadComboBox.Location = new Point(113, 100);
             EspecialidadComboBox.Name = "EspecialidadComboBox";
             EspecialidadComboBox.Size = new Size(216, 23);
             EspecialidadComboBox.TabIndex = 1;
@@ -88,7 +88,7 @@
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(64, 149);
+            CancelarButton.Location = new Point(64, 143);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
             CancelarButton.TabIndex = 3;
@@ -100,7 +100,7 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(203, 149);
+            GuardarButton.Location = new Point(203, 143);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
             GuardarButton.TabIndex = 2;

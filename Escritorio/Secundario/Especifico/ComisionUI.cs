@@ -36,8 +36,13 @@
             
             this.Comision = comisionAModificar;
 
-            DescripcionTextBox.Text = comisionAModificar.Desc_comision;
+            PlanComboBox.Enabled = false;
+
             AnioEspecialidadTextBox.Text = comisionAModificar.Anio_especialidad.ToString();
+            AnioEspecialidadTextBox.BackColor = Color.WhiteSmoke;
+            AnioEspecialidadTextBox.Enabled = false;
+
+            DescripcionTextBox.Text = comisionAModificar.Desc_comision;
             
             PlanComboBox.DataSource = ListadoNombresPlanes();
 

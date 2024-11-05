@@ -12,7 +12,9 @@
         private List<(int Id, string Descripcion)> Comisiones;
         private List<(int Id, string Descripcion)> Materias;
 
-        public CursoUI(List<(int Id, string Descripcion)> comisiones, List<(int Id, string Descripcion)> materias)
+        private bool _suspendComboBoxEvent = false;
+
+        public CursoUI(List<(int Id, string Descripcion)> comisiones)
         {
             InitializeComponent();
 
@@ -20,13 +22,16 @@
             GuardarButton.Text = "Crear";
 
             this.Comisiones = comisiones;
-            this.Materias = materias;
 
-            List<string> listadoComisiones = ListadoNombresComisiones();
-            List<string> listadoMaterias = ListadoNombresMaterias();
+            ComisionComboBox.DataSource = ListadoNombresComisiones();
 
-            ComisionComboBox.DataSource = listadoComisiones;
-            MateriaComboBox.DataSource = listadoMaterias;
+            this.Curso = new Curso();
+
+            Curso.Id_comision = ObtenerIdComisionSeleccionada();
+
+            ComisionComboBox.SelectedIndexChanged += ComisionComboBox_SelectedIndexChanged;
+
+            this.Load += async (sender, e) => await CargarMateriasAsync();
         }
 
         public CursoUI(List<(int Id, string Descripcion)> comisiones, List<(int Id, string Descripcion)> materias, Curso cursoAModificar)
@@ -41,7 +46,13 @@
             
             this.Curso = cursoAModificar;
 
+            ComisionComboBox.Enabled = false;
+            MateriaComboBox.Enabled = false;
+
             AnioCalendarioTextBox.Text = cursoAModificar.Anio_calendario.ToString();
+            AnioCalendarioTextBox.BackColor = Color.WhiteSmoke;
+            AnioCalendarioTextBox.Enabled = false;
+
             CupoTextBox.Text = cursoAModificar.Cupo.ToString();
 
             ComisionComboBox.DataSource = ListadoNombresComisiones();
@@ -54,7 +65,7 @@
                 }
             }
             
-            MateriaComboBox.DataSource = ListadoNombresMaterias();
+            MateriaComboBox.DataSource = ListadoNombresMateriasModificacion();
 
             foreach (var materia in this.Materias)
             {
@@ -126,9 +137,9 @@
 
             if (int.TryParse(CupoTextBox.Text, out int cupo))
             {
-                if (cupo < 20 || cupo > 100)
+                if (cupo < 1 || cupo > 100)
                 {
-                    MessageBox.Show($"El cupo debe ser un número entre 20 y 100", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"El cupo debe ser un número entre 1 y 100", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     DialogResult = DialogResult.None;
                     return false;
@@ -140,7 +151,7 @@
             }
             else
             {
-                MessageBox.Show($"El cupo debe ser un número entre 20 y 100", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"El cupo debe ser un número entre 1 y 100", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 DialogResult = DialogResult.None;
                 return false;
@@ -210,14 +221,46 @@
 
             return listadoNombresComisiones;
         }
-        
-        private List<string> ListadoNombresMaterias()
+
+        private async Task CargarMateriasAsync()
+        {
+            MateriaComboBox.DataSource = await ListadoNombresMateriasCreacion();
+        }
+
+        private async Task<List<string>> ListadoNombresMateriasCreacion()
+        {
+            var materias_comision_plan = (List<Materia>) await MateriaNegocio.GetMateriasParaComision(Curso.Id_comision.ToString());
+
+            this.Materias = materias_comision_plan.Select(materia => (materia.Id_materia, materia.Desc_materia)).ToList();
+
+            if (materias_comision_plan.Any())
+            {
+                materias_comision_plan = materias_comision_plan.OrderBy(mat => mat.Desc_materia).ToList();
+            }
+
+            return materias_comision_plan.Select(materia => (materia.Desc_materia)).ToList();
+        }
+
+        private List<string> ListadoNombresMateriasModificacion()
         {
             List<string> listadoNombresMaterias = this.Materias.Select(materia => materia.Descripcion).ToList();
 
             listadoNombresMaterias.Sort();
 
             return listadoNombresMaterias;
+        }
+
+        private async void ComisionComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_suspendComboBoxEvent) return;
+
+            _suspendComboBoxEvent = true;
+
+            Curso.Id_comision = ObtenerIdComisionSeleccionada();
+
+            MateriaComboBox.DataSource = await ListadoNombresMateriasCreacion();
+
+            _suspendComboBoxEvent = false;
         }
 
         private void CancelarButton_Click(object sender, EventArgs e)

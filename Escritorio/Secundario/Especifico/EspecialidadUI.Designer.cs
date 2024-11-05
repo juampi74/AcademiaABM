@@ -39,7 +39,7 @@
             // 
             TituloLabel.AutoSize = true;
             TituloLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TituloLabel.Location = new Point(53, 9);
+            TituloLabel.Location = new Point(57, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(165, 37);
             TituloLabel.TabIndex = 4;
@@ -48,7 +48,7 @@
             // DescEspecialidadLabel
             // 
             DescEspecialidadLabel.AutoSize = true;
-            DescEspecialidadLabel.Location = new Point(32, 66);
+            DescEspecialidadLabel.Location = new Point(46, 67);
             DescEspecialidadLabel.Name = "DescEspecialidadLabel";
             DescEspecialidadLabel.Size = new Size(72, 15);
             DescEspecialidadLabel.TabIndex = 3;
@@ -58,7 +58,7 @@
             // 
             DescEspecialidadTextBox.BackColor = SystemColors.ControlDarkDark;
             DescEspecialidadTextBox.ForeColor = SystemColors.Menu;
-            DescEspecialidadTextBox.Location = new Point(127, 63);
+            DescEspecialidadTextBox.Location = new Point(127, 64);
             DescEspecialidadTextBox.Name = "DescEspecialidadTextBox";
             DescEspecialidadTextBox.Size = new Size(169, 23);
             DescEspecialidadTextBox.TabIndex = 0;
@@ -67,7 +67,7 @@
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(63, 105);
+            CancelarButton.Location = new Point(63, 104);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
             CancelarButton.TabIndex = 2;
@@ -79,7 +79,7 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(204, 105);
+            GuardarButton.Location = new Point(204, 104);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
             GuardarButton.TabIndex = 1;

@@ -12,7 +12,11 @@
         private List<(int Id, string ApellidoYNombre)> Docentes;
         private List<(int Id, string MateriaYComision)> Cursos;
 
-        public DictadoUI(List<(int Id, string ApellidoYNombre)> docentes, List<(int Id, string MateriaYComision)> cursos)
+        public string Mensaje { get; set; }
+
+        private bool _suspendComboBoxEvent = false;
+
+        public DictadoUI(List<(int Id, string ApellidoYNombre)> docentes)
         {
             InitializeComponent();
 
@@ -20,10 +24,16 @@
             GuardarButton.Text = "Crear";
 
             this.Docentes = docentes;
-            this.Cursos = cursos;
-            
+
             DocenteComboBox.DataSource = ListadoNombresDocentes();
-            CursoComboBox.DataSource = ListadoNombresCursos();
+
+            this.Dictado = new Docente_Curso();
+
+            Dictado.Id_docente = ObtenerIdDocenteSeleccionado();
+
+            DocenteComboBox.SelectedIndexChanged += DocenteComboBox_SelectedIndexChanged;
+
+            this.Load += async (sender, e) => await CargarCursosAsync();
         }
 
         public DictadoUI(List<(int Id, string ApellidoYNombre)> docentes, List<(int Id, string MateriaYComision)> cursos, Docente_Curso dictadoAModificar)
@@ -38,6 +48,9 @@
 
             this.Dictado = dictadoAModificar;
 
+            DocenteComboBox.Enabled = false;
+            CursoComboBox.Enabled = false;
+
             CargoTextBox.Text = dictadoAModificar.Cargo;
 
             DocenteComboBox.DataSource = ListadoNombresDocentes();
@@ -50,7 +63,7 @@
                 }
             }
 
-            CursoComboBox.DataSource = ListadoNombresCursos();
+            CursoComboBox.DataSource = ListadoNombresCursosModificacion();
             
             foreach (var curso in this.Cursos)
             {
@@ -92,7 +105,8 @@
                     }
                     else
                     {
-                        DialogResult = DialogResult.Cancel;
+                        this.Mensaje = (await response.Content.ReadAsStringAsync()).Trim('"');
+                        DialogResult = DialogResult.Abort;
                     }
                 }
             }
@@ -173,14 +187,46 @@
 
             return listadoNombresDocentes;
         }
-        
-        private List<string> ListadoNombresCursos()
+
+        private async Task CargarCursosAsync()
+        {
+            CursoComboBox.DataSource = await ListadoNombresCursosCreacion();
+        }
+
+        private async Task<List<string>> ListadoNombresCursosCreacion()
+        {
+            var cursos_docente = (List<Curso>) await CursoNegocio.GetCursosParaPersona(Dictado.Id_docente.ToString());
+
+            this.Cursos = cursos_docente.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
+
+            if (cursos_docente.Any())
+            {
+                cursos_docente = cursos_docente.OrderBy(cur => cur.Materia.Desc_materia).ThenBy(cur => cur.Comision.Desc_comision).ToList();
+            }
+
+            return cursos_docente.Select(curso => (curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
+        }
+
+        private List<string> ListadoNombresCursosModificacion()
         {
             List<string> listadoNombresCursos = this.Cursos.Select(curso => curso.MateriaYComision).ToList();
 
             listadoNombresCursos.Sort();
 
             return listadoNombresCursos;
+        }
+
+        private async void DocenteComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_suspendComboBoxEvent) return;
+
+            _suspendComboBoxEvent = true;
+
+            Dictado.Id_docente = ObtenerIdDocenteSeleccionado();
+
+            CursoComboBox.DataSource = await ListadoNombresCursosCreacion();
+
+            _suspendComboBoxEvent = false;
         }
 
         private void CancelarButton_Click(object sender, EventArgs e)

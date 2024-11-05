@@ -38,14 +38,19 @@
             this.Planes = planes;
             this.Persona = personaAModificar;
 
+            TipoPersonaComboBox.Enabled = false;
+            PlanComboBox.Enabled = false;
+
+            FechaNacimientoDatePicker.Value = personaAModificar.Fecha_nac;
+            FechaNacimientoDatePicker.BackColor = Color.WhiteSmoke;
+            FechaNacimientoDatePicker.Enabled = false;
+
             NombreTextBox.Text = personaAModificar.Nombre;
             ApellidoTextBox.Text = personaAModificar.Apellido;
             DireccionTextBox.Text = personaAModificar.Direccion;
             EmailTextBox.Text = personaAModificar.Email;
             TelefonoTextBox.Text = personaAModificar.Telefono;
-
-            FechaNacimientoDatePicker.Value = personaAModificar.Fecha_nac;
-                        
+ 
             LegajoTextBox.Text = personaAModificar.Legajo.ToString();
             
             TipoPersonaComboBox.DataSource = new List<string>() { "Alumno", "Docente" };

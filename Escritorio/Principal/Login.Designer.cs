@@ -51,7 +51,7 @@
             // NombreDeUsuarioLabel
             // 
             NombreDeUsuarioLabel.AutoSize = true;
-            NombreDeUsuarioLabel.Location = new Point(13, 80);
+            NombreDeUsuarioLabel.Location = new Point(23, 83);
             NombreDeUsuarioLabel.Name = "NombreDeUsuarioLabel";
             NombreDeUsuarioLabel.Size = new Size(113, 15);
             NombreDeUsuarioLabel.TabIndex = 4;
@@ -60,7 +60,7 @@
             // ClaveLabel
             // 
             ClaveLabel.AutoSize = true;
-            ClaveLabel.Location = new Point(86, 116);
+            ClaveLabel.Location = new Point(96, 117);
             ClaveLabel.Name = "ClaveLabel";
             ClaveLabel.Size = new Size(39, 15);
             ClaveLabel.TabIndex = 3;
@@ -83,7 +83,7 @@
             // 
             // btnIngresar
             // 
-            btnIngresar.Location = new Point(179, 155);
+            btnIngresar.Location = new Point(179, 156);
             btnIngresar.Name = "btnIngresar";
             btnIngresar.Size = new Size(75, 23);
             btnIngresar.TabIndex = 2;
@@ -94,7 +94,7 @@
             // IngresarInformacionLabel
             // 
             IngresarInformacionLabel.AutoSize = true;
-            IngresarInformacionLabel.Location = new Point(26, 45);
+            IngresarInformacionLabel.Location = new Point(26, 46);
             IngresarInformacionLabel.Name = "IngresarInformacionLabel";
             IngresarInformacionLabel.Size = new Size(232, 15);
             IngresarInformacionLabel.TabIndex = 5;

@@ -36,6 +36,8 @@
             
             this.Materia = materiaAModificar;
 
+            PlanComboBox.Enabled = false;
+
             DescripcionTextBox.Text = materiaAModificar.Desc_materia;
             HsSemanalesTextBox.Text = materiaAModificar.Hs_semanales.ToString();
             HsTotalesTextBox.Text = materiaAModificar.Hs_totales.ToString();
@@ -119,9 +121,9 @@
 
             if (int.TryParse(HsTotalesTextBox.Text, out int hsTotales))
             {
-                if (hsTotales < 90 || hsTotales > 190)
+                if (hsTotales < 100 || hsTotales > 250)
                 {
-                    MessageBox.Show($"La cantidad de horas totales debe ser un número entre 90 y 190", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"La cantidad de horas totales debe ser un número entre 100 y 250", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     DialogResult = DialogResult.None;
                     return false;
@@ -133,7 +135,7 @@
             }
             else
             {
-                MessageBox.Show($"La cantidad de horas totales debe ser un número entre 90 y 190", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"La cantidad de horas totales debe ser un número entre 100 y 250", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 DialogResult = DialogResult.None;
                 return false;

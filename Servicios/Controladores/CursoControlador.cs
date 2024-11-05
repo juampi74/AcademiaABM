@@ -5,15 +5,19 @@
     using Datos;
     using Entidades;
 
+    using Microsoft.Extensions.Logging;
+
     [ApiController]
     [Route("api/[controller]")]
     public class CursoController : ControllerBase
     {
         private readonly UniversidadContext _context;
+        private readonly ILogger<UsuarioController> _logger; // Logger para el controlador
 
-        public CursoController(UniversidadContext context)
+        public CursoController(UniversidadContext context, ILogger<UsuarioController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpGet(Name = "GetCurso")]
@@ -128,6 +132,28 @@
             catch (DbUpdateException)
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
+        }
+
+        [HttpGet("Persona/{id_persona}")]
+        public ActionResult<IEnumerable<Curso>> GetCursosParaPersona(string id_persona)
+        {
+            try
+            {
+                int id_persona_int = int.Parse(id_persona);
+
+                int id_plan = _context.Personas.Find(id_persona_int).Id_plan;
+
+                return _context.Cursos
+                           .Include(cur => cur.Comision)
+                           .Include(cur => cur.Materia)
+                           .Where(cur => cur.Comision.Id_plan == id_plan)
+                           .ToList();
+
             }
             catch (Exception)
             {

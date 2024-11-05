@@ -1,138 +1,154 @@
 ﻿@page "/persona"
 @page "/persona/{idPersona:int}"
 
+@using Web.Pages.Autenticacion;
+
 @using System.Text.RegularExpressions;
 
 @inject SweetAlertService Swal;
 @inject NavigationManager navegacion;
 
-<h2 class="mt-3">@titulo</h2>
+@inject AuthService AuthService;
 
-@if (!errorBD)
+@if (cargando)
 {
-    if (!errorFaltanEntidades)
-    {
-        <EditForm Model="persona" OnValidSubmit="GuardarPersona">
-            <DataAnnotationsValidator></DataAnnotationsValidator>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Nombre</label>
-                <InputText class="form-control" @bind-Value="persona.Nombre" @oninput="ValidarNombre"></InputText>
-                @if (errorNombreInvalido)
-                {
-                    <div class="text-danger mt-2">El nombre debe tener entre de 2 y 30 caracteres.</div>
-                }
-            </div>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Apellido</label>
-                <InputText class="form-control" @bind-Value="persona.Apellido" @oninput="ValidarApellido"></InputText>
-                @if (errorApellidoInvalido)
-                {
-                    <div class="text-danger mt-2">El apellido debe tener entre de 2 y 50 caracteres.</div>
-                }
-            </div>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Direccion</label>
-                <InputText class="form-control" @bind-Value="persona.Direccion" @oninput="ValidarDireccion"></InputText>
-                @if (errorDireccionInvalida)
-                {
-                    <div class="text-danger mt-2">La dirección debe tener entre de 5 y 30 caracteres.</div>
-                }
-            </div>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Email</label>
-                <InputText class="form-control" @bind-Value="persona.Email" @oninput="ValidarEmail"></InputText>
-                @if (errorEmailInvalido)
-                {
-                    <div class="text-danger mt-2">El email ingresado es inválido.</div>
-                }
-            </div>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Telefono</label>
-                <InputText class="form-control" @bind-Value="persona.Telefono" @oninput="ValidarTelefono"></InputText>
-                @if (errorTelefonoInvalido)
-                {
-                    <div class="text-danger mt-2">El teléfono debe estar conformado por entre 10 y 20 números.</div>
-                }
-            </div>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Fecha de Nacimiento</label>
-                <InputDate class="form-control" @bind-Value="persona.Fecha_nac" @oninput="ValidarFechaNacimiento"></InputDate>
-                @if (errorFechaNacimientoInvalida)
-                {
-                    <div class="text-danger mt-2">La fecha de nacimiento debe ser mayor o igual al año 1900 y menor a la actual.</div>
-                }
-            </div>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Legajo</label>
-                <InputNumber class="form-control" @bind-Value="persona.Legajo" @oninput="ValidarLegajo"></InputNumber>
-                @if (errorLegajoInvalido)
-                {
-                    <div class="text-danger mt-2">El legajo debe estar conformado por 5 o 6 números.</div>
-                }
-            </div>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Tipo</label>
-                <InputSelect class="form-select" @bind-Value="persona.Tipo_persona">
-                    <option value="0">Alumno</option>
-                    <option value="1">Docente</option>
-                </InputSelect>
-                <ValidationMessage For="@(() => persona.Tipo_persona)"></ValidationMessage>
-            </div>
-
-            <div class="mt-4">
-                <label class="form-label fw-bold">Plan</label>
-                <InputSelect class="form-select" @bind-Value="persona.Id_plan">
-                    @foreach (var plan in planes)
-                    {
-                        <option value="@plan.Id_plan">@plan.Desc_plan ➡️ @plan.Especialidad.Desc_especialidad</option>
-                    }
-                </InputSelect>
-                <ValidationMessage For="@(() => persona.Id_plan)"></ValidationMessage>
-            </div>
-
-            <div class="d-flex align-items-center justify-content-end my-3">
-                <a class="btn btn-warning" href="personas">Volver</a>
-
-                <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
-                    @btnTexto
-                </button>
-            </div>
-
-        </EditForm>
-    }
-    else
-    {
-        <div class="alert alert-warning fw-bold my-4" role="alert">
-            Debe haber al menos un plan registrado previamente!
-        </div>
-        <div class="d-flex justify-content-end">
-            <a class="btn btn-warning" href="personas">Volver</a>
-        </div>
-    }
+    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+}
+else if (!rolAutorizado)
+{
+    <Unauthorized />
 }
 else
 {
-    <div class="alert alert-danger fw-bold my-4" role="alert">
-        Error al conectarse a la base de datos!
-    </div>
-    <div class="d-flex justify-content-end">
-        <a class="btn btn-warning" href="personas">Volver</a>
-    </div>
+    <h2 class="mt-2">@titulo</h2>
+
+    @if (!errorBD)
+    {
+        if (!errorFaltanEntidades)
+        {
+            <EditForm Model="persona" OnValidSubmit="GuardarPersona">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Nombre</label>
+                    <InputText class="form-control" @bind-Value="persona.Nombre" @oninput="ValidarNombre"></InputText>
+                    @if (errorNombreInvalido)
+                    {
+                        <div class="text-danger mt-2">El nombre debe tener entre de 2 y 30 caracteres.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Apellido</label>
+                    <InputText class="form-control" @bind-Value="persona.Apellido" @oninput="ValidarApellido"></InputText>
+                    @if (errorApellidoInvalido)
+                    {
+                        <div class="text-danger mt-2">El apellido debe tener entre de 2 y 50 caracteres.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Direccion</label>
+                    <InputText class="form-control" @bind-Value="persona.Direccion" @oninput="ValidarDireccion"></InputText>
+                    @if (errorDireccionInvalida)
+                    {
+                        <div class="text-danger mt-2">La dirección debe tener entre de 5 y 30 caracteres.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Email</label>
+                    <InputText class="form-control" @bind-Value="persona.Email" @oninput="ValidarEmail"></InputText>
+                    @if (errorEmailInvalido)
+                    {
+                        <div class="text-danger mt-2">El email ingresado es inválido.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Telefono</label>
+                    <InputText class="form-control" @bind-Value="persona.Telefono" @oninput="ValidarTelefono"></InputText>
+                    @if (errorTelefonoInvalido)
+                    {
+                        <div class="text-danger mt-2">El teléfono debe estar conformado por entre 10 y 20 números.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Fecha de Nacimiento</label>
+                    <InputDate class="form-control" @bind-Value="persona.Fecha_nac" @oninput="ValidarFechaNacimiento" disabled="@camposDeshabilitados"></InputDate>
+                    @if (errorFechaNacimientoInvalida)
+                    {
+                        <div class="text-danger mt-2">La fecha de nacimiento debe ser mayor o igual al año 1900 y menor a la actual.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Legajo</label>
+                    <InputNumber class="form-control" @bind-Value="persona.Legajo" @oninput="ValidarLegajo"></InputNumber>
+                    @if (errorLegajoInvalido)
+                    {
+                        <div class="text-danger mt-2">El legajo debe estar conformado por 5 o 6 números.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Tipo</label>
+                    <InputSelect class="form-select" @bind-Value="persona.Tipo_persona" disabled="@camposDeshabilitados">
+                        <option value="0">Alumno</option>
+                        <option value="1">Docente</option>
+                    </InputSelect>
+                    <ValidationMessage For="@(() => persona.Tipo_persona)"></ValidationMessage>
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Plan</label>
+                    <InputSelect class="form-select" @bind-Value="persona.Id_plan" disabled="@camposDeshabilitados">
+                        @foreach (var plan in planes)
+                        {
+                            <option value="@plan.Id_plan">@plan.Desc_plan ➡️ @plan.Especialidad.Desc_especialidad</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => persona.Id_plan)"></ValidationMessage>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-end my-3">
+                    <a class="btn btn-warning" href="personas">Volver</a>
+
+                    <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
+                        @btnTexto
+                    </button>
+                </div>
+
+            </EditForm>
+        }
+        else
+        {
+            <div class="alert alert-warning fw-bold my-3" role="alert">
+                Debe haber al menos un plan registrado previamente!
+            </div>
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-dark" href="personas">Volver</a>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-danger fw-bold my-3" role="alert">
+            Error al conectarse a la base de datos!
+        </div>
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-dark" href="personas">Volver</a>
+        </div>
+    }
 }
-
-
 
 @code {
     [Parameter]
     public int idPersona { get; set; } = 0;
+
+    bool cargando = true;
+    bool rolAutorizado = false;
 
     string titulo = string.Empty;
     string btnTexto = string.Empty;
@@ -161,50 +177,77 @@ else
     bool fechaNacimientoModificada = false;
     bool legajoModificado = false;
 
+    bool camposDeshabilitados = false;
+
     protected override async Task OnInitializedAsync()
     {
-        if (idPersona != 0)
+        var authResult = await AuthService.IsAuthenticatedAsync();
+
+        if (!authResult.IsAuthenticated)
         {
-            titulo = "Editar Persona";
-            btnTexto = "Actualizar";
-
-            try
-            {
-                persona = await PersonaNegocio.GetOne(idPersona);
-
-                planes = (List<Plan>) await PlanNegocio.GetAll();
-
-            }
-            catch (Exception)
-            {
-                errorBD = true;
-            }
+            navegacion.NavigateTo("/login");
         }
         else
         {
-            titulo = "Nueva Persona";
-            btnTexto = "Guardar";
-
-            botonDeshabilitado = true;
-
-            try
+            if (authResult.Rol != "2")
             {
-                planes = (List<Plan>) await PlanNegocio.GetAll();
-
+                rolAutorizado = false;
             }
-            catch (Exception)
+            else
             {
-                errorBD = true;
-            }
-        }
+                rolAutorizado = true;
 
-        if (planes.Any())
-        {
-            planes = planes.OrderBy(plan => plan.Desc_plan).ThenBy(plan => plan.Especialidad.Desc_especialidad).ToList();
-        }
-        else
-        {
-            errorFaltanEntidades = true;
+                if (idPersona != 0)
+                {
+                    titulo = "Editar Persona";
+                    btnTexto = "Actualizar";
+
+                    try
+                    {
+                        persona = await PersonaNegocio.GetOne(idPersona);
+
+                        planes = (List<Plan>)await PlanNegocio.GetAll();
+
+                        camposDeshabilitados = true;
+                    }
+                    catch (Exception)
+                    {
+                        errorBD = true;
+                    }
+                }
+                else
+                {
+                    titulo = "Nueva Persona";
+                    btnTexto = "Guardar";
+
+                    botonDeshabilitado = true;
+
+                    persona.Fecha_nac = DateTime.Today;
+
+                    try
+                    {
+                        planes = (List<Plan>)await PlanNegocio.GetAll();
+                    }
+                    catch (Exception)
+                    {
+                        errorBD = true;
+                    }
+                
+                    if (planes.Any())
+                    {
+                        planes = planes.OrderBy(plan => plan.Desc_plan).ThenBy(plan => plan.Especialidad.Desc_especialidad).ToList();
+
+                        persona.Tipo_persona = 0;
+                        persona.Id_plan = planes.First().Id_plan;
+                    }
+                    else
+                    {
+                        errorFaltanEntidades = true;
+                    }
+                }
+            }
+            
+            cargando = false;
         }
     }
 
@@ -367,6 +410,7 @@ else
             if (idPersona != 0)
             {
                 PersonaDTO personaDTO = new PersonaDTO();
+
                 personaDTO.Nombre = persona.Nombre;
                 personaDTO.Apellido = persona.Apellido;
                 personaDTO.Direccion = persona.Direccion;
@@ -398,6 +442,7 @@ else
                 {
                     persona.Tipo_persona = 0;
                 }
+
                 if (persona.Id_plan == 0)
                 {
                     persona.Id_plan = planes.First().Id_plan;

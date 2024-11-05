@@ -36,6 +36,8 @@
 
             this.Plan = planAModificar;
 
+            EspecialidadComboBox.Enabled = false;
+
             DescPlanTextBox.Text = planAModificar.Desc_plan;
 
             EspecialidadComboBox.DataSource = ListadoNombresEspecialidades();
@@ -88,9 +90,9 @@
 
         private bool ValidarDatosIngresados()
         {
-            if (DescPlanTextBox.Text.Length < 10)
+            if (DescPlanTextBox.Text.Length < 5)
             {
-                MessageBox.Show($"La descripción debe tener más de 10 caracteres", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"La descripción debe tener más de 5 caracteres", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 DialogResult = DialogResult.None;
                 return false;

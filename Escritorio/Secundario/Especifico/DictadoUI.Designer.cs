@@ -43,7 +43,7 @@
             // 
             TituloLabel.AutoSize = true;
             TituloLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TituloLabel.Location = new Point(114, 8);
+            TituloLabel.Location = new Point(140, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(110, 37);
             TituloLabel.TabIndex = 8;
@@ -52,7 +52,7 @@
             // CursoLabel
             // 
             CursoLabel.AutoSize = true;
-            CursoLabel.Location = new Point(46, 61);
+            CursoLabel.Location = new Point(46, 103);
             CursoLabel.Name = "CursoLabel";
             CursoLabel.Size = new Size(41, 15);
             CursoLabel.TabIndex = 7;
@@ -63,15 +63,15 @@
             CursoComboBox.BackColor = SystemColors.GrayText;
             CursoComboBox.ForeColor = SystemColors.Window;
             CursoComboBox.FormattingEnabled = true;
-            CursoComboBox.Location = new Point(93, 59);
+            CursoComboBox.Location = new Point(93, 100);
             CursoComboBox.Name = "CursoComboBox";
-            CursoComboBox.Size = new Size(278, 23);
+            CursoComboBox.Size = new Size(320, 23);
             CursoComboBox.TabIndex = 0;
             // 
             // DocenteLabel
             // 
             DocenteLabel.AutoSize = true;
-            DocenteLabel.Location = new Point(33, 103);
+            DocenteLabel.Location = new Point(33, 67);
             DocenteLabel.Name = "DocenteLabel";
             DocenteLabel.Size = new Size(54, 15);
             DocenteLabel.TabIndex = 6;
@@ -82,15 +82,15 @@
             DocenteComboBox.BackColor = SystemColors.GrayText;
             DocenteComboBox.ForeColor = SystemColors.Window;
             DocenteComboBox.FormattingEnabled = true;
-            DocenteComboBox.Location = new Point(93, 101);
+            DocenteComboBox.Location = new Point(93, 64);
             DocenteComboBox.Name = "DocenteComboBox";
-            DocenteComboBox.Size = new Size(278, 23);
+            DocenteComboBox.Size = new Size(320, 23);
             DocenteComboBox.TabIndex = 1;
             // 
             // CargoLabel
             // 
             CargoLabel.AutoSize = true;
-            CargoLabel.Location = new Point(44, 144);
+            CargoLabel.Location = new Point(45, 140);
             CargoLabel.Name = "CargoLabel";
             CargoLabel.Size = new Size(42, 15);
             CargoLabel.TabIndex = 5;
@@ -100,16 +100,16 @@
             // 
             CargoTextBox.BackColor = SystemColors.ControlDarkDark;
             CargoTextBox.ForeColor = SystemColors.Menu;
-            CargoTextBox.Location = new Point(92, 141);
+            CargoTextBox.Location = new Point(93, 136);
             CargoTextBox.Name = "CargoTextBox";
-            CargoTextBox.Size = new Size(281, 23);
+            CargoTextBox.Size = new Size(320, 23);
             CargoTextBox.TabIndex = 2;
             // 
             // CancelarButton
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(97, 182);
+            CancelarButton.Location = new Point(115, 180);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
             CancelarButton.TabIndex = 4;
@@ -121,7 +121,7 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(238, 182);
+            GuardarButton.Location = new Point(256, 180);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
             GuardarButton.TabIndex = 3;
@@ -134,7 +134,7 @@
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(408, 221);
+            ClientSize = new Size(447, 221);
             Controls.Add(TituloLabel);
             Controls.Add(CursoLabel);
             Controls.Add(CursoComboBox);

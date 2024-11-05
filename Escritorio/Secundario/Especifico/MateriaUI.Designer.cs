@@ -54,7 +54,7 @@
             // DescripcionLabel
             // 
             DescripcionLabel.AutoSize = true;
-            DescripcionLabel.Location = new Point(36, 66);
+            DescripcionLabel.Location = new Point(36, 67);
             DescripcionLabel.Name = "DescripcionLabel";
             DescripcionLabel.Size = new Size(72, 15);
             DescripcionLabel.TabIndex = 9;
@@ -72,7 +72,7 @@
             // HsSemanalesLabel
             // 
             HsSemanalesLabel.AutoSize = true;
-            HsSemanalesLabel.Location = new Point(8, 106);
+            HsSemanalesLabel.Location = new Point(8, 103);
             HsSemanalesLabel.Name = "HsSemanalesLabel";
             HsSemanalesLabel.Size = new Size(100, 15);
             HsSemanalesLabel.TabIndex = 8;
@@ -82,7 +82,7 @@
             // 
             HsSemanalesTextBox.BackColor = SystemColors.ControlDarkDark;
             HsSemanalesTextBox.ForeColor = SystemColors.Menu;
-            HsSemanalesTextBox.Location = new Point(119, 103);
+            HsSemanalesTextBox.Location = new Point(119, 100);
             HsSemanalesTextBox.Name = "HsSemanalesTextBox";
             HsSemanalesTextBox.Size = new Size(250, 23);
             HsSemanalesTextBox.TabIndex = 1;
@@ -90,7 +90,7 @@
             // HsTotalesLabel
             // 
             HsTotalesLabel.AutoSize = true;
-            HsTotalesLabel.Location = new Point(28, 143);
+            HsTotalesLabel.Location = new Point(28, 139);
             HsTotalesLabel.Name = "HsTotalesLabel";
             HsTotalesLabel.Size = new Size(80, 15);
             HsTotalesLabel.TabIndex = 7;
@@ -100,7 +100,7 @@
             // 
             HsTotalesTextBox.BackColor = SystemColors.ControlDarkDark;
             HsTotalesTextBox.ForeColor = SystemColors.Menu;
-            HsTotalesTextBox.Location = new Point(119, 139);
+            HsTotalesTextBox.Location = new Point(119, 136);
             HsTotalesTextBox.Name = "HsTotalesTextBox";
             HsTotalesTextBox.Size = new Size(250, 23);
             HsTotalesTextBox.TabIndex = 2;
@@ -108,7 +108,7 @@
             // PlanLabel
             // 
             PlanLabel.AutoSize = true;
-            PlanLabel.Location = new Point(74, 176);
+            PlanLabel.Location = new Point(75, 175);
             PlanLabel.Name = "PlanLabel";
             PlanLabel.Size = new Size(33, 15);
             PlanLabel.TabIndex = 6;
@@ -119,9 +119,9 @@
             PlanComboBox.BackColor = SystemColors.GrayText;
             PlanComboBox.ForeColor = SystemColors.Window;
             PlanComboBox.FormattingEnabled = true;
-            PlanComboBox.Location = new Point(119, 173);
+            PlanComboBox.Location = new Point(119, 172);
             PlanComboBox.Name = "PlanComboBox";
-            PlanComboBox.Size = new Size(248, 23);
+            PlanComboBox.Size = new Size(250, 23);
             PlanComboBox.TabIndex = 3;
             // 
             // CancelarButton
@@ -153,7 +153,7 @@
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(382, 256);
+            ClientSize = new Size(385, 256);
             Controls.Add(TituloLabel);
             Controls.Add(DescripcionLabel);
             Controls.Add(DescripcionTextBox);

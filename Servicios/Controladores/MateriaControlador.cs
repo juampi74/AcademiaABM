@@ -134,5 +134,25 @@
                 return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
         }
+
+        [HttpGet("Comision/{id_comision}")]
+        public ActionResult<IEnumerable<Materia>> GetMateriasParaComision(string id_comision)
+        {
+            try
+            {
+                int id_comision_int = int.Parse(id_comision);
+
+                int id_plan = _context.Comisiones.Find(id_comision_int).Id_plan;
+
+                return _context.Materias
+                           .Where(mat => mat.Id_plan == id_plan)
+                           .ToList();
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
+        }
     }
 }

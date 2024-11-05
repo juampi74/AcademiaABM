@@ -64,7 +64,7 @@
             // NombreLabel
             // 
             NombreLabel.AutoSize = true;
-            NombreLabel.Location = new Point(75, 66);
+            NombreLabel.Location = new Point(75, 67);
             NombreLabel.Name = "NombreLabel";
             NombreLabel.Size = new Size(54, 15);
             NombreLabel.TabIndex = 19;
@@ -74,7 +74,7 @@
             // 
             NombreTextBox.BackColor = SystemColors.ControlDarkDark;
             NombreTextBox.ForeColor = SystemColors.Menu;
-            NombreTextBox.Location = new Point(140, 63);
+            NombreTextBox.Location = new Point(140, 64);
             NombreTextBox.Name = "NombreTextBox";
             NombreTextBox.Size = new Size(228, 23);
             NombreTextBox.TabIndex = 0;
@@ -100,7 +100,7 @@
             // DireccionLabel
             // 
             DireccionLabel.AutoSize = true;
-            DireccionLabel.Location = new Point(69, 141);
+            DireccionLabel.Location = new Point(69, 140);
             DireccionLabel.Name = "DireccionLabel";
             DireccionLabel.Size = new Size(60, 15);
             DireccionLabel.TabIndex = 17;
@@ -110,7 +110,7 @@
             // 
             DireccionTextBox.BackColor = SystemColors.ControlDarkDark;
             DireccionTextBox.ForeColor = SystemColors.Menu;
-            DireccionTextBox.Location = new Point(140, 138);
+            DireccionTextBox.Location = new Point(140, 136);
             DireccionTextBox.Name = "DireccionTextBox";
             DireccionTextBox.Size = new Size(228, 23);
             DireccionTextBox.TabIndex = 2;
@@ -118,7 +118,7 @@
             // EmailLabel
             // 
             EmailLabel.AutoSize = true;
-            EmailLabel.Location = new Point(89, 180);
+            EmailLabel.Location = new Point(90, 176);
             EmailLabel.Name = "EmailLabel";
             EmailLabel.Size = new Size(39, 15);
             EmailLabel.TabIndex = 16;
@@ -128,7 +128,7 @@
             // 
             EmailTextBox.BackColor = SystemColors.ControlDarkDark;
             EmailTextBox.ForeColor = SystemColors.Menu;
-            EmailTextBox.Location = new Point(140, 176);
+            EmailTextBox.Location = new Point(140, 172);
             EmailTextBox.Name = "EmailTextBox";
             EmailTextBox.Size = new Size(228, 23);
             EmailTextBox.TabIndex = 3;
@@ -136,7 +136,7 @@
             // TelefonoLabel
             // 
             TelefonoLabel.AutoSize = true;
-            TelefonoLabel.Location = new Point(74, 217);
+            TelefonoLabel.Location = new Point(75, 211);
             TelefonoLabel.Name = "TelefonoLabel";
             TelefonoLabel.Size = new Size(55, 15);
             TelefonoLabel.TabIndex = 15;
@@ -146,7 +146,7 @@
             // 
             TelefonoTextBox.BackColor = SystemColors.ControlDarkDark;
             TelefonoTextBox.ForeColor = SystemColors.Menu;
-            TelefonoTextBox.Location = new Point(140, 214);
+            TelefonoTextBox.Location = new Point(140, 208);
             TelefonoTextBox.Name = "TelefonoTextBox";
             TelefonoTextBox.Size = new Size(228, 23);
             TelefonoTextBox.TabIndex = 4;
@@ -154,7 +154,7 @@
             // FechaNacimientoLabel
             // 
             FechaNacimientoLabel.AutoSize = true;
-            FechaNacimientoLabel.Location = new Point(9, 253);
+            FechaNacimientoLabel.Location = new Point(9, 248);
             FechaNacimientoLabel.Name = "FechaNacimientoLabel";
             FechaNacimientoLabel.Size = new Size(122, 15);
             FechaNacimientoLabel.TabIndex = 14;
@@ -162,15 +162,15 @@
             // 
             // FechaNacimientoDatePicker
             // 
-            FechaNacimientoDatePicker.Location = new Point(141, 250);
+            FechaNacimientoDatePicker.Location = new Point(141, 244);
             FechaNacimientoDatePicker.Name = "FechaNacimientoDatePicker";
-            FechaNacimientoDatePicker.Size = new Size(227, 23);
+            FechaNacimientoDatePicker.Size = new Size(228, 23);
             FechaNacimientoDatePicker.TabIndex = 5;
             // 
             // LegajoLabel
             // 
             LegajoLabel.AutoSize = true;
-            LegajoLabel.Location = new Point(84, 288);
+            LegajoLabel.Location = new Point(85, 283);
             LegajoLabel.Name = "LegajoLabel";
             LegajoLabel.Size = new Size(45, 15);
             LegajoLabel.TabIndex = 13;
@@ -180,7 +180,7 @@
             // 
             LegajoTextBox.BackColor = SystemColors.ControlDarkDark;
             LegajoTextBox.ForeColor = SystemColors.Menu;
-            LegajoTextBox.Location = new Point(140, 285);
+            LegajoTextBox.Location = new Point(140, 280);
             LegajoTextBox.Name = "LegajoTextBox";
             LegajoTextBox.Size = new Size(228, 23);
             LegajoTextBox.TabIndex = 6;
@@ -188,7 +188,7 @@
             // TipoPersonaLabel
             // 
             TipoPersonaLabel.AutoSize = true;
-            TipoPersonaLabel.Location = new Point(91, 329);
+            TipoPersonaLabel.Location = new Point(96, 319);
             TipoPersonaLabel.Name = "TipoPersonaLabel";
             TipoPersonaLabel.Size = new Size(33, 15);
             TipoPersonaLabel.TabIndex = 12;
@@ -199,7 +199,7 @@
             TipoPersonaComboBox.BackColor = SystemColors.GrayText;
             TipoPersonaComboBox.ForeColor = SystemColors.Window;
             TipoPersonaComboBox.FormattingEnabled = true;
-            TipoPersonaComboBox.Location = new Point(140, 326);
+            TipoPersonaComboBox.Location = new Point(140, 316);
             TipoPersonaComboBox.Name = "TipoPersonaComboBox";
             TipoPersonaComboBox.Size = new Size(228, 23);
             TipoPersonaComboBox.TabIndex = 7;
@@ -207,7 +207,7 @@
             // PlanLabel
             // 
             PlanLabel.AutoSize = true;
-            PlanLabel.Location = new Point(90, 368);
+            PlanLabel.Location = new Point(96, 355);
             PlanLabel.Name = "PlanLabel";
             PlanLabel.Size = new Size(33, 15);
             PlanLabel.TabIndex = 11;
@@ -218,7 +218,7 @@
             PlanComboBox.BackColor = SystemColors.GrayText;
             PlanComboBox.ForeColor = SystemColors.Window;
             PlanComboBox.FormattingEnabled = true;
-            PlanComboBox.Location = new Point(140, 364);
+            PlanComboBox.Location = new Point(140, 352);
             PlanComboBox.Name = "PlanComboBox";
             PlanComboBox.Size = new Size(228, 23);
             PlanComboBox.TabIndex = 8;
@@ -227,7 +227,7 @@
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(74, 413);
+            CancelarButton.Location = new Point(74, 399);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
             CancelarButton.TabIndex = 10;
@@ -239,7 +239,7 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(216, 413);
+            GuardarButton.Location = new Point(216, 399);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
             GuardarButton.TabIndex = 9;
@@ -252,7 +252,7 @@
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(382, 454);
+            ClientSize = new Size(382, 443);
             Controls.Add(TituloLabel);
             Controls.Add(NombreLabel);
             Controls.Add(NombreTextBox);

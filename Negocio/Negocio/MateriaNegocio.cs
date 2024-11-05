@@ -65,6 +65,19 @@
             // Devolver verdadero si la solicitud fue exitosa, falso en caso contrario
             return response;
         }
+
+        public async static Task<IEnumerable<Materia>> GetMateriasParaComision(string id_comision)
+        {
+            // Realizar una solicitud GET a la API para obtener las posibles materias para el curso segun el
+            // plan de estudios de la comision seleccionada
+            var response = await Conexion.Instancia.Cliente.GetStringAsync($"{defaultURL}Comision/{id_comision}");
+
+            // Deserializar la respuesta JSON en una colección de objetos Alumno_Inscripcion
+            var data = JsonConvert.DeserializeObject<IEnumerable<Materia>>(response);
+
+            // Devolver los datos obtenidos
+            return data;
+        }
     }
 }
 

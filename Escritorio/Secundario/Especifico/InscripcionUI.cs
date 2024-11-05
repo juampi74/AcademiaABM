@@ -14,7 +14,9 @@
 
         public string Mensaje { get; set; }
 
-        public InscripcionUI(List<(int Id, string ApellidoYNombre)> alumnos, List<(int Id, string MateriaYComision)> cursos)
+        private bool _suspendComboBoxEvent = false;
+
+        public InscripcionUI(List<(int Id, string ApellidoYNombre)> alumnos)
         {
             InitializeComponent();
 
@@ -27,10 +29,16 @@
             CondicionTextBox.Visible = false;
 
             this.Alumnos = alumnos;
-            this.Cursos = cursos;
 
             AlumnoComboBox.DataSource = ListadoNombresAlumnos();
-            CursoComboBox.DataSource = ListadoNombresCursos();
+
+            this.Inscripcion = new Alumno_Inscripcion();
+
+            Inscripcion.Id_alumno = ObtenerIdAlumnoSeleccionado();
+
+            AlumnoComboBox.SelectedIndexChanged += AlumnoComboBox_SelectedIndexChanged;
+
+            this.Load += async (sender, e) => await CargarCursosAsync();
         }
 
         public InscripcionUI(List<(int Id, string ApellidoYNombre)> alumnos, List<(int Id, string MateriaYComision)> cursos, Alumno_Inscripcion inscripcionAModificar)
@@ -64,7 +72,7 @@
                 }
             }
 
-            CursoComboBox.DataSource = ListadoNombresCursos();
+            CursoComboBox.DataSource = ListadoNombresCursosModificacion();
 
             foreach (var curso in this.Cursos)
             {
@@ -73,74 +81,46 @@
                     CursoComboBox.SelectedItem = curso.MateriaYComision;
                 }
             }
+
+            NotaTextBox.TextChanged += NotaTextBox_TextChanged;
         }
 
         private async void GuardarButton_Click(object sender, EventArgs e)
         {
-            if (ComprobarCamposRequeridos())
+            if (GuardarButton.Text == "Modificar")
             {
-                if (GuardarButton.Text == "Modificar")
+                Alumno_InscripcionDTO inscripcionModificada = EstablecerDatosInscripcionAModificar();
+
+                if (inscripcionModificada.Condicion != "")
                 {
-                    Alumno_InscripcionDTO inscripcionModificada = EstablecerDatosInscripcionAModificar();
+                    var response = await InscripcionNegocio.Update(Inscripcion.Id_inscripcion, inscripcionModificada);
 
-                    if (inscripcionModificada.Condicion != "")
-                    {
-                        var response = await InscripcionNegocio.Update(Inscripcion.Id_inscripcion, inscripcionModificada);
-
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            DialogResult = DialogResult.OK;
-                        }
-                        else if (response.StatusCode == HttpStatusCode.Conflict)
-                        {
-                            DialogResult = DialogResult.Abort;
-                        }
-                    }
-
-                }
-                else
-                {
-                    Alumno_Inscripcion nuevaInscripcion = EstablecerDatosNuevaInscripcion();
-
-                    var response = await InscripcionNegocio.Add(nuevaInscripcion);
-
-                    if (response.StatusCode == HttpStatusCode.Created)
+                    if (response.StatusCode == HttpStatusCode.OK)
                     {
                         DialogResult = DialogResult.OK;
                     }
-                    else
+                    else if (response.StatusCode == HttpStatusCode.Conflict)
                     {
-                        this.Mensaje = (await response.Content.ReadAsStringAsync()).Trim('"');
                         DialogResult = DialogResult.Abort;
                     }
                 }
+
             }
-        }
-
-        private bool ComprobarCamposRequeridos()
-        {
-            if (GuardarButton.Text == "Modificar")
+            else
             {
-                foreach (Control control in this.Controls.Cast<Control>().OrderBy(c => c.TabIndex))
+                Alumno_Inscripcion nuevaInscripcion = EstablecerDatosNuevaInscripcion();
+
+                var response = await InscripcionNegocio.Add(nuevaInscripcion);
+
+                if (response.StatusCode == HttpStatusCode.Created)
                 {
-                    if (control is TextBox textBox && control.Enabled == true)
-                    {
-                        if (string.IsNullOrEmpty(textBox.Text))
-                        {
-                            CampoRequerido campoRequerido = new CampoRequerido();
-                            campoRequerido.CampoRequeridoLabel.Text = campoRequerido.CampoRequeridoLabel.Text.Replace("${campo}", textBox.Name.Replace("TextBox", ""));
-                            campoRequerido.ShowDialog(this);
-
-                            DialogResult = DialogResult.None;
-                            return false;
-                        }
-                    }
+                    DialogResult = DialogResult.OK;
                 }
-                return true;
-
-            } else
-            {
-                return true;
+                else
+                {
+                    this.Mensaje = (await response.Content.ReadAsStringAsync()).Trim('"');
+                    DialogResult = DialogResult.Abort;
+                }
             }
         }
 
@@ -151,26 +131,14 @@
 
             Alumno_InscripcionDTO inscripcion = new Alumno_InscripcionDTO();
 
-            if (int.TryParse(NotaTextBox.Text, out int nota))
+            if (CondicionTextBox.Text != "Nota fuera de rango" && CondicionTextBox.Text != "Nota invalida")
             {
-                string condicionCalculada = "";
-
-                if (nota < 1 || nota > 10)
-                {
-                    MessageBox.Show($"Por favor, ingrese una nota válida entre 1 y 10", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    condicionCalculada = (nota < 4) ? "Libre" : (nota < 6) ? "Regular" : "Aprobado";
-                }
-
-                inscripcion.Condicion = condicionCalculada;
-        
-                inscripcion.Nota = nota;
+                inscripcion.Nota = int.Parse(NotaTextBox.Text);
+                inscripcion.Condicion = CondicionTextBox.Text;
                 inscripcion.Id_alumno = idAlumnoSeleccionado;
                 inscripcion.Id_curso = idCursoSeleccionado;
-
-            } else
+            }
+            else
             {
                 MessageBox.Show($"Por favor, ingrese una nota válida entre 1 y 10", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -178,6 +146,28 @@
             return inscripcion;
         }
 
+        private void CalcularCondicion()
+        {
+            string condicionCalculada;
+
+            if (int.TryParse(NotaTextBox.Text, out int nota))
+            {
+                if (nota < 1 || nota > 10)
+                {
+                    condicionCalculada = "Nota fuera de rango";
+                }
+                else
+                {
+                    condicionCalculada = (nota < 4) ? "Libre" : (nota < 6) ? "Regular" : "Aprobado";
+                }
+            }
+            else
+            {
+                condicionCalculada = "Nota invalida";
+            }
+
+            CondicionTextBox.Text = condicionCalculada;
+        }
 
         private Alumno_Inscripcion EstablecerDatosNuevaInscripcion()
         {
@@ -227,14 +217,51 @@
 
             return listadoNombresAlumnos;
         }
-        
-        private List<string> ListadoNombresCursos()
+
+        private async Task CargarCursosAsync()
+        {
+            CursoComboBox.DataSource = await ListadoNombresCursosCreacion();
+        }
+
+        private async Task<List<string>> ListadoNombresCursosCreacion()
+        {
+            var cursos_alumno = (List<Curso>)await CursoNegocio.GetCursosParaPersona(Inscripcion.Id_alumno.ToString());
+
+            this.Cursos = cursos_alumno.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
+
+            if (cursos_alumno.Any())
+            {
+                cursos_alumno = cursos_alumno.OrderBy(cur => cur.Materia.Desc_materia).ThenBy(cur => cur.Comision.Desc_comision).ToList();
+            }
+
+            return cursos_alumno.Select(curso => (curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
+        }
+
+        private List<string> ListadoNombresCursosModificacion()
         {
             List<string> listadoNombresCursos = this.Cursos.Select(curso => curso.MateriaYComision).ToList();
 
             listadoNombresCursos.Sort();
 
             return listadoNombresCursos;
+        }
+
+        private async void AlumnoComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_suspendComboBoxEvent) return;
+
+            _suspendComboBoxEvent = true;
+
+            Inscripcion.Id_alumno = ObtenerIdAlumnoSeleccionado();
+
+            CursoComboBox.DataSource = await ListadoNombresCursosCreacion();
+
+            _suspendComboBoxEvent = false;
+        }
+
+        private void NotaTextBox_TextChanged(object sender, EventArgs e)
+        {
+            CalcularCondicion();
         }
 
         private void CancelarButton_Click(object sender, EventArgs e)
