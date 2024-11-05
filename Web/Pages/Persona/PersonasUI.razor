@@ -1,0 +1,196 @@
+﻿@page "/personas"
+
+@using Web.Pages.Autenticacion;
+
+@inject SweetAlertService Swal;
+
+@inject NavigationManager navegacion;
+
+@inject AuthService AuthService;
+
+@if (cargando)
+{
+    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+}
+else if (!rolAutorizado)
+{
+    <Unauthorized />
+}
+else
+{
+    @if (!error)
+    {
+        @if (personas == null)
+        {
+            <div class="d-flex align-items-center">
+                <h2 class="me-3">Personas</h2>
+                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+            </div>
+        }
+        else
+        {
+            <div class="d-flex align-items-center justify-content-between">
+                <h2>Personas</h2>
+                <a href="persona">
+                    <img class="pb-2" src="/assets/add.png" style="width: 60px; height: 60px" />
+                </a>
+            </div>
+
+            <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Apellido y Nombre, Legajo, Tipo de Persona, Plan o Especialidad..." class="form-control mt-2 mb-4 busqueda-input" />
+
+            IEnumerable<Persona> personasFilt = personasFiltradas();
+
+            @if (!personasFilt.Any())
+            {
+                <div class="alert alert-primary fw-bold mt-3" role="alert">
+                    No hay personas registradas o no hay resultados que coincidan con la búsqueda.
+                </div>
+            }
+            else
+            {
+                <table class="table mt-3">
+                    <thead>
+                        <tr>
+                            <th>Apellido y Nombre</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Legajo</th>
+                            <th>Tipo</th>
+                            <th>Plan</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var persona in personasFilt)
+                        {
+                            <tr>
+                                <td style="vertical-align: middle;">@persona.Apellido, @persona.Nombre</td>
+                                <td style="vertical-align: middle;">@persona.Fecha_nac.ToString("dd/MM/yyyy")</td>
+                                <td style="vertical-align: middle;">@persona.Legajo</td>
+                                <td style="vertical-align: middle;">@(persona.Tipo_persona == 0 ? "Alumno" : "Docente")</td>
+                                <td style="vertical-align: middle;">@persona.Plan.Desc_plan ➡️ @persona.Plan.Especialidad.Desc_especialidad</td>
+                                <td class="d-flex justify-content-end">
+                                    <a class="btn btn-primary btn-sm" href="persona/@persona.Id_persona">
+                                        <i class="bi bi-pencil-square fs-5"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm ms-2" @onclick="(() => EliminarPersona(persona))">
+                                        <i class="bi bi-trash-fill fs-5"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+    }
+    else
+    {
+        <h2 class="mt-3">Personas</h2>
+        <div class="alert alert-danger fw-bold my-3" role="alert">
+            Error al conectarse a la base de datos!
+        </div>
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-dark" href="/">Volver</a>
+        </div>
+    }
+}
+
+@code {
+    IEnumerable<Persona> personas;
+    string busqueda = "";
+    bool error;
+
+    bool cargando = true;
+    bool rolAutorizado = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authResult = await AuthService.IsAuthenticatedAsync();
+
+        if (!authResult.IsAuthenticated)
+        {
+            navegacion.NavigateTo("/login");
+
+        }
+        else
+        {
+            if (authResult.Rol != "2")
+            {
+                rolAutorizado = false;
+
+            }
+            else
+            {
+                rolAutorizado = true;
+                await CargarPersonas();
+            }
+        }
+
+        cargando = false;
+    }
+
+    private async Task CargarPersonas()
+    {
+        personas = null;
+        error = false;
+
+        try
+        {
+            personas = await PersonaNegocio.GetAll();
+        }
+        catch (Exception)
+        {
+            error = true;
+        }
+    }
+
+    private IEnumerable<Persona> personasFiltradas()
+    {
+        if (string.IsNullOrWhiteSpace(busqueda))
+        {
+            return personas ?? new List<Persona>();
+        }
+
+        return personas?.Where(per =>
+              (per.Apellido + ", " + per.Nombre).Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               per.Legajo.ToString().Contains(busqueda) ||
+              (busqueda.Equals("Alumno", StringComparison.OrdinalIgnoreCase) && per.Tipo_persona == 0) ||
+              (busqueda.Equals("Docente", StringComparison.OrdinalIgnoreCase) && per.Tipo_persona == 1) ||
+               per.Plan.Desc_plan.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               per.Plan.Especialidad.Desc_especialidad.Contains(busqueda, StringComparison.OrdinalIgnoreCase))
+            ?? new List<Persona>();
+    }
+
+    private async Task EliminarPersona(Persona persona)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¿Está seguro?",
+                Text = "Esta acción no se puede revertir",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
+
+        if (result.IsConfirmed)
+        {
+            HttpResponseMessage response = await PersonaNegocio.Delete(persona);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                await Swal.FireAsync("Persona eliminada", "La persona ha sido eliminada correctamente", SweetAlertIcon.Success);
+
+                await CargarPersonas();
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                await Swal.FireAsync("Error", "La persona tiene dictados, inscripciones y/o usuarios asociados", SweetAlertIcon.Error);
+            }
+            else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                error = true;
+            }
+        }
+    }
+}

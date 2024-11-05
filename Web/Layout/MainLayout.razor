@@ -1,0 +1,73 @@
+﻿@inherits LayoutComponentBase
+@inject AuthService AuthService
+@inject AuthStateService AuthStateService
+@inject NavigationManager Navigation
+
+@using System.Security.Claims
+@using System.Text.Json
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu Role="@Role" />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            @if (IsAuthenticated)
+            {
+                <div class="d-flex align-items-center justify-content-end">
+                    <p class="m-0">Bienvenido, @Username - @(Role == "0" ? "Alumno" : (Role == "1" ? "Docente" : "Administrador"))</p>
+                    <NavLink @onclick="Logout" class="btn btn-link">Cerrar Sesión</NavLink>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex align-items-center justify-content-end">
+                    <NavLink href="/login">Iniciar Sesión</NavLink>
+                </div>
+            }
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    private bool IsAuthenticated { get; set; }
+    private string Username { get; set; }
+    private string Role { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        UpdateAuthenticationState();
+        AuthStateService.OnChange += UpdateAuthenticationState;
+    }
+
+    public void UpdateAuthenticationState()
+    {
+        Task.Run(async () =>
+        {
+            var authResult = await AuthService.IsAuthenticatedAsync();
+
+            IsAuthenticated = authResult.IsAuthenticated;
+
+            Username = authResult.NombreUsuario;
+            Role = authResult.Rol;
+
+            StateHasChanged();
+        });
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/login");
+    }
+
+    public void Dispose()
+    {
+        AuthStateService.OnChange -= UpdateAuthenticationState;
+    }
+}

@@ -1,0 +1,360 @@
+﻿@page "/usuario"
+@page "/usuario/{idUsuario:int}"
+
+@using Web.Pages.Autenticacion;
+
+@inject SweetAlertService Swal;
+@inject NavigationManager navegacion;
+
+@inject AuthService AuthService;
+
+@if (cargando)
+{
+    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+}
+else if (!rolAutorizado)
+{
+    <Unauthorized />
+}
+else
+{
+    <h2 class="mt-2">@titulo</h2>
+
+    @if (!errorBD)
+    {
+        @if (!errorFaltanEntidades)
+        {
+            <EditForm Model="usuario" OnValidSubmit="GuardarUsuario">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Nombre de Usuario</label>
+                    <InputText class="form-control" @bind-Value="usuario.Nombre_usuario" @oninput="ValidarNombreUsuario" disabled="@camposDeshabilitados"></InputText>
+                    @if (errorNombreUsuarioInvalido)
+                    {
+                        <div class="text-danger mt-2">El nombre de usuario debe tener entre de 5 y 20 caracteres.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Clave</label>
+                    <InputText class="form-control" @bind-Value="usuario.Clave" @oninput="ValidarClave"></InputText>
+                    @if (errorClaveInvalida)
+                    {
+                        <div class="text-danger mt-2">La clave debe tener entre de 5 y 15 caracteres.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Habilitado</label>
+                    <InputSelect class="form-select" @bind-Value="usuario.Habilitado">
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
+                    </InputSelect>
+                    <ValidationMessage For="@(() => usuario.Habilitado)"></ValidationMessage>
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Cambia Clave</label>
+                    <InputSelect class="form-select" @bind-Value="usuario.Cambia_clave">
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
+                    </InputSelect>
+                    <ValidationMessage For="@(() => usuario.Cambia_clave)"></ValidationMessage>
+                </div>
+
+                @if (mostrarCheckboxAdministrador)
+                {
+                    <div class="mt-4 form-check">
+                        <InputCheckbox @bind-Value="esAdministrador" id="esAdministrador" @onchange="OnAdminCheckboxChanged" disabled="@checkboxDeshabilitado" />
+                        <label class="form-check-label" for="esAdministrador">Administrador</label>
+                    </div>
+                }
+
+                @if (!esAdministrador)
+                {
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Persona</label>
+                        <InputSelect class="form-select" @bind-Value="usuario.Id_persona" disabled="@camposDeshabilitados">
+                            @foreach (var persona in personas)
+                            {
+                                <option value="@persona.Id_persona">@persona.Apellido, @persona.Nombre</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => usuario.Id_persona)"></ValidationMessage>
+                    </div>
+                }
+
+                <div class="d-flex align-items-center justify-content-end my-3">
+                    <a class="btn btn-warning" href="usuarios">Volver</a>
+
+                    <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
+                        @btnTexto
+                    </button>
+                </div>
+
+            </EditForm>
+        }
+        else
+        {
+            <div class="alert alert-warning fw-bold my-3" role="alert">
+                Debe haber al menos una persona registrada previamente!
+            </div>
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-dark" href="usuarios">Volver</a>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-danger fw-bold my-3" role="alert">
+            Error al conectarse a la base de datos!
+        </div>
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-dark" href="usuarios">Volver</a>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public int idUsuario { get; set; } = 0;
+
+    bool cargando = true;
+    bool rolAutorizado = false;
+
+    string titulo = string.Empty;
+    string btnTexto = string.Empty;
+
+    Usuario usuario = new Usuario();
+    List<Persona> personas = new List<Persona>();
+
+    bool errorBD = false;
+    bool errorFaltanEntidades = false;
+
+    bool errorNombreUsuarioInvalido = false;
+    bool errorClaveInvalida = false;
+
+    bool botonDeshabilitado = false;
+
+    bool nombreUsuarioModificado = false;
+    bool claveModificada = false;
+
+    bool esAdministrador = false;
+    bool checkboxDeshabilitado = false;
+    bool mostrarCheckboxAdministrador = true;
+
+    bool camposDeshabilitados = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authResult = await AuthService.IsAuthenticatedAsync();
+
+        if (!authResult.IsAuthenticated)
+        {
+            navegacion.NavigateTo("/login");
+        }
+        else
+        {
+            if (authResult.Rol != "2")
+            {
+                rolAutorizado = false;
+            }
+            else
+            {
+                rolAutorizado = true;
+
+                if (idUsuario != 0)
+                {
+                    titulo = "Editar Usuario";
+                    btnTexto = "Actualizar";
+
+                    try
+                    {
+                        usuario = await UsuarioNegocio.GetOne(idUsuario);
+
+                        personas = (List<Persona>)await PersonaNegocio.GetAll();
+
+                        camposDeshabilitados = true;
+
+                        if (usuario.Rol == 2)
+                        {
+                            esAdministrador = true;
+                            checkboxDeshabilitado = true;
+                        }
+
+                        mostrarCheckboxAdministrador = usuario.Id_persona == null;
+
+                    }
+                    catch (Exception)
+                    {
+                        errorBD = true;
+                    }
+                }
+                else
+                {
+                    titulo = "Nuevo Usuario";
+                    btnTexto = "Guardar";
+
+                    botonDeshabilitado = true;
+
+                    // Al crear un nuevo usuario, marco inicialmente que está habilitado (solo no lo va a estar si así se elige en el desplegable)
+                    usuario.Habilitado = 1;
+
+                    try
+                    {
+                        personas = (List<Persona>)await PersonaNegocio.GetAll();
+                    }
+                    catch (Exception)
+                    {
+                        errorBD = true;
+                    }
+
+                    if (personas.Any())
+                    {
+                        personas = personas.OrderBy(per => per.Apellido).ThenBy(per => per.Nombre).ToList();
+                    }
+                    else
+                    {
+                        errorFaltanEntidades = true;
+                    }
+                }
+            }
+
+            cargando = false;
+        }
+    }
+
+    private void OnAdminCheckboxChanged(ChangeEventArgs e)
+    {
+        esAdministrador = (bool) e.Value;
+        if (esAdministrador)
+        {
+            usuario.Id_persona = 0;
+        }
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarNombreUsuario(ChangeEventArgs e)
+    {
+        nombreUsuarioModificado = true;
+
+        string? nombreUsuario = e.Value?.ToString();
+
+        if (nombreUsuario == null || nombreUsuario.Length < 5 || nombreUsuario.Length > 20)
+        {
+            errorNombreUsuarioInvalido = true;
+        }
+        else
+        {
+            errorNombreUsuarioInvalido = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarClave(ChangeEventArgs e)
+    {
+        claveModificada = true;
+
+        string? clave = e.Value?.ToString();
+
+        if (clave == null || clave.Length < 5 || clave.Length > 15)
+        {
+            errorClaveInvalida = true;
+        }
+        else
+        {
+            errorClaveInvalida = false;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ActualizarEstadoBoton()
+    {
+        if (idUsuario != 0)
+        {
+            botonDeshabilitado = errorNombreUsuarioInvalido || errorClaveInvalida;
+        }
+        else
+        {
+            botonDeshabilitado = errorNombreUsuarioInvalido || errorClaveInvalida ||
+                             !nombreUsuarioModificado || !claveModificada ||
+                             (esAdministrador && usuario.Id_persona != 0);
+        }
+    }
+
+    private async Task GuardarUsuario()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¿Está seguro?",
+                Text = "Se guardaran los cambios realizados",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
+
+        if (result.IsConfirmed)
+        {
+            if (idUsuario != 0)
+            {
+                UsuarioDTO usuarioDTO = new UsuarioDTO();
+
+                usuarioDTO.Nombre_usuario = usuario.Nombre_usuario;
+                usuarioDTO.Clave = usuario.Clave;
+                usuarioDTO.Habilitado = usuario.Habilitado;
+                usuarioDTO.Cambia_clave = usuario.Cambia_clave;
+                usuarioDTO.Id_persona = esAdministrador ? 0 : usuario.Id_persona;
+
+                HttpResponseMessage response = await UsuarioNegocio.Update(idUsuario, usuarioDTO);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    await Swal.FireAsync("Usuario actualizado", "El usuario ha sido actualizado correctamente", SweetAlertIcon.Success);
+                }
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    await Swal.FireAsync("Error", "La operación no se ha podido llevar a cabo", SweetAlertIcon.Error);
+                }
+                else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+                {
+                    await Swal.FireAsync("Error", "Error al conectarse a la base de datos!", SweetAlertIcon.Error);
+                }
+            }
+            else
+            {
+                if (usuario.Habilitado != 0 && usuario.Habilitado != 1)
+                {
+                    usuario.Habilitado = 1;
+                }
+                if (usuario.Cambia_clave != 0 && usuario.Cambia_clave != 1)
+                {
+                    usuario.Cambia_clave = 0;
+                }
+                if ((usuario.Id_persona == null || usuario.Id_persona == 0) && !esAdministrador)
+                {
+                    usuario.Id_persona = personas.First().Id_persona;
+                }
+
+                HttpResponseMessage response = await UsuarioNegocio.Add(usuario);
+
+                if (response.StatusCode == HttpStatusCode.Created)
+                {
+                    await Swal.FireAsync("Usuario creado", "El usuario ha sido creado correctamente", SweetAlertIcon.Success);
+                }
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    await Swal.FireAsync("Error", "La operación no se ha podido llevar a cabo", SweetAlertIcon.Error);
+                }
+                else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+                {
+                    await Swal.FireAsync("Error", "Error al conectarse a la base de datos!", SweetAlertIcon.Error);
+                }
+            }
+            navegacion.NavigateTo("/usuarios");
+        }
+    }
+}

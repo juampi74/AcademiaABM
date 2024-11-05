@@ -1,0 +1,283 @@
+﻿@page "/comision"
+@page "/comision/{idComision:int}"
+
+@using Web.Pages.Autenticacion;
+
+@inject SweetAlertService Swal;
+@inject NavigationManager navegacion;
+
+@inject AuthService AuthService;
+
+@if (cargando)
+{
+    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+}
+else if (!rolAutorizado)
+{
+    <Unauthorized />
+}
+else
+{
+    <h2 class="mt-2">@titulo</h2>
+
+    @if (!errorBD)
+    {
+        @if (!errorFaltanEntidades)
+        {
+            <EditForm Model="comision" OnValidSubmit="GuardarComision">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Descripcion</label>
+                    <InputText class="form-control" @bind-Value="comision.Desc_comision" @oninput="ValidarDescripcion"></InputText>
+                    @if (errorDescripcionInvalida)
+                    {
+                        <div class="text-danger mt-2">La descripción debe tener más de 10 caracteres.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Año Especialidad</label>
+                    <InputNumber class="form-control" @bind-Value="comision.Anio_especialidad" @oninput="ValidarAnio" disabled="@camposDeshabilitados"></InputNumber>
+                    @if (errorAnioInvalido)
+                    {
+                        <div class="text-danger mt-2">El año de la especialidad debe ser un número entre 1 y 6.</div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <label class="form-label fw-bold">Plan</label>
+                    <InputSelect class="form-select" @bind-Value="comision.Id_plan" disabled="@camposDeshabilitados">
+                        @foreach (var plan in planes)
+                        {
+                            <option value="@plan.Id_plan">@plan.Desc_plan ➡️ @plan.Especialidad.Desc_especialidad</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => comision.Id_plan)"></ValidationMessage>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-end mt-3">
+                    <a class="btn btn-warning" href="comisiones">Volver</a>
+                    <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
+                        @btnTexto
+                    </button>
+                </div>
+            </EditForm>
+        }
+        else
+        {
+            <div class="alert alert-warning fw-bold my-3" role="alert">
+                Debe haber al menos un plan registrado previamente!
+            </div>
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-dark" href="comisiones">Volver</a>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-danger fw-bold my-3" role="alert">
+            Error al conectarse a la base de datos!
+        </div>
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-dark" href="comisiones">Volver</a>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public int idComision { get; set; } = 0;
+
+    bool cargando = true;
+    bool rolAutorizado = false;
+
+    string titulo = string.Empty;
+    string btnTexto = string.Empty;
+
+    Comision comision = new Comision();
+    List<Plan> planes = new List<Plan>();
+
+    bool errorBD = false;
+    bool errorFaltanEntidades = false;
+
+    bool errorDescripcionInvalida = false;
+    bool errorAnioInvalido = false;
+
+    bool botonDeshabilitado = false;
+
+    bool descripcionModificada = false;
+    bool anioModificado = false;
+
+    bool camposDeshabilitados = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authResult = await AuthService.IsAuthenticatedAsync();
+
+        if (!authResult.IsAuthenticated)
+        {
+            navegacion.NavigateTo("/login");
+        }
+        else
+        {
+            if (authResult.Rol != "2")
+            {
+                rolAutorizado = false;
+            }
+            else
+            {
+                rolAutorizado = true;
+
+                if (idComision != 0)
+                {
+                    titulo = "Editar Comision";
+                    btnTexto = "Actualizar";
+
+                    try
+                    {
+                        comision = await ComisionNegocio.GetOne(idComision);
+
+                        planes = (List<Plan>) await PlanNegocio.GetAll();
+
+                        camposDeshabilitados = true;
+                    }
+                    catch (Exception)
+                    {
+                        errorBD = true;
+                    }
+                }
+                else
+                {
+                    titulo = "Nueva Comision";
+                    btnTexto = "Guardar";
+                    botonDeshabilitado = true;
+
+                    try
+                    {
+                        planes = (List<Plan>) await PlanNegocio.GetAll();
+                    }
+                    catch (Exception)
+                    {
+                        errorBD = true;
+                    }
+
+                    if (planes.Any())
+                    {
+                        planes = planes.OrderBy(plan => plan.Desc_plan).ThenBy(plan => plan.Especialidad.Desc_especialidad).ToList();
+                        comision.Id_plan = planes.First().Id_plan;
+                    }
+                    else
+                    {
+                        errorFaltanEntidades = true;
+                    }
+                }
+            }   
+
+            cargando = false;
+        }
+    }
+
+    private void ValidarDescripcion(ChangeEventArgs e)
+    {
+        descripcionModificada = true;
+
+        string? descripcion = e.Value?.ToString();
+
+        errorDescripcionInvalida = descripcion == null || descripcion.Length < 10;
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ValidarAnio(ChangeEventArgs e)
+    {
+        anioModificado = true;
+
+        if (int.TryParse(e.Value?.ToString(), out int anio))
+        {
+            errorAnioInvalido = anio < 1 || anio > 6;
+        }
+        else
+        {
+            errorAnioInvalido = true;
+        }
+
+        ActualizarEstadoBoton();
+    }
+
+    private void ActualizarEstadoBoton()
+    {
+        if (idComision != 0)
+        {
+            botonDeshabilitado = errorDescripcionInvalida || errorAnioInvalido;
+        }
+        else
+        {
+            botonDeshabilitado = errorDescripcionInvalida || errorAnioInvalido ||
+                                !descripcionModificada || !anioModificado;
+        }
+    }
+
+    private async Task GuardarComision()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¿Está seguro?",
+                Text = "Se guardarán los cambios realizados",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "Cancelar",
+                ConfirmButtonText = "Confirmar"
+            });
+
+        if (result.IsConfirmed)
+        {
+            if (idComision != 0)
+            {
+                ComisionDTO comisionDTO = new ComisionDTO();
+
+                comisionDTO.Desc_comision = comision.Desc_comision;
+                comisionDTO.Anio_especialidad = comision.Anio_especialidad;
+                comisionDTO.Id_plan = comision.Id_plan;
+
+                HttpResponseMessage response = await ComisionNegocio.Update(idComision, comisionDTO);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    await Swal.FireAsync("Comisión actualizada", "La comisión ha sido actualizada correctamente", SweetAlertIcon.Success);
+                }
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    await Swal.FireAsync("Error", "La operación no se ha podido llevar a cabo", SweetAlertIcon.Error);
+                }
+                else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+                {
+                    await Swal.FireAsync("Error", "Error al conectarse a la base de datos!", SweetAlertIcon.Error);
+                }
+            }
+            else
+            {
+                if (comision.Id_plan == 0)
+                {
+                    comision.Id_plan = planes.First().Id_plan;
+                }
+
+                HttpResponseMessage response = await ComisionNegocio.Add(comision);
+
+                if (response.StatusCode == HttpStatusCode.Created)
+                {
+                    await Swal.FireAsync("Comisión creada", "La comisión ha sido creada correctamente", SweetAlertIcon.Success);
+                }
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    await Swal.FireAsync("Error", "La operación no se ha podido llevar a cabo", SweetAlertIcon.Error);
+                }
+                else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+                {
+                    await Swal.FireAsync("Error", "Error al conectarse a la base de datos!", SweetAlertIcon.Error);
+                }
+            }
+            navegacion.NavigateTo("/comisiones");
+        }
+    }
+}

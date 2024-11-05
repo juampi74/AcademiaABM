@@ -1,0 +1,71 @@
+﻿@page "/login"
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+<div class="container">
+    <h3 class="text-center mb-3">Iniciar Sesión</h3>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card border border-3 border-dark rounded">
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Usuario</label>
+                            <input id="username" @bind="Username" @onfocus="HidePosibleError" class="form-control busqueda-input" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input id="password" @bind="Password" @onfocus="HidePosibleError" type="password" class="form-control busqueda-input" />
+                        </div>
+                        <button type="button" @onclick="HandleLogin" class="btn btn-dark border border-3 border-white w-100">Ingresar</button>
+                        @if (Cargando)
+                        {
+                            <div class="text-center mt-4">
+                                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                            </div>
+                        }
+                    </form>
+
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <div class="alert alert-danger mt-4 error-message">@ErrorMessage</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string Username { get; set; }
+    private string Password { get; set; }
+    private string ErrorMessage { get; set; }
+    private bool Cargando = false;
+
+
+    private async Task HandleLogin()
+    {
+        Cargando = true;
+        ErrorMessage = null;
+
+        var loginResult = await AuthService.LoginAsync(Username, Password);
+
+        Cargando = false;
+
+        if (loginResult.Success)
+        {
+            // Redirigir a la página principal después de iniciar sesión
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            ErrorMessage = loginResult.Message;
+        }
+    }
+
+    private void HidePosibleError()
+    {
+        ErrorMessage = null;
+    }
+}
