@@ -9,8 +9,7 @@
 
         public string AnioCalendario { get; set; }
         public string Cupo { get; set; }
-        public string Comision { get; set; }
         public string Materia { get; set; }
-
+        public string Comision { get; set; }
     }
 }

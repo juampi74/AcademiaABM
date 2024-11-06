@@ -1,6 +1,8 @@
 ﻿@page "/login"
-@inject AuthService AuthService
+
 @inject NavigationManager Navigation
+
+@inject AuthService AuthService
 
 <div class="container">
     <h3 class="text-center mb-3">Iniciar Sesión</h3>
@@ -22,7 +24,7 @@
                         @if (Cargando)
                         {
                             <div class="text-center mt-4">
-                                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                                <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
                             </div>
                         }
                     </form>
@@ -55,7 +57,6 @@
 
         if (loginResult.Success)
         {
-            // Redirigir a la página principal después de iniciar sesión
             Navigation.NavigateTo("/");
         }
         else

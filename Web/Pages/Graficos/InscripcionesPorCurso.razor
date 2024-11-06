@@ -11,7 +11,7 @@
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -27,7 +27,7 @@ else
             {
                 <div class="d-flex align-items-center">
                     <h2 class="me-3">Inscripciones por Curso</h2>
-                    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
                 </div>
             }
             else
@@ -138,7 +138,6 @@ else
                         };
         
                     _config.Data.Datasets.Add(dataset);
-
                 }
                 catch (Exception)
                 {
@@ -146,7 +145,6 @@ else
                 }
             }
         }
-
         cargando = false;
     }
 }

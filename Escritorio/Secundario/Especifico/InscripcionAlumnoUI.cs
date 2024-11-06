@@ -63,7 +63,6 @@
                     idCursoSeleccionado = curso.Id;
                 }
             }
-
             return idCursoSeleccionado;
         }
 

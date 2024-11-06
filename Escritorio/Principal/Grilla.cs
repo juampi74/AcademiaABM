@@ -1,8 +1,6 @@
 namespace Escritorio
 {
     using System.Net;
-    using System.Windows.Forms;
-    using System.Collections.Generic;
 
     using Entidades;
     using Negocio;
@@ -48,6 +46,9 @@ namespace Escritorio
         {
             BarraBusqueda.Enabled = false;
             BarraBusqueda.BackColor = Color.WhiteSmoke;
+
+            dgvSysacad.DefaultCellStyle.Font = new Font("Segoe UI", 10);
+            dgvSysacad.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
 
             tsbNuevo.Enabled = false;
             tsbEditar.Enabled = false;
@@ -218,7 +219,6 @@ namespace Escritorio
                         operacionExitosa.ShowDialog(this);
                     }
                     btnMostrarComisiones_Click(sender, e);
-
                 }
                 else
                 {
@@ -310,7 +310,7 @@ namespace Escritorio
                 if (alumnos.Any())
                 {
                     List<(int Id, string ApellidoYNombre)> opcionesAlumno = alumnos.Where(alumno => alumno.Tipo_persona == 0)
-                                                                                    .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
+                                                                                      .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
 
                     InscripcionUI nuevaInscripcion = new InscripcionUI(opcionesAlumno);
 
@@ -567,7 +567,7 @@ namespace Escritorio
                     if (cursos != null)
                     {
                         List<(int Id, string ApellidoYNombre)> opcionesDocente = docentes.Where(docente => docente.Tipo_persona == 1)
-                                                                                         .Select(docente => (docente.Id_persona, docente.Apellido + ", " + docente.Nombre)).ToList();
+                                                                                            .Select(docente => (docente.Id_persona, docente.Apellido + ", " + docente.Nombre)).ToList();
 
                         List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
 
@@ -604,7 +604,6 @@ namespace Escritorio
                     operacionExitosa.ShowDialog(this);
                 }
                 btnMostrarEspecialidades_Click(sender, e);
-
             }
             else if (entidadListada == "Inscripcion")
             {
@@ -625,7 +624,7 @@ namespace Escritorio
                     if (cursos != null)
                     {
                         List<(int Id, string ApellidoYNombre)> opcionesAlumno = alumnos.Where(alumno => alumno.Tipo_persona == 0)
-                                                                                       .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
+                                                                                          .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
 
                         List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
 
@@ -778,7 +777,7 @@ namespace Escritorio
                     if (cursos != null)
                     {
                         List<(int Id, string ApellidoYNombre)> opcionesAlumno = alumnos.Where(alumno => alumno.Tipo_persona == 0)
-                                                                                       .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
+                                                                                          .Select(alumno => (alumno.Id_persona, alumno.Apellido + ", " + alumno.Nombre)).ToList();
 
                         List<(int Id, string MateriaYComision)> opcionesCurso = cursos.Select(curso => (curso.Id_curso, curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
 
@@ -827,9 +826,7 @@ namespace Escritorio
                         errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La comisión tiene cursos asociados");
                         errorBD.ShowDialog(this);
                     }
-
                     btnMostrarComisiones_Click(sender, e);
-
                 }
             }
             else if (entidadListada == "Curso")
@@ -856,9 +853,7 @@ namespace Escritorio
                         errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "El curso tiene inscripciones y/o dictados asociados");
                         errorBD.ShowDialog(this);
                     }
-
                     btnMostrarCursos_Click(sender, e);
-
                 }
             }
             else if (entidadListada == "Dictado")
@@ -885,9 +880,7 @@ namespace Escritorio
                         errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
                         errorBD.ShowDialog(this);
                     }
-
                     btnMostrarDictados_Click(sender, e);
-
                 }
             }
             else if (entidadListada == "Especialidad")
@@ -914,9 +907,7 @@ namespace Escritorio
                         errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La especialidad tiene planes asociados");
                         errorBD.ShowDialog(this);
                     }
-
                     btnMostrarEspecialidades_Click(sender, e);
-
                 }
             }
             else if (entidadListada == "Inscripcion")
@@ -953,9 +944,7 @@ namespace Escritorio
                             errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
                             errorBD.ShowDialog(this);
                         }
-
                         btnMostrarInscripciones_Click(sender, e);
-
                     }
                 }
             }
@@ -983,9 +972,7 @@ namespace Escritorio
                         errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La materia tiene cursos asociados");
                         errorBD.ShowDialog(this);
                     }
-
                     btnMostrarMaterias_Click(sender, e);
-
                 }
             }
             else if (entidadListada == "Persona")
@@ -1012,9 +999,7 @@ namespace Escritorio
                         errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La persona tiene dictados, inscripciones y/o usuarios asociados");
                         errorBD.ShowDialog(this);
                     }
-
                     btnMostrarPersonas_Click(sender, e);
-
                 }
             }
             else if (entidadListada == "Plan")
@@ -1041,9 +1026,7 @@ namespace Escritorio
                         errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "El plan tiene comisiones, materias y/o personas asociadas");
                         errorBD.ShowDialog(this);
                     }
-
                     btnMostrarPlanes_Click(sender, e);
-
                 }
             }
             else if (entidadListada == "Usuario")
@@ -1070,9 +1053,7 @@ namespace Escritorio
                         errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
                         errorBD.ShowDialog(this);
                     }
-
                     btnMostrarUsuarios_Click(sender, e);
-
                 }
             }
             else if (entidadListada == "InscripcionAlumno")
@@ -1109,9 +1090,7 @@ namespace Escritorio
                             errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La operación no se ha podido llevar a cabo");
                             errorBD.ShowDialog(this);
                         }
-
                         btnMostrarInscripciones_Click(sender, e);
-
                     }
                 }
             }
@@ -1131,6 +1110,11 @@ namespace Escritorio
                 this.ActiveControl = null;
                 BarraBusqueda.PlaceholderText = "Buscar por Descripcion, Plan o Especialidad...";
                 BarraBusqueda.BackColor = Color.White;
+
+                comisiones = comisiones.OrderBy(com => com.Plan.Especialidad.Desc_especialidad)
+                                          .ThenByDescending(com => com.Plan.Desc_plan)
+                                             .ThenBy(com => com.Anio_especialidad)
+                                                .ThenBy(com => com.Desc_comision);
 
                 var comisionesViewModel = comisiones.Select(comision => new ComisionViewModel
                 {
@@ -1177,16 +1161,20 @@ namespace Escritorio
                 BarraBusqueda.Enabled = true;
                 BarraBusqueda.Text = "";
                 this.ActiveControl = null;
-                BarraBusqueda.PlaceholderText = "Buscar por Comision o Materia...";
+                BarraBusqueda.PlaceholderText = "Buscar por Año Calendario, Comision o Materia...";
                 BarraBusqueda.BackColor = Color.White;
+
+                cursos = cursos.OrderByDescending(cur => cur.Anio_calendario)
+                                  .ThenBy(cur => cur.Materia.Desc_materia)
+                                     .ThenBy(cur => cur.Comision.Desc_comision);
 
                 var cursosViewModel = cursos.Select(curso => new CursoViewModel
                 {
                     Id = curso.Id_curso,
                     AnioCalendario = curso.Anio_calendario.ToString(),
                     Cupo = curso.Cupo.ToString(),
-                    Comision = curso.Comision.Desc_comision,
-                    Materia = curso.Materia.Desc_materia
+                    Materia = curso.Materia.Desc_materia,
+                    Comision = curso.Comision.Desc_comision
 
                 }).ToList();
 
@@ -1228,6 +1216,12 @@ namespace Escritorio
                 this.ActiveControl = null;
                 BarraBusqueda.PlaceholderText = "Buscar por Cargo, Docente, Comision o Materia...";
                 BarraBusqueda.BackColor = Color.White;
+
+                dictados = dictados.OrderBy(dic => dic.Curso.Materia.Desc_materia)
+                                      .ThenBy(dic => dic.Curso.Comision.Desc_comision)
+                                         .ThenBy(dic => dic.Docente.Apellido)
+                                            .ThenBy(dic => dic.Docente.Nombre)
+                                               .ThenBy(dic => dic.Cargo);
 
                 var dictadosViewModel = dictados.Select(dictado => new DictadoViewModel
                 {
@@ -1277,6 +1271,8 @@ namespace Escritorio
                 BarraBusqueda.PlaceholderText = "Buscar por Descripcion...";
                 BarraBusqueda.BackColor = Color.White;
 
+                especialidades = especialidades.OrderBy(esp => esp.Desc_especialidad);
+
                 var especialidadesViewModel = especialidades.Select(especialidad => new EspecialidadViewModel
                 {
                     Id = especialidad.Id_especialidad,
@@ -1322,6 +1318,21 @@ namespace Escritorio
                 this.ActiveControl = null;
                 BarraBusqueda.PlaceholderText = "Buscar por Condicion, Alumno, Comision o Materia...";
                 BarraBusqueda.BackColor = Color.White;
+
+                var condicionOrden = new Dictionary<string, int>
+                {
+                    { "Aprobado", 0 },
+                    { "Regular", 1 },
+                    { "Libre", 2 },
+                    { "Inscripto", 3 }
+                };
+
+                inscripciones = inscripciones.OrderBy(ins => condicionOrden[ins.Condicion])
+                                                .ThenBy(ins => ins.Curso.Materia.Desc_materia)
+                                                   .ThenBy(ins => ins.Curso.Comision.Desc_comision)
+                                                      .ThenByDescending(ins => ins.Nota)
+                                                         .ThenBy(ins => ins.Alumno.Apellido)
+                                                            .ThenBy(ins => ins.Alumno.Nombre);
 
                 var inscripcionesViewModel = inscripciones.Select(inscripcion => new InscripcionViewModel
                 {
@@ -1372,6 +1383,10 @@ namespace Escritorio
                 BarraBusqueda.PlaceholderText = "Buscar por Descripcion, Plan o Especialidad...";
                 BarraBusqueda.BackColor = Color.White;
 
+                materias = materias.OrderBy(mat => mat.Plan.Especialidad.Desc_especialidad)
+                                      .ThenByDescending(mat => mat.Plan.Desc_plan)
+                                         .ThenBy(mat => mat.Desc_materia);
+
                 var materiasViewModel = materias.Select(materia => new MateriaViewModel
                 {
                     Id = materia.Id_materia,
@@ -1420,6 +1435,13 @@ namespace Escritorio
                 this.ActiveControl = null;
                 BarraBusqueda.PlaceholderText = "Buscar por Apellido y Nombre, Legajo, Tipo de Persona, Plan o Especialidad...";
                 BarraBusqueda.BackColor = Color.White;
+
+                personas = personas.OrderBy(per => per.Plan.Especialidad.Desc_especialidad)
+                                      .ThenByDescending(per => per.Plan.Desc_plan)
+                                         .ThenBy(per => per.Tipo_persona)
+                                            .ThenBy(per => per.Apellido)
+                                               .ThenBy(per => per.Nombre)
+                                                  .ThenByDescending(per => per.Legajo);
 
                 var personasViewModel = personas.Select(persona => new PersonaViewModel
                 {
@@ -1471,6 +1493,9 @@ namespace Escritorio
                 BarraBusqueda.PlaceholderText = "Buscar por Descripcion o Especialidad...";
                 BarraBusqueda.BackColor = Color.White;
 
+                planes = planes.OrderBy(pla => pla.Especialidad.Desc_especialidad)
+                                  .ThenByDescending(pla => pla.Desc_plan);
+
                 var planesViewModel = planes.Select(plan => new PlanViewModel
                 {
                     Id = plan.Id_plan,
@@ -1517,6 +1542,18 @@ namespace Escritorio
                 this.ActiveControl = null;
                 BarraBusqueda.PlaceholderText = "Buscar por Nombre de Usuario, Rol o Persona...";
                 BarraBusqueda.BackColor = Color.White;
+
+                var rolOrden = new Dictionary<int, int>
+                {
+                    { 2, 0 }, // Administrador (ID 2 en BD)
+                    { 0, 1 }, // Alumno (ID 0 en BD)
+                    { 1, 2 }  // Docente (ID 1 en BD)
+                };
+
+                usuarios = usuarios.OrderBy(usu => rolOrden[usu.Rol])
+                                      .ThenBy(usu => usu.Persona?.Apellido)
+                                         .ThenBy(usu => usu.Persona?.Nombre)
+                                            .ThenBy(usu => usu.Nombre_usuario);
 
                 var usuariosViewModel = usuarios.Select(usuario => new UsuarioViewModel
                 {
@@ -1567,6 +1604,19 @@ namespace Escritorio
                 BarraBusqueda.PlaceholderText = "Buscar por Condicion, Comision o Materia...";
                 BarraBusqueda.BackColor = Color.White;
 
+                var condicionOrden = new Dictionary<string, int>
+                {
+                    { "Aprobado", 0 },
+                    { "Regular", 1 },
+                    { "Libre", 2 },
+                    { "Inscripto", 3 }
+                };
+
+                tusInscripciones = tusInscripciones.OrderBy(ins => condicionOrden[ins.Condicion])
+                                                      .ThenBy(ins => ins.Curso.Materia.Desc_materia)
+                                                         .ThenBy(ins => ins.Curso.Comision.Desc_comision)
+                                                            .ThenByDescending(ins => ins.Nota);
+
                 var inscripcionesAlumnoViewModel = tusInscripciones.Select(inscripcion => new InscripcionAlumnoViewModel
                 {
                     Id = inscripcion.Id_inscripcion,
@@ -1612,6 +1662,21 @@ namespace Escritorio
                 this.ActiveControl = null;
                 BarraBusqueda.PlaceholderText = "Buscar por Condicion, Alumno, Comision o Materia...";
                 BarraBusqueda.BackColor = Color.White;
+
+                var condicionOrden = new Dictionary<string, int>
+                {
+                    { "Aprobado", 0 },
+                    { "Regular", 1 },
+                    { "Libre", 2 },
+                    { "Inscripto", 3 }
+                };
+
+                inscripcionesATusCursos = inscripcionesATusCursos.OrderBy(ins => condicionOrden[ins.Condicion])
+                                                                    .ThenBy(ins => ins.Curso.Materia.Desc_materia)
+                                                                       .ThenBy(ins => ins.Curso.Comision.Desc_comision)
+                                                                          .ThenByDescending(ins => ins.Nota)
+                                                                             .ThenBy(ins => ins.Alumno.Apellido)
+                                                                                .ThenBy(ins => ins.Alumno.Nombre);
 
                 var inscripcionesCursosDocenteViewModel = inscripcionesATusCursos.Select(inscripcion => new InscripcionCursoDocenteViewModel
                 {
@@ -1755,6 +1820,7 @@ namespace Escritorio
                 else
                 {
                     cursosFiltrados = listadoCursosViewModel?.Where(cur =>
+                                      cur.AnioCalendario.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
                                       cur.Comision.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
                                       cur.Materia.Contains(busqueda, StringComparison.OrdinalIgnoreCase)).ToList()
                                    ?? new List<CursoViewModel>();
@@ -1970,7 +2036,6 @@ namespace Escritorio
                 tsbEditar.Enabled = hayUsuarios;
                 tsbEliminar.Enabled = hayUsuarios;
             }
-
             SeleccionarPrimeraFila();
         }
 

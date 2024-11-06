@@ -1,6 +1,7 @@
 namespace Servicios
 {
     using Microsoft.EntityFrameworkCore;
+    
     using Datos;
 
     public class Program
@@ -13,9 +14,9 @@ namespace Servicios
             {
                 options.AddPolicy("AllowAll", policy =>
                 {
-                    policy.AllowAnyOrigin()    // Permitir solicitudes desde cualquier origen
-                          .AllowAnyHeader()    // Permitir cualquier cabecera
-                          .AllowAnyMethod();   // Permitir cualquier método
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
                 });
             });
 

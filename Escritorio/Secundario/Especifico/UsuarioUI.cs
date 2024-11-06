@@ -132,7 +132,6 @@
                 DialogResult = DialogResult.None;
                 return false;
             }
-
             return true;
         }
 
@@ -164,7 +163,6 @@
             {
                 usuario = new Usuario(NombreUsuarioTextBox.Text, ClaveTextBox.Text, 0);
             }
-
             return usuario;
         }
 
@@ -179,7 +177,6 @@
                     idPersonaSeleccionada = persona.Id;
                 }
             }
-
             return idPersonaSeleccionada;
         }
 

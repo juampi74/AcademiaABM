@@ -3,14 +3,13 @@
 @using Web.Pages.Autenticacion;
 
 @inject SweetAlertService Swal;
-
 @inject NavigationManager navegacion;
 
 @inject AuthService AuthService;
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -24,7 +23,7 @@ else
         {
             <div class="d-flex align-items-center">
                 <h2 class="me-3">Tus inscripciones</h2>
-                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
             </div>
         }
         else
@@ -133,7 +132,6 @@ else
                 await CargarInscripciones(this.id_persona);
             }
         }
-
         cargando = false;
     }
 
@@ -144,7 +142,19 @@ else
 
         try
         {
-            inscripciones = await InscripcionNegocio.GetInscripcionesPorAlumno(id_persona);
+            var condicionOrden = new Dictionary<string, int>
+            {
+                { "Aprobado", 0 },
+                { "Regular", 1 },
+                { "Libre", 2 },
+                { "Inscripto", 3 }
+            };
+
+            inscripciones = (await InscripcionNegocio.GetInscripcionesPorAlumno(id_persona))
+                                .OrderBy(ins => condicionOrden[ins.Condicion])
+                                   .ThenBy(ins => ins.Curso.Materia.Desc_materia)
+                                      .ThenBy(ins => ins.Curso.Comision.Desc_comision)
+                                         .ThenByDescending(ins => ins.Nota);
         }
         catch (Exception)
         {

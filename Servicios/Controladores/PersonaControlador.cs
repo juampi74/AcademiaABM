@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    
     using Datos;
     using Entidades;
 
@@ -45,7 +46,6 @@
                 }
 
                 return Persona;
-
             }
             catch (Exception)
             {
@@ -64,7 +64,6 @@
                 _context.SaveChanges();
 
                 return CreatedAtAction("GetById", new { id = nuevaPersona.Id_persona }, nuevaPersona);
-
             }
             catch (DbUpdateException)
             {
@@ -102,7 +101,6 @@
                 _context.SaveChanges();
 
                 return Persona;
-
             }
             catch (DbUpdateException)
             {

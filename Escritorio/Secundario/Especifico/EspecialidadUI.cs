@@ -75,7 +75,6 @@
                 DialogResult = DialogResult.None;
                 return false;
             }
-            
             return true;
         }
 

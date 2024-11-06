@@ -1,15 +1,15 @@
 ﻿namespace Servicios
 {
     using Microsoft.AspNetCore.Mvc;
-    using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.IdentityModel.Tokens;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Security.Claims;
-    using System.Text;
     
-    using Entidades;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Text;
+    using Microsoft.IdentityModel.Tokens;
+    using System.Security.Claims;
+    
     using Datos;
+    using Entidades;
 
     [Route("api/auth")]
     [ApiController]
@@ -27,18 +27,15 @@
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            
             try
             {
-                // Buscar el usuario en la base de datos
                 var usuarioEncontrado = await _context.Usuarios
                     .Include(u => u.Persona)
                     .FirstOrDefaultAsync(u => u.Nombre_usuario == loginRequest.Username && u.Clave == loginRequest.Password);
 
-                // Verificar si el usuario fue encontrado
                 if (usuarioEncontrado != null)
                 {
-                    var token = GenerateRandomToken(usuarioEncontrado); // Genera un token aleatorio
+                    var token = GenerateRandomToken(usuarioEncontrado);
                     return Ok(new { token });
                 }
                 else
@@ -72,7 +69,6 @@
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-
     }
 
     public class LoginRequest

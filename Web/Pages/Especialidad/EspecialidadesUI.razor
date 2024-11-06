@@ -9,7 +9,7 @@
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -23,7 +23,7 @@ else
         {
             <div class="d-flex align-items-center">
                 <h2 class="me-3">Especialidades</h2>
-                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
             </div>
         }
         else
@@ -101,14 +101,12 @@ else
         if (!authResult.IsAuthenticated)
         {
             navegacion.NavigateTo("/login");
-
         }
         else
         {
             if (authResult.Rol != "2")
             {
                 rolAutorizado = false;
-
             }
             else
             {
@@ -116,7 +114,6 @@ else
                 await CargarEspecialidades();
             }
         }
-
         cargando = false;
     }
 
@@ -127,7 +124,8 @@ else
 
         try
         {
-            especialidades = await EspecialidadNegocio.GetAll();
+            especialidades = (await EspecialidadNegocio.GetAll())
+                                .OrderBy(esp => esp.Desc_especialidad);
         }
         catch (Exception)
         {

@@ -9,7 +9,7 @@
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -138,7 +138,6 @@ else
                     errorBD = true;
                 }
             }
-
             cargando = false;
         }
     }
@@ -159,7 +158,6 @@ else
                 condicionCalculada = (nota < 4) ? "Libre" : (nota < 6) ? "Regular" : "Aprobado";
                 botonDeshabilitado = false;
             }
-
             inscripcion.Condicion = condicionCalculada;
         }
         else

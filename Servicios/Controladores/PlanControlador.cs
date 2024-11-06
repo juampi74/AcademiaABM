@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    
     using Datos;
     using Entidades;
 
@@ -44,7 +45,6 @@
                 }
 
                 return Plan;
-
             }
             catch (Exception)
             {
@@ -63,7 +63,6 @@
                 _context.SaveChanges();
 
                 return CreatedAtAction("GetById", new { id = nuevoPlan.Id_plan }, nuevoPlan);
-
             }
             catch (DbUpdateException)
             {
@@ -94,7 +93,6 @@
                 _context.SaveChanges();
 
                 return Plan;
-
             }
             catch (DbUpdateException)
             {

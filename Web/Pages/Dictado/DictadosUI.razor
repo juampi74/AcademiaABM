@@ -9,7 +9,7 @@
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -23,7 +23,7 @@ else
         {
             <div class="d-flex align-items-center">
                 <h2 class="me-3">Dictados</h2>
-                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
             </div>
         }
         else
@@ -105,14 +105,12 @@ else
         if (!authResult.IsAuthenticated)
         {
             navegacion.NavigateTo("/login");
-
         }
         else
         {
             if (authResult.Rol != "2")
             {
                 rolAutorizado = false;
-
             }
             else
             {
@@ -120,7 +118,6 @@ else
                 await CargarDictados();
             }
         }
-
         cargando = false;
     }
 
@@ -131,7 +128,12 @@ else
 
         try
         {
-            dictados = await DictadoNegocio.GetAll();
+            dictados = (await DictadoNegocio.GetAll())
+                            .OrderBy(dic => dic.Curso.Materia.Desc_materia)
+                                .ThenBy(dic => dic.Curso.Comision.Desc_comision)
+                                    .ThenBy(dic => dic.Docente.Apellido)
+                                        .ThenBy(dic => dic.Docente.Nombre)
+                                            .ThenBy(dic => dic.Cargo);
         }
         catch (Exception)
         {

@@ -194,7 +194,6 @@
                     idComisionSeleccionada = comision.Id;
                 }
             }
-
             return idComisionSeleccionada;
         }
 
@@ -209,7 +208,6 @@
                     idMateriaSeleccionada = materia.Id;
                 }
             }
-
             return idMateriaSeleccionada;
         }
 
@@ -242,7 +240,6 @@
                 MessageBox.Show($"No hay materias registradas que coincidan con el plan de estudios de la comisión seleccionada!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.Cancel;
             }
-
             return materias_comision_plan.Select(materia => (materia.Desc_materia)).ToList();
         }
 

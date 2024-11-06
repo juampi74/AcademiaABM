@@ -1,10 +1,7 @@
 ﻿namespace Web
 {
-    using System;
-    using System.Net.Http;
     using System.Net.Http.Json;
     using System.Text.Json;
-    using System.Threading.Tasks;
     using Microsoft.JSInterop;
 
     public class AuthService
@@ -34,7 +31,6 @@
                 _authStateService.NotifyStateChanged();
 
                 return new LoginResult { Success = true, Message = "Inicio de sesión exitoso" };
-
             }
             else
             {
@@ -90,6 +86,7 @@
         private object DecodeJwt(string jwt)
         {
             var parts = jwt.Split('.');
+            
             if (parts.Length != 3)
             {
                 throw new ArgumentException("El JWT no está bien formado.");

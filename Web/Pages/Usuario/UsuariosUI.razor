@@ -3,14 +3,13 @@
 @using Web.Pages.Autenticacion;
 
 @inject SweetAlertService Swal;
-
 @inject NavigationManager navegacion;
 
 @inject AuthService AuthService;
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -24,7 +23,7 @@ else
         {
             <div class="d-flex align-items-center">
                 <h2 class="me-3">Usuarios</h2>
-                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
             </div>
         }
         else
@@ -112,14 +111,12 @@ else
         if (!authResult.IsAuthenticated)
         {
             navegacion.NavigateTo("/login");
-
         }
         else
         {
             if (authResult.Rol != "2")
             {
                 rolAutorizado = false;
-
             }
             else
             {
@@ -127,7 +124,6 @@ else
                 await CargarUsuarios();
             }
         }
-
         cargando = false;
     }
 
@@ -138,7 +134,18 @@ else
 
         try
         {
-            usuarios = await UsuarioNegocio.GetAll();
+            var rolOrden = new Dictionary<int, int>
+            {
+                { 2, 0 }, // Administrador (ID 2 en BD)
+                { 0, 1 }, // Alumno (ID 0 en BD)
+                { 1, 2 }  // Docente (ID 1 en BD)
+            };
+
+            usuarios = (await UsuarioNegocio.GetAll())
+                          .OrderBy(usu => rolOrden[usu.Rol])
+                             .ThenBy(usu => usu.Persona?.Apellido)
+                                .ThenBy(usu => usu.Persona?.Nombre)
+                                   .ThenBy(usu => usu.Nombre_usuario);
         }
         catch (Exception)
         {

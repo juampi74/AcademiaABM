@@ -10,7 +10,7 @@
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -215,7 +215,6 @@ else
                     }
                 }
             }
-        
             cargando = false;
         }
     }
@@ -253,7 +252,6 @@ else
                 dictado.Id_curso = cursos_docente.First().Id_curso;
             }
         }
-
         return cursos_docente;
     }
 

@@ -55,7 +55,7 @@
             
             TipoPersonaComboBox.DataSource = new List<string>() { "Alumno", "Docente" };
             
-            if(personaAModificar.Tipo_persona == 0)
+            if (personaAModificar.Tipo_persona == 0)
             {
                 TipoPersonaComboBox.SelectedIndex = 0;
             }
@@ -120,7 +120,6 @@
 
                 DialogResult = DialogResult.None;
                 return false;
-
             }
 
             if (ApellidoTextBox.Text.Length < 2 || ApellidoTextBox.Text.Length > 50)
@@ -129,7 +128,6 @@
 
                 DialogResult = DialogResult.None;
                 return false;
-
             }
 
             if (DireccionTextBox.Text.Length < 5 || ApellidoTextBox.Text.Length > 30)
@@ -138,7 +136,6 @@
 
                 DialogResult = DialogResult.None;
                 return false;
-
             }
 
             if (!Regex.IsMatch(EmailTextBox.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
@@ -147,7 +144,6 @@
 
                 DialogResult = DialogResult.None;
                 return false;
-
             }
 
             if (!Regex.IsMatch(TelefonoTextBox.Text, @"^\d{10,20}$"))
@@ -156,7 +152,6 @@
 
                 DialogResult = DialogResult.None;
                 return false;
-
             }
 
             if (DateTime.TryParse(FechaNacimientoDatePicker.Value.ToString(), out DateTime fechaNacimiento))
@@ -241,7 +236,6 @@
                     idPlanSeleccionado = plan.Id;
                 }
             }
-
             return idPlanSeleccionado;
         }
 
@@ -257,7 +251,6 @@
             {
                 numeroTipoPersona = 1;
             }
-
             return numeroTipoPersona;
         }
 

@@ -10,7 +10,7 @@
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -200,7 +200,6 @@ else
                     }
                 }
             }
-
             cargando = false;
         }
     }
@@ -208,10 +207,12 @@ else
     private void OnAdminCheckboxChanged(ChangeEventArgs e)
     {
         esAdministrador = (bool) e.Value;
+        
         if (esAdministrador)
         {
             usuario.Id_persona = 0;
         }
+
         ActualizarEstadoBoton();
     }
 

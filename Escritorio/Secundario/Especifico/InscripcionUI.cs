@@ -142,7 +142,6 @@
             {
                 MessageBox.Show($"Por favor, ingrese una nota válida entre 1 y 10", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
             return inscripcion;
         }
 
@@ -165,7 +164,6 @@
             {
                 condicionCalculada = "Nota invalida";
             }
-
             CondicionTextBox.Text = condicionCalculada;
         }
 
@@ -190,7 +188,6 @@
                     idAlumnoSeleccionado = alumno.Id;
                 }
             }
-
             return idAlumnoSeleccionado;
         }
 
@@ -205,7 +202,6 @@
                     idCursoSeleccionado = curso.Id;
                 }
             }
-
             return idCursoSeleccionado;
         }
 
@@ -238,7 +234,6 @@
                 MessageBox.Show($"No hay cursos registrados para el plan de estudios del alumno!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.Cancel;
             }
-
             return cursos_alumno.Select(curso => (curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
         }
 

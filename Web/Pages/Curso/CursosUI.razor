@@ -9,7 +9,7 @@
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -23,7 +23,7 @@ else
         {
             <div class="d-flex align-items-center">
                 <h2 class="me-3">Cursos</h2>
-                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
             </div>
         }
         else
@@ -35,7 +35,7 @@ else
                 </a>
             </div>
 
-            <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Comision o Materia..." class="form-control mt-2 mb-4 busqueda-input" />
+            <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Año Calendario, Comision o Materia..." class="form-control mt-2 mb-4 busqueda-input" />
 
             IEnumerable<Curso> cursosFilt = cursosFiltrados();
 
@@ -52,8 +52,8 @@ else
                         <tr>
                             <th>Año Calendario</th>
                             <th>Cupo</th>
-                            <th>Comision</th>
                             <th>Materia</th>
+                            <th>Comision</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -63,8 +63,8 @@ else
                             <tr>
                                 <td style="vertical-align: middle;">@curso.Anio_calendario</td>
                                 <td style="vertical-align: middle;">@curso.Cupo</td>
-                                <td style="vertical-align: middle;">@curso.Comision.Desc_comision</td>
                                 <td style="vertical-align: middle;">@curso.Materia.Desc_materia</td>
+                                <td style="vertical-align: middle;">@curso.Comision.Desc_comision</td>
                                 <td class="d-flex justify-content-end">
                                     <a class="btn btn-primary btn-sm" href="curso/@curso.Id_curso">
                                         <i class="bi bi-pencil-square fs-5"></i>
@@ -107,14 +107,12 @@ else
         if (!authResult.IsAuthenticated)
         {
             navegacion.NavigateTo("/login");
-
         }
         else
         {
             if (authResult.Rol != "2")
             {
                 rolAutorizado = false;
-
             }
             else
             {
@@ -122,7 +120,6 @@ else
                 await CargarCursos();
             }
         }
-
         cargando = false;
     }
 
@@ -133,7 +130,10 @@ else
 
         try
         {
-            cursos = await CursoNegocio.GetAll();
+            cursos = (await CursoNegocio.GetAll())
+                        .OrderByDescending(cur => cur.Anio_calendario)
+                            .ThenBy(cur => cur.Materia.Desc_materia)
+                                .ThenBy(cur => cur.Comision.Desc_comision);
         }
         catch (Exception)
         {
@@ -149,6 +149,7 @@ else
         }
 
         return cursos?.Where(cur =>
+               cur.Anio_calendario.ToString().Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
                cur.Comision.Desc_comision.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
                cur.Materia.Desc_materia.Contains(busqueda, StringComparison.OrdinalIgnoreCase))
             ?? new List<Curso>();

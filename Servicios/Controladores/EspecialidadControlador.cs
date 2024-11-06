@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    
     using Datos;
     using Entidades;
 
@@ -43,7 +44,6 @@
                 }
 
                 return Especialidad;
-
             }
             catch (Exception)
             {
@@ -62,7 +62,6 @@
                 _context.SaveChanges();
 
                 return CreatedAtAction("GetById", new { id = nuevaEspecialidad.Id_especialidad }, nuevaEspecialidad);
-
             }
             catch (DbUpdateException)
             {
@@ -81,10 +80,10 @@
             {
                 var Especialidad = _context.Especialidades.Find(id);
 
-                /*if (Especialidad == null)
+                if (Especialidad == null)
                 {
                     return NotFound();
-                }*/
+                }
 
                 Especialidad.Desc_especialidad = especialidadDTO.Desc_especialidad;
 
@@ -92,7 +91,6 @@
                 _context.SaveChanges();
 
                 return Especialidad;
-
             }
             catch (DbUpdateException)
             {

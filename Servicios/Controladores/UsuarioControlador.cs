@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    
     using Datos;
     using Entidades;
 
@@ -44,7 +45,6 @@
                 }
 
                 return Usuario;
-
             }
             catch (Exception)
             {
@@ -61,14 +61,11 @@
 
                 if (usuarioDTO.Id_persona == 0 || usuarioDTO.Id_persona == null)
                 {
-                    // Se le asigna Rol 2 (Administrador)
                     nuevoUsuario = new Usuario(usuarioDTO.Nombre_usuario, usuarioDTO.Clave, 2);
 
                 } else
                 {
-                    // Corresponde a un Alumno o a un Docente, y se le asigna el rol correpsondiente al Tipo_persona de la Persona asociada al Usuario
                     Persona persona = _context.Personas.Find(usuarioDTO.Id_persona);
-
                     nuevoUsuario = new Usuario(usuarioDTO.Nombre_usuario, usuarioDTO.Clave, persona.Tipo_persona, persona.Id_persona);
                 }
 
@@ -76,7 +73,6 @@
                 _context.SaveChanges();
 
                 return CreatedAtAction("GetById", new { id = nuevoUsuario.Id_usuario }, nuevoUsuario);
-
             }
             catch (DbUpdateException)
             {
@@ -112,7 +108,6 @@
                 _context.SaveChanges();
 
                 return Usuario;
-
             }
             catch (DbUpdateException)
             {

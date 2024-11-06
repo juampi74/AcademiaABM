@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    
     using Datos;
     using Entidades;
 
@@ -45,7 +46,6 @@
                 }
 
                 return Comision;
-
             }
             catch (Exception)
             {
@@ -64,7 +64,6 @@
                 _context.SaveChanges();
 
                 return CreatedAtAction("GetById", new { id = nuevaComision.Id_comision }, nuevaComision);
-
             }
             catch (DbUpdateException)
             {

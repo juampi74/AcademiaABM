@@ -86,10 +86,13 @@
             // 
             // BarraBusqueda
             // 
+            BarraBusqueda.Font = new Font("Segoe UI", 10F);
             BarraBusqueda.Location = new Point(3, 8);
+            BarraBusqueda.MaxLength = 200;
+            BarraBusqueda.Multiline = true;
             BarraBusqueda.Name = "BarraBusqueda";
             BarraBusqueda.PlaceholderText = "Buscar...";
-            BarraBusqueda.Size = new Size(1058, 23);
+            BarraBusqueda.Size = new Size(1058, 25);
             BarraBusqueda.TabIndex = 1;
             BarraBusqueda.TextChanged += BarraBusqueda_TextChanged;
             // 
@@ -121,10 +124,10 @@
             dgvSysacad.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tlSysacad.SetColumnSpan(dgvSysacad, 6);
             dgvSysacad.Dock = DockStyle.Bottom;
-            dgvSysacad.Location = new Point(3, 34);
+            dgvSysacad.Location = new Point(3, 37);
             dgvSysacad.Name = "dgvSysacad";
             dgvSysacad.RowHeadersWidth = 51;
-            dgvSysacad.Size = new Size(1058, 441);
+            dgvSysacad.Size = new Size(1058, 438);
             dgvSysacad.TabIndex = 0;
             // 
             // fLPBotonesOpciones

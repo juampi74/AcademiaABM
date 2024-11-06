@@ -3,14 +3,13 @@
 @using Web.Pages.Autenticacion;
 
 @inject SweetAlertService Swal;
-
 @inject NavigationManager navegacion;
 
 @inject AuthService AuthService;
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -24,7 +23,7 @@ else
         {
             <div class="d-flex align-items-center">
                 <h2 class="me-3">Planes</h2>
-                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
             </div>
         }
         else
@@ -117,7 +116,6 @@ else
                 await CargarPlanes();
             }
         }
-
         cargando = false;
     }
 
@@ -128,7 +126,9 @@ else
 
         try
         {
-            planes = await PlanNegocio.GetAll();
+            planes = (await PlanNegocio.GetAll())
+                        .OrderBy(pla => pla.Especialidad.Desc_especialidad)
+                           .ThenByDescending(pla => pla.Desc_plan);
         }
         catch (Exception)
         {

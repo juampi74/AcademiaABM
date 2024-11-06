@@ -3,14 +3,13 @@
 @using Web.Pages.Autenticacion;
 
 @inject SweetAlertService Swal;
-
 @inject NavigationManager navegacion;
 
 @inject AuthService AuthService;
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -24,7 +23,7 @@ else
         {
             <div class="d-flex align-items-center">
                 <h2 class="me-3">Materias</h2>
-                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
             </div>
         }
         else
@@ -108,14 +107,12 @@ else
         if (!authResult.IsAuthenticated)
         {
             navegacion.NavigateTo("/login");
-
         }
         else
         {
             if (authResult.Rol != "2")
             {
                 rolAutorizado = false;
-
             }
             else
             {
@@ -123,7 +120,6 @@ else
                 await CargarMaterias();
             }
         }
-
         cargando = false;
     }
 
@@ -134,7 +130,10 @@ else
 
         try
         {
-            materias = await MateriaNegocio.GetAll();
+            materias = (await MateriaNegocio.GetAll())
+                          .OrderBy(mat => mat.Plan.Especialidad.Desc_especialidad)
+                             .ThenByDescending(mat => mat.Plan.Desc_plan)
+                                .ThenBy(mat => mat.Desc_materia);
         }
         catch (Exception)
         {

@@ -2,22 +2,19 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    
     using Datos;
     using Entidades;
-
-    using Microsoft.Extensions.Logging;
 
     [ApiController]
     [Route("api/[controller]")]
     public class CursoController : ControllerBase
     {
         private readonly UniversidadContext _context;
-        private readonly ILogger<UsuarioController> _logger; // Logger para el controlador
 
-        public CursoController(UniversidadContext context, ILogger<UsuarioController> logger)
+        public CursoController(UniversidadContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
         [HttpGet(Name = "GetCurso")]
@@ -49,7 +46,6 @@
                 }
 
                 return Curso;
-
             }
             catch (Exception)
             {
@@ -68,7 +64,6 @@
                 _context.SaveChanges();
 
                 return CreatedAtAction("GetById", new { id = nuevoCurso.Id_curso }, nuevoCurso);
-
             }
             catch (DbUpdateException)
             {
@@ -101,7 +96,6 @@
                 _context.SaveChanges();
 
                 return Curso;
-
             }
             catch (DbUpdateException)
             {

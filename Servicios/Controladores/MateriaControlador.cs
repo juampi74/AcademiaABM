@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    
     using Datos;
     using Entidades;
 
@@ -45,7 +46,6 @@
                 }
 
                 return Materia;
-
             }
             catch (Exception)
             {
@@ -64,7 +64,6 @@
                 _context.SaveChanges();
 
                 return CreatedAtAction("GetById", new { id = nuevaMateria.Id_materia }, nuevaMateria);
-
             }
             catch (DbUpdateException)
             {
@@ -97,7 +96,6 @@
                 _context.SaveChanges();
 
                 return Materia;
-
             }
             catch (DbUpdateException)
             {
@@ -147,7 +145,6 @@
                 return _context.Materias
                            .Where(mat => mat.Id_plan == id_plan)
                            .ToList();
-
             }
             catch (Exception)
             {

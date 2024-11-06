@@ -9,7 +9,7 @@
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -23,7 +23,7 @@ else
         {
             <div class="d-flex align-items-center">
                 <h2 class="me-3">Comisiones</h2>
-                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
             </div>
         }
         else
@@ -105,7 +105,6 @@ else
         if (!authResult.IsAuthenticated)
         {
             navegacion.NavigateTo("/login");
-
         }
         else
         {
@@ -119,7 +118,6 @@ else
                 await CargarComisiones();
             }
         }
-
         cargando = false;
     }
 
@@ -130,7 +128,11 @@ else
 
         try
         {
-            comisiones = await ComisionNegocio.GetAll();
+            comisiones = (await ComisionNegocio.GetAll())
+                            .OrderBy(com => com.Plan.Especialidad.Desc_especialidad)
+                                .ThenByDescending(com => com.Plan.Desc_plan)
+                                    .ThenBy(com => com.Anio_especialidad)
+                                        .ThenBy(com => com.Desc_comision);
         }
         catch (Exception)
         {

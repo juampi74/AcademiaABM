@@ -95,7 +95,6 @@
             {
                 MessageBox.Show($"Por favor, ingrese una nota válida entre 1 y 10", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
             return inscripcion;
         }
 

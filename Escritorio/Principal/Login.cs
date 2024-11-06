@@ -2,7 +2,6 @@
 {
     using Entidades;
     using Negocio;
-    using System.Collections.Generic;
 
     public partial class Login : Form
     {
@@ -32,13 +31,13 @@
                     cargando.Close();
                     ComprobarUsuarioIngresado(listadoUsuarios);
 
-                } else
+                }
+                else
                 {
                     cargando.Close();
                     MessageBox.Show($"Error al conectar a la base de datos!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     DialogResult = DialogResult.Cancel;
                 }                
-            
             }
         }
 
@@ -59,7 +58,6 @@
                     }
                 }
             }
-
             return true;
         }
 
@@ -69,7 +67,8 @@
             {
                 return UsuarioNegocio.GetAll().Result;
 
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 return Enumerable.Empty<Usuario>();
             }

@@ -10,7 +10,7 @@
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -206,7 +206,6 @@ else
                             {
                                 errorFaltaCurso = true;
                             }
-
                         }
                         else
                         {
@@ -219,7 +218,6 @@ else
                     }
                 }
             }
-
             cargando = false;
         }
     }
@@ -257,7 +255,6 @@ else
                 inscripcion.Id_curso = cursos_alumno.First().Id_curso;
             }
         }
-
         return cursos_alumno;
     }
 

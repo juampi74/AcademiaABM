@@ -10,6 +10,5 @@
         public string Descripcion { get; set; }
         public int AnioEspecialidad { get; set; }
         public string Plan { get; set; }
-
     }
 }

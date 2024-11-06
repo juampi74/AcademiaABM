@@ -2,22 +2,19 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    
     using Datos;
     using Entidades;
-
-    using Microsoft.Extensions.Logging;
 
     [ApiController]
     [Route("api/[controller]")]
     public class InscripcionController : ControllerBase
     {
         private readonly UniversidadContext _context;
-        private readonly ILogger<UsuarioController> _logger; // Logger para el controlador
 
-        public InscripcionController(UniversidadContext context, ILogger<UsuarioController> logger)
+        public InscripcionController(UniversidadContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
         [HttpGet(Name = "GetInscripcion")]
@@ -55,7 +52,6 @@
                 }
 
                 return Inscripcion;
-
             }
             catch (Exception)
             {
@@ -128,7 +124,6 @@
                 _context.SaveChanges();
 
                 return Inscripcion;
-
             }
             catch (DbUpdateException)
             {
@@ -210,7 +205,6 @@
                                 .ThenInclude(cur => cur.Materia)
                             .Where(ins => cursosDocenteIDs.Contains(ins.Curso.Id_curso))
                             .ToList();
-
             }
             catch (Exception)
             {

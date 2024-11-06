@@ -3,14 +3,13 @@
 @using Web.Pages.Autenticacion;
 
 @inject SweetAlertService Swal;
-
 @inject NavigationManager navegacion;
 
 @inject AuthService AuthService;
 
 @if (cargando)
 {
-    <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+    <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
 }
 else if (!rolAutorizado)
 {
@@ -24,7 +23,7 @@ else
         {
             <div class="d-flex align-items-center">
                 <h2 class="me-3">Personas</h2>
-                <img class="pb-2" style="width:35px" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" />
+                <img class="pb-2" style="width:35px" src="/assets/loading.gif" />
             </div>
         }
         else
@@ -110,14 +109,12 @@ else
         if (!authResult.IsAuthenticated)
         {
             navegacion.NavigateTo("/login");
-
         }
         else
         {
             if (authResult.Rol != "2")
             {
                 rolAutorizado = false;
-
             }
             else
             {
@@ -125,7 +122,6 @@ else
                 await CargarPersonas();
             }
         }
-
         cargando = false;
     }
 
@@ -136,7 +132,13 @@ else
 
         try
         {
-            personas = await PersonaNegocio.GetAll();
+            personas = (await PersonaNegocio.GetAll())
+                          .OrderBy(per => per.Plan.Especialidad.Desc_especialidad)
+                              .ThenByDescending(per => per.Plan.Desc_plan)
+                                  .ThenBy(per => per.Tipo_persona)
+                                     .ThenBy(per => per.Apellido)
+                                        .ThenBy(per => per.Nombre)
+                                            .ThenByDescending(per => per.Legajo);
         }
         catch (Exception)
         {

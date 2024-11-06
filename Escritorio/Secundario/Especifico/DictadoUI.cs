@@ -160,7 +160,6 @@
                     idDocenteSeleccionado = docente.Id;
                 }
             }
-
             return idDocenteSeleccionado;
         }
 
@@ -175,7 +174,6 @@
                     idCursoSeleccionado = curso.Id;
                 }
             }
-
             return idCursoSeleccionado;
         }
 
@@ -208,7 +206,6 @@
                 MessageBox.Show($"No hay cursos registrados para el plan de estudios al que está asociado el docente!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.Cancel;
             }
-
             return cursos_docente.Select(curso => (curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
         }
 
