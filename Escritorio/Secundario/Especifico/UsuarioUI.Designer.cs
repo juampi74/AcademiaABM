@@ -33,14 +33,10 @@
             NombreUsuarioTextBox = new TextBox();
             ClaveLabel = new Label();
             ClaveTextBox = new TextBox();
-            HabilitadoLabel = new Label();
-            CambiaClaveLabel = new Label();
             PersonaLabel = new Label();
             PersonaComboBox = new ComboBox();
             CancelarButton = new Button();
             GuardarButton = new Button();
-            CambiaClaveComboBox = new ComboBox();
-            HabilitadoComboBox = new ComboBox();
             AdministradorCheckBox = new CheckBox();
             SuspendLayout();
             // 
@@ -48,7 +44,7 @@
             // 
             TituloLabel.AutoSize = true;
             TituloLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TituloLabel.Location = new Point(56, 9);
+            TituloLabel.Location = new Point(59, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(108, 37);
             TituloLabel.TabIndex = 13;
@@ -90,28 +86,10 @@
             ClaveTextBox.Size = new Size(129, 23);
             ClaveTextBox.TabIndex = 1;
             // 
-            // HabilitadoLabel
-            // 
-            HabilitadoLabel.AutoSize = true;
-            HabilitadoLabel.Location = new Point(70, 139);
-            HabilitadoLabel.Name = "HabilitadoLabel";
-            HabilitadoLabel.Size = new Size(65, 15);
-            HabilitadoLabel.TabIndex = 10;
-            HabilitadoLabel.Text = "Habilitado:";
-            // 
-            // CambiaClaveLabel
-            // 
-            CambiaClaveLabel.AutoSize = true;
-            CambiaClaveLabel.Location = new Point(52, 174);
-            CambiaClaveLabel.Name = "CambiaClaveLabel";
-            CambiaClaveLabel.Size = new Size(83, 15);
-            CambiaClaveLabel.TabIndex = 9;
-            CambiaClaveLabel.Text = "Cambia Clave:";
-            // 
             // PersonaLabel
             // 
             PersonaLabel.AutoSize = true;
-            PersonaLabel.Location = new Point(83, 247);
+            PersonaLabel.Location = new Point(83, 175);
             PersonaLabel.Name = "PersonaLabel";
             PersonaLabel.Size = new Size(52, 15);
             PersonaLabel.TabIndex = 8;
@@ -122,7 +100,7 @@
             PersonaComboBox.BackColor = SystemColors.GrayText;
             PersonaComboBox.ForeColor = SystemColors.Window;
             PersonaComboBox.FormattingEnabled = true;
-            PersonaComboBox.Location = new Point(140, 244);
+            PersonaComboBox.Location = new Point(140, 172);
             PersonaComboBox.Name = "PersonaComboBox";
             PersonaComboBox.Size = new Size(127, 23);
             PersonaComboBox.TabIndex = 5;
@@ -131,7 +109,7 @@
             // 
             CancelarButton.BackColor = Color.DarkRed;
             CancelarButton.ForeColor = Color.Cornsilk;
-            CancelarButton.Location = new Point(34, 290);
+            CancelarButton.Location = new Point(34, 219);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
             CancelarButton.TabIndex = 7;
@@ -143,7 +121,7 @@
             // 
             GuardarButton.BackColor = Color.SteelBlue;
             GuardarButton.ForeColor = Color.Cornsilk;
-            GuardarButton.Location = new Point(176, 290);
+            GuardarButton.Location = new Point(176, 219);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
             GuardarButton.TabIndex = 6;
@@ -151,30 +129,10 @@
             GuardarButton.UseVisualStyleBackColor = false;
             GuardarButton.Click += GuardarButton_Click;
             // 
-            // CambiaClaveComboBox
-            // 
-            CambiaClaveComboBox.BackColor = SystemColors.GrayText;
-            CambiaClaveComboBox.ForeColor = SystemColors.Window;
-            CambiaClaveComboBox.FormattingEnabled = true;
-            CambiaClaveComboBox.Location = new Point(140, 172);
-            CambiaClaveComboBox.Name = "CambiaClaveComboBox";
-            CambiaClaveComboBox.Size = new Size(127, 23);
-            CambiaClaveComboBox.TabIndex = 3;
-            // 
-            // HabilitadoComboBox
-            // 
-            HabilitadoComboBox.BackColor = SystemColors.GrayText;
-            HabilitadoComboBox.ForeColor = SystemColors.Window;
-            HabilitadoComboBox.FormattingEnabled = true;
-            HabilitadoComboBox.Location = new Point(141, 136);
-            HabilitadoComboBox.Name = "HabilitadoComboBox";
-            HabilitadoComboBox.Size = new Size(127, 23);
-            HabilitadoComboBox.TabIndex = 2;
-            // 
             // AdministradorCheckBox
             // 
             AdministradorCheckBox.AutoSize = true;
-            AdministradorCheckBox.Location = new Point(36, 208);
+            AdministradorCheckBox.Location = new Point(36, 136);
             AdministradorCheckBox.Name = "AdministradorCheckBox";
             AdministradorCheckBox.Size = new Size(102, 19);
             AdministradorCheckBox.TabIndex = 4;
@@ -187,17 +145,13 @@
             AcceptButton = GuardarButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(298, 334);
+            ClientSize = new Size(298, 262);
             Controls.Add(AdministradorCheckBox);
-            Controls.Add(HabilitadoComboBox);
-            Controls.Add(CambiaClaveComboBox);
             Controls.Add(TituloLabel);
             Controls.Add(NombreUsuarioLabel);
             Controls.Add(NombreUsuarioTextBox);
             Controls.Add(ClaveLabel);
             Controls.Add(ClaveTextBox);
-            Controls.Add(HabilitadoLabel);
-            Controls.Add(CambiaClaveLabel);
             Controls.Add(PersonaLabel);
             Controls.Add(PersonaComboBox);
             Controls.Add(CancelarButton);
@@ -217,14 +171,10 @@
         private TextBox NombreUsuarioTextBox;
         private Label ClaveLabel;
         private TextBox ClaveTextBox;
-        private Label HabilitadoLabel;
-        private Label CambiaClaveLabel;
         private Label PersonaLabel;
         private ComboBox PersonaComboBox;
         private Button CancelarButton;
         private Button GuardarButton;
-        private ComboBox CambiaClaveComboBox;
-        private ComboBox HabilitadoComboBox;
         private CheckBox AdministradorCheckBox;
     }
 }

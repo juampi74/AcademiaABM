@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="OxyPlot.Core" Version="2.2.0" />
+    <PackageReference Include="OxyPlot.WindowsForms" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Entidades\Entidades.csproj" />
     <ProjectReference Include="..\Negocio\Negocio.csproj" />
   </ItemGroup>
@@ -25,16 +30,28 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Secundario\Especifico\Graficos\CondicionDeAlumnos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\Especifico\Graficos\RendimientoDelAlumno.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Secundario\Especifico\InscripcionAlumnoUI.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Secundario\Especifico\InscripcionCursoDocenteUI.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Secundario\Especifico\Graficos\AlumnosPorPlan.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Secundario\Especifico\InscripcionUI.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Secundario\Especifico\DictadoUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Secundario\Especifico\Graficos\InscripcionesPorCurso.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Secundario\Especifico\UsuarioUI.cs">

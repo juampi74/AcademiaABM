@@ -24,63 +24,75 @@ else
     {
         @if (!errorFaltanEntidades)
         {
-            <EditForm Model="curso" OnValidSubmit="GuardarCurso">
-                <DataAnnotationsValidator></DataAnnotationsValidator>
+            @if (!errorFaltaMateria)
+            {
+                <EditForm Model="curso" OnValidSubmit="GuardarCurso">
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
 
-                <div class="mt-4">
-                    <label class="form-label fw-bold">Año Calendario</label>
-                    <InputNumber class="form-control" @bind-Value="curso.Anio_calendario" @oninput="ValidarAnio" disabled="@camposDeshabilitados"></InputNumber>
-                    @if (errorAnioInvalido)
-                    {
-                        <div class="text-danger mt-2">El año debe corresponder al actual o al siguiente.</div>
-                    }
-                </div>
-
-                <div class="mt-4">
-                    <label class="form-label fw-bold">Cupo</label>
-                    <InputNumber class="form-control" @bind-Value="curso.Cupo" @oninput="ValidarCupo"></InputNumber>
-                    @if (errorCupoInvalido)
-                    {
-                        <div class="text-danger mt-2">El cupo debe ser un número entre 1 y 100.</div>
-                    }
-                </div>
-
-                <div class="mt-4">
-                    <label class="form-label fw-bold">Comision</label>
-                    <InputSelect class="form-select" @bind-Value="SelectedComisionID" disabled="@camposDeshabilitados">
-                        @foreach (var comision in comisiones)
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Año Calendario</label>
+                        <InputNumber class="form-control" @bind-Value="curso.Anio_calendario" @oninput="ValidarAnio" disabled="@camposDeshabilitados"></InputNumber>
+                        @if (errorAnioInvalido)
                         {
-                            <option value="@comision.Id_comision">@comision.Desc_comision</option>
+                            <div class="text-danger mt-2">El año debe corresponder al actual o al siguiente.</div>
                         }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => curso.Id_comision)"></ValidationMessage>
-                </div>
+                    </div>
 
-                <div class="mt-4">
-                    <label class="form-label fw-bold">Materia</label>
-                    <InputSelect class="form-select" @bind-Value="curso.Id_materia" disabled="@camposDeshabilitados">
-                        @foreach (var materia in materias)
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Cupo</label>
+                        <InputNumber class="form-control" @bind-Value="curso.Cupo" @oninput="ValidarCupo"></InputNumber>
+                        @if (errorCupoInvalido)
                         {
-                            <option value="@materia.Id_materia">@materia.Desc_materia</option>
+                            <div class="text-danger mt-2">El cupo debe ser un número entre 1 y 100.</div>
                         }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => curso.Id_materia)"></ValidationMessage>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Comision</label>
+                        <InputSelect class="form-select" @bind-Value="SelectedComisionID" disabled="@camposDeshabilitados">
+                            @foreach (var comision in comisiones)
+                            {
+                                <option value="@comision.Id_comision">@comision.Desc_comision</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => curso.Id_comision)"></ValidationMessage>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Materia</label>
+                        <InputSelect class="form-select" @bind-Value="curso.Id_materia" disabled="@camposDeshabilitados">
+                            @foreach (var materia in materias)
+                            {
+                                <option value="@materia.Id_materia">@materia.Desc_materia</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => curso.Id_materia)"></ValidationMessage>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-end mt-3">
+                        <a class="btn btn-warning" href="cursos">Volver</a>
+
+                        <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
+                            @btnTexto
+                        </button>
+                    </div>
+
+                </EditForm>
+            }
+            else
+            {
+                <div class="alert alert-warning fw-bold my-3" role="alert">
+                    No hay materias registradas que coincidan con el plan de estudios de la comisión seleccionada!
                 </div>
-
-                <div class="d-flex align-items-center justify-content-end mt-3">
-                    <a class="btn btn-warning" href="cursos">Volver</a>
-
-                    <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
-                        @btnTexto
-                    </button>
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-dark" href="cursos">Volver</a>
                 </div>
-
-            </EditForm>
+            }
         }
         else
         {
             <div class="alert alert-warning fw-bold my-3" role="alert">
-                Debe haber al menos una comisión y una materia registradas previamente!
+                Debe haber al menos una comisión registrada previamente!
             </div>
             <div class="d-flex justify-content-end">
                 <a class="btn btn-dark" href="cursos">Volver</a>
@@ -114,6 +126,7 @@ else
 
     bool errorBD = false;
     bool errorFaltanEntidades = false;
+    bool errorFaltaMateria = false;
 
     bool errorAnioInvalido = false;
     bool errorCupoInvalido = false;
@@ -196,6 +209,11 @@ else
                             curso.Id_comision = SelectedComisionID;
                             materias = await CargarMaterias();
 
+                            if (!materias.Any())
+                            {
+                                errorFaltaMateria = true;
+                            }
+
                         }
                         else
                         {
@@ -208,7 +226,7 @@ else
                     }
                 }
             }
-        
+
             cargando = false;
         }
     }
@@ -217,6 +235,12 @@ else
     {
         curso.Id_comision = SelectedComisionID;
         materias = await CargarMaterias();
+
+        if (!materias.Any())
+        {
+            errorFaltaMateria = true;
+        }
+
         StateHasChanged();
     }
 

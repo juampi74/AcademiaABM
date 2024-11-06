@@ -41,7 +41,7 @@
             // 
             TituloLabel.AutoSize = true;
             TituloLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TituloLabel.Location = new Point(95, 9);
+            TituloLabel.Location = new Point(101, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(68, 37);
             TituloLabel.TabIndex = 6;

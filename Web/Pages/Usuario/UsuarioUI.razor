@@ -45,24 +45,6 @@ else
                     }
                 </div>
 
-                <div class="mt-4">
-                    <label class="form-label fw-bold">Habilitado</label>
-                    <InputSelect class="form-select" @bind-Value="usuario.Habilitado">
-                        <option value="1">Si</option>
-                        <option value="0">No</option>
-                    </InputSelect>
-                    <ValidationMessage For="@(() => usuario.Habilitado)"></ValidationMessage>
-                </div>
-
-                <div class="mt-4">
-                    <label class="form-label fw-bold">Cambia Clave</label>
-                    <InputSelect class="form-select" @bind-Value="usuario.Cambia_clave">
-                        <option value="1">Si</option>
-                        <option value="0">No</option>
-                    </InputSelect>
-                    <ValidationMessage For="@(() => usuario.Cambia_clave)"></ValidationMessage>
-                </div>
-
                 @if (mostrarCheckboxAdministrador)
                 {
                     <div class="mt-4 form-check">
@@ -198,9 +180,6 @@ else
 
                     botonDeshabilitado = true;
 
-                    // Al crear un nuevo usuario, marco inicialmente que está habilitado (solo no lo va a estar si así se elige en el desplegable)
-                    usuario.Habilitado = 1;
-
                     try
                     {
                         personas = (List<Persona>)await PersonaNegocio.GetAll();
@@ -216,7 +195,8 @@ else
                     }
                     else
                     {
-                        errorFaltanEntidades = true;
+                        esAdministrador = true;
+                        checkboxDeshabilitado = true;
                     }
                 }
             }
@@ -281,7 +261,7 @@ else
         {
             botonDeshabilitado = errorNombreUsuarioInvalido || errorClaveInvalida ||
                              !nombreUsuarioModificado || !claveModificada ||
-                             (esAdministrador && usuario.Id_persona != 0);
+                             (esAdministrador && usuario.Id_persona != 0 && usuario.Id_persona != null);
         }
     }
 
@@ -305,8 +285,6 @@ else
 
                 usuarioDTO.Nombre_usuario = usuario.Nombre_usuario;
                 usuarioDTO.Clave = usuario.Clave;
-                usuarioDTO.Habilitado = usuario.Habilitado;
-                usuarioDTO.Cambia_clave = usuario.Cambia_clave;
                 usuarioDTO.Id_persona = esAdministrador ? 0 : usuario.Id_persona;
 
                 HttpResponseMessage response = await UsuarioNegocio.Update(idUsuario, usuarioDTO);
@@ -326,14 +304,6 @@ else
             }
             else
             {
-                if (usuario.Habilitado != 0 && usuario.Habilitado != 1)
-                {
-                    usuario.Habilitado = 1;
-                }
-                if (usuario.Cambia_clave != 0 && usuario.Cambia_clave != 1)
-                {
-                    usuario.Cambia_clave = 0;
-                }
                 if ((usuario.Id_persona == null || usuario.Id_persona == 0) && !esAdministrador)
                 {
                     usuario.Id_persona = personas.First().Id_persona;

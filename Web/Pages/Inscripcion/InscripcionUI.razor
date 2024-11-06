@@ -24,60 +24,73 @@ else
     {
         @if (!errorFaltanEntidades)
         {
-            <EditForm Model="inscripcion" OnValidSubmit="GuardarInscripcion">
-                <DataAnnotationsValidator></DataAnnotationsValidator>
+            @if(!errorFaltaCurso)
+            {
+                <EditForm Model="inscripcion" OnValidSubmit="GuardarInscripcion">
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
 
-                <div class="mt-4">
-                    <label class="form-label fw-bold">Alumno</label>
-                    <InputSelect class="form-select" @bind-Value="SelectedAlumnoId" disabled="@modoEdicion">
-                        @foreach (var alumno in alumnos)
-                        {
-                            <option value="@alumno.Id_persona">@alumno.Apellido, @alumno.Nombre</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => inscripcion.Id_alumno)"></ValidationMessage>
-                </div>
-
-                <div class="mt-4">
-                    <label class="form-label fw-bold">Curso</label>
-                    <InputSelect class="form-select" @bind-Value="inscripcion.Id_curso" disabled="@modoEdicion">
-                        @foreach (var curso in cursos)
-                        {
-                            <option value="@curso.Id_curso">@curso.Materia.Desc_materia ➡️ @curso.Comision.Desc_comision</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => inscripcion.Id_curso)"></ValidationMessage>
-                </div>
-
-                @if (modoEdicion)
-                {
                     <div class="mt-4">
-                        <label class="form-label fw-bold">Nota</label>
-                        <InputNumber class="form-control" @bind-Value="inscripcion.Nota" @oninput="CalcularCondicion"></InputNumber>
-                        @if (errorNotaInvalida)
-                        {
-                            <div class="text-danger mt-2">Por favor, ingrese una nota válida entre 1 y 10.</div>
-                        }
+                        <label class="form-label fw-bold">Alumno</label>
+                        <InputSelect class="form-select" @bind-Value="SelectedAlumnoId" disabled="@modoEdicion">
+                            @foreach (var alumno in alumnos)
+                            {
+                                <option value="@alumno.Id_persona">@alumno.Apellido, @alumno.Nombre</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => inscripcion.Id_alumno)"></ValidationMessage>
                     </div>
 
                     <div class="mt-4">
-                        <label class="form-label fw-bold">Condicion</label>
-                        <InputText class="form-control" @bind-Value="condicionCalculada" disabled></InputText>
+                        <label class="form-label fw-bold">Curso</label>
+                        <InputSelect class="form-select" @bind-Value="inscripcion.Id_curso" disabled="@modoEdicion">
+                            @foreach (var curso in cursos)
+                            {
+                                <option value="@curso.Id_curso">@curso.Materia.Desc_materia ➡️ @curso.Comision.Desc_comision</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => inscripcion.Id_curso)"></ValidationMessage>
                     </div>
-                }
 
-                <div class="d-flex align-items-center justify-content-end mt-3">
-                    <a class="btn btn-warning" href="inscripciones">Volver</a>
-                    <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
-                        @btnTexto
-                    </button>
+                    @if (modoEdicion)
+                    {
+                        <div class="mt-4">
+                            <label class="form-label fw-bold">Nota</label>
+                            <InputNumber class="form-control" @bind-Value="inscripcion.Nota" @oninput="CalcularCondicion"></InputNumber>
+                            @if (errorNotaInvalida)
+                            {
+                                <div class="text-danger mt-2">Por favor, ingrese una nota válida entre 1 y 10.</div>
+                            }
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="form-label fw-bold">Condicion</label>
+                            <InputText class="form-control" @bind-Value="condicionCalculada" disabled></InputText>
+                        </div>
+                    }
+
+                    <div class="d-flex align-items-center justify-content-end mt-3">
+                        <a class="btn btn-warning" href="inscripciones">Volver</a>
+                        <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
+                            @btnTexto
+                        </button>
+                    </div>
+                </EditForm>
+
+            }
+            else
+            {
+                <div class="alert alert-warning fw-bold my-3" role="alert">
+                    No hay cursos registrados para el plan de estudios del alumno!
                 </div>
-            </EditForm>
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-dark" href="cursos">Volver</a>
+                </div>
+            }
         }
         else
         {
             <div class="alert alert-warning fw-bold my-3" role="alert">
-                Debe haber al menos un alumno y un curso registrados previamente!
+                Debe haber al menos un alumno registrado previamente!
             </div>
             <div class="d-flex justify-content-end">
                 <a class="btn btn-dark" href="inscripciones">Volver</a>
@@ -111,6 +124,7 @@ else
 
     bool errorBD = false;
     bool errorFaltanEntidades = false;
+    bool errorFaltaCurso = false;
     bool errorNotaInvalida = false;
     bool botonDeshabilitado = true;
     string condicionCalculada = "";
@@ -188,6 +202,11 @@ else
                             inscripcion.Id_alumno = SelectedAlumnoId;
                             cursos = await CargarCursos();
 
+                            if (!cursos.Any())
+                            {
+                                errorFaltaCurso = true;
+                            }
+
                         }
                         else
                         {
@@ -209,6 +228,12 @@ else
     {
         inscripcion.Id_alumno = SelectedAlumnoId;
         cursos = await CargarCursos();
+
+        if (!cursos.Any())
+        {
+            errorFaltaCurso = true;
+        }
+
         StateHasChanged();
     }
 

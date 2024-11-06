@@ -55,7 +55,7 @@
             CursoLabel.Location = new Point(46, 103);
             CursoLabel.Name = "CursoLabel";
             CursoLabel.Size = new Size(41, 15);
-            CursoLabel.TabIndex = 7;
+            CursoLabel.TabIndex = 6;
             CursoLabel.Text = "Curso:";
             // 
             // CursoComboBox
@@ -66,7 +66,7 @@
             CursoComboBox.Location = new Point(93, 100);
             CursoComboBox.Name = "CursoComboBox";
             CursoComboBox.Size = new Size(320, 23);
-            CursoComboBox.TabIndex = 0;
+            CursoComboBox.TabIndex = 1;
             // 
             // DocenteLabel
             // 
@@ -74,7 +74,7 @@
             DocenteLabel.Location = new Point(33, 67);
             DocenteLabel.Name = "DocenteLabel";
             DocenteLabel.Size = new Size(54, 15);
-            DocenteLabel.TabIndex = 6;
+            DocenteLabel.TabIndex = 7;
             DocenteLabel.Text = "Docente:";
             // 
             // DocenteComboBox
@@ -85,7 +85,7 @@
             DocenteComboBox.Location = new Point(93, 64);
             DocenteComboBox.Name = "DocenteComboBox";
             DocenteComboBox.Size = new Size(320, 23);
-            DocenteComboBox.TabIndex = 1;
+            DocenteComboBox.TabIndex = 0;
             // 
             // CargoLabel
             // 

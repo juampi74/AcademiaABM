@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Grilla));
             toolStripContainer1 = new ToolStripContainer();
+            BarraBusqueda = new TextBox();
             tlSysacad = new TableLayoutPanel();
             dgvSysacad = new DataGridView();
             fLPBotonesOpciones = new FlowLayoutPanel();
@@ -42,8 +43,12 @@
             btnMostrarInscripciones = new Button();
             btnMostrarDictados = new Button();
             btnMostrarUsuarios = new Button();
+            btnMostrarInscripcionesPorCurso = new Button();
+            btnMostrarAlumnosPorPlan = new Button();
             btnMostrarTusInscripciones = new Button();
+            btnMostrarRendimientoDelAlumno = new Button();
             btnMostrarInscripcionesATusCursos = new Button();
+            btnMostrarCondicionDeAlumnos = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
             btnSalir = new Button();
             tsSysacad = new ToolStrip();
@@ -65,18 +70,28 @@
             // 
             // toolStripContainer1.ContentPanel
             // 
+            toolStripContainer1.ContentPanel.Controls.Add(BarraBusqueda);
             toolStripContainer1.ContentPanel.Controls.Add(tlSysacad);
-            toolStripContainer1.ContentPanel.Size = new Size(800, 423);
+            toolStripContainer1.ContentPanel.Size = new Size(1064, 514);
             toolStripContainer1.Dock = DockStyle.Fill;
             toolStripContainer1.Location = new Point(0, 0);
             toolStripContainer1.Name = "toolStripContainer1";
-            toolStripContainer1.Size = new Size(800, 450);
+            toolStripContainer1.Size = new Size(1064, 541);
             toolStripContainer1.TabIndex = 0;
             toolStripContainer1.Text = "toolStripContainer1";
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
             toolStripContainer1.TopToolStripPanel.Controls.Add(tsSysacad);
+            // 
+            // BarraBusqueda
+            // 
+            BarraBusqueda.Location = new Point(3, 8);
+            BarraBusqueda.Name = "BarraBusqueda";
+            BarraBusqueda.PlaceholderText = "Buscar...";
+            BarraBusqueda.Size = new Size(1058, 23);
+            BarraBusqueda.TabIndex = 1;
+            BarraBusqueda.TextChanged += BarraBusqueda_TextChanged;
             // 
             // tlSysacad
             // 
@@ -97,7 +112,7 @@
             tlSysacad.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tlSysacad.RowStyles.Add(new RowStyle());
             tlSysacad.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tlSysacad.Size = new Size(800, 423);
+            tlSysacad.Size = new Size(1064, 514);
             tlSysacad.TabIndex = 0;
             // 
             // dgvSysacad
@@ -105,11 +120,11 @@
             dgvSysacad.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dgvSysacad.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tlSysacad.SetColumnSpan(dgvSysacad, 6);
-            dgvSysacad.Dock = DockStyle.Fill;
-            dgvSysacad.Location = new Point(3, 3);
+            dgvSysacad.Dock = DockStyle.Bottom;
+            dgvSysacad.Location = new Point(3, 34);
             dgvSysacad.Name = "dgvSysacad";
             dgvSysacad.RowHeadersWidth = 51;
-            dgvSysacad.Size = new Size(794, 381);
+            dgvSysacad.Size = new Size(1058, 441);
             dgvSysacad.TabIndex = 0;
             // 
             // fLPBotonesOpciones
@@ -123,11 +138,15 @@
             fLPBotonesOpciones.Controls.Add(btnMostrarInscripciones);
             fLPBotonesOpciones.Controls.Add(btnMostrarDictados);
             fLPBotonesOpciones.Controls.Add(btnMostrarUsuarios);
+            fLPBotonesOpciones.Controls.Add(btnMostrarInscripcionesPorCurso);
+            fLPBotonesOpciones.Controls.Add(btnMostrarAlumnosPorPlan);
             fLPBotonesOpciones.Controls.Add(btnMostrarTusInscripciones);
+            fLPBotonesOpciones.Controls.Add(btnMostrarRendimientoDelAlumno);
             fLPBotonesOpciones.Controls.Add(btnMostrarInscripcionesATusCursos);
-            fLPBotonesOpciones.Location = new Point(3, 390);
+            fLPBotonesOpciones.Controls.Add(btnMostrarCondicionDeAlumnos);
+            fLPBotonesOpciones.Location = new Point(3, 481);
             fLPBotonesOpciones.Name = "fLPBotonesOpciones";
-            fLPBotonesOpciones.Size = new Size(672, 29);
+            fLPBotonesOpciones.Size = new Size(939, 30);
             fLPBotonesOpciones.TabIndex = 5;
             // 
             // btnMostrarEspecialidades
@@ -220,6 +239,26 @@
             btnMostrarUsuarios.UseVisualStyleBackColor = true;
             btnMostrarUsuarios.Click += btnMostrarUsuarios_Click;
             // 
+            // btnMostrarInscripcionesPorCurso
+            // 
+            btnMostrarInscripcionesPorCurso.Location = new Point(675, 3);
+            btnMostrarInscripcionesPorCurso.Name = "btnMostrarInscripcionesPorCurso";
+            btnMostrarInscripcionesPorCurso.Size = new Size(139, 23);
+            btnMostrarInscripcionesPorCurso.TabIndex = 11;
+            btnMostrarInscripcionesPorCurso.Text = "Inscripciones por Curso";
+            btnMostrarInscripcionesPorCurso.UseVisualStyleBackColor = true;
+            btnMostrarInscripcionesPorCurso.Click += btnMostrarInscripcionesPorCurso_Click;
+            // 
+            // btnMostrarAlumnosPorPlan
+            // 
+            btnMostrarAlumnosPorPlan.Location = new Point(820, 3);
+            btnMostrarAlumnosPorPlan.Name = "btnMostrarAlumnosPorPlan";
+            btnMostrarAlumnosPorPlan.Size = new Size(113, 23);
+            btnMostrarAlumnosPorPlan.TabIndex = 12;
+            btnMostrarAlumnosPorPlan.Text = "Alumnos por Plan";
+            btnMostrarAlumnosPorPlan.UseVisualStyleBackColor = true;
+            btnMostrarAlumnosPorPlan.Click += btnMostrarAlumnosPorPlan_Click;
+            // 
             // btnMostrarTusInscripciones
             // 
             btnMostrarTusInscripciones.Location = new Point(3, 32);
@@ -230,9 +269,19 @@
             btnMostrarTusInscripciones.UseVisualStyleBackColor = true;
             btnMostrarTusInscripciones.Click += btnMostrarTusInscripciones_Click;
             // 
+            // btnMostrarRendimientoDelAlumno
+            // 
+            btnMostrarRendimientoDelAlumno.Location = new Point(119, 32);
+            btnMostrarRendimientoDelAlumno.Name = "btnMostrarRendimientoDelAlumno";
+            btnMostrarRendimientoDelAlumno.Size = new Size(98, 23);
+            btnMostrarRendimientoDelAlumno.TabIndex = 13;
+            btnMostrarRendimientoDelAlumno.Text = "Tu rendimiento";
+            btnMostrarRendimientoDelAlumno.UseVisualStyleBackColor = true;
+            btnMostrarRendimientoDelAlumno.Click += btnMostrarRendimientoDelAlumno_Click;
+            // 
             // btnMostrarInscripcionesATusCursos
             // 
-            btnMostrarInscripcionesATusCursos.Location = new Point(119, 32);
+            btnMostrarInscripcionesATusCursos.Location = new Point(223, 32);
             btnMostrarInscripcionesATusCursos.Name = "btnMostrarInscripcionesATusCursos";
             btnMostrarInscripcionesATusCursos.Size = new Size(150, 23);
             btnMostrarInscripcionesATusCursos.TabIndex = 10;
@@ -240,11 +289,21 @@
             btnMostrarInscripcionesATusCursos.UseVisualStyleBackColor = true;
             btnMostrarInscripcionesATusCursos.Click += btnMostrarInscripcionesATusCursos_Click;
             // 
+            // btnMostrarCondicionDeAlumnos
+            // 
+            btnMostrarCondicionDeAlumnos.Location = new Point(379, 32);
+            btnMostrarCondicionDeAlumnos.Name = "btnMostrarCondicionDeAlumnos";
+            btnMostrarCondicionDeAlumnos.Size = new Size(138, 23);
+            btnMostrarCondicionDeAlumnos.TabIndex = 14;
+            btnMostrarCondicionDeAlumnos.Text = "Condicion de Alumnos";
+            btnMostrarCondicionDeAlumnos.UseVisualStyleBackColor = true;
+            btnMostrarCondicionDeAlumnos.Click += btnMostrarCondicionDeAlumnos_Click;
+            // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             flowLayoutPanel1.Controls.Add(btnSalir);
-            flowLayoutPanel1.Location = new Point(731, 390);
+            flowLayoutPanel1.Location = new Point(995, 481);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Size = new Size(66, 30);
             flowLayoutPanel1.TabIndex = 6;
@@ -304,11 +363,12 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1064, 541);
             Controls.Add(toolStripContainer1);
             Name = "Grilla";
             Text = "Grilla";
             toolStripContainer1.ContentPanel.ResumeLayout(false);
+            toolStripContainer1.ContentPanel.PerformLayout();
             toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
             toolStripContainer1.TopToolStripPanel.PerformLayout();
             toolStripContainer1.ResumeLayout(false);
@@ -345,6 +405,11 @@
         private FlowLayoutPanel flowLayoutPanel1;
         private Button btnMostrarTusInscripciones;
         private Button btnMostrarInscripcionesATusCursos;
+        private Button btnMostrarInscripcionesPorCurso;
+        private Button btnMostrarAlumnosPorPlan;
+        private TextBox BarraBusqueda;
+        private Button btnMostrarRendimientoDelAlumno;
+        private Button btnMostrarCondicionDeAlumnos;
     }
 }
 

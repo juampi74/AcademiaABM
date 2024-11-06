@@ -5,19 +5,15 @@
     using Datos;
     using Entidades;
 
-    using Microsoft.Extensions.Logging;
-
     [ApiController]
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
     {
         private readonly UniversidadContext _context;
-        private readonly ILogger<UsuarioController> _logger; // Logger para el controlador
 
-        public UsuarioController(UniversidadContext context, ILogger<UsuarioController> logger)
+        public UsuarioController(UniversidadContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
         [HttpGet(Name = "GetUsuario")]
@@ -61,21 +57,19 @@
         {
             try
             {
-                _logger.LogInformation("Valor de usuarioDTO.Id_persona: {IdPersona}", usuarioDTO.Id_persona);
-
                 Usuario nuevoUsuario;
 
                 if (usuarioDTO.Id_persona == 0 || usuarioDTO.Id_persona == null)
                 {
                     // Se le asigna Rol 2 (Administrador)
-                    nuevoUsuario = new Usuario(usuarioDTO.Nombre_usuario, usuarioDTO.Clave, usuarioDTO.Habilitado, usuarioDTO.Cambia_clave, 2);
+                    nuevoUsuario = new Usuario(usuarioDTO.Nombre_usuario, usuarioDTO.Clave, 2);
 
                 } else
                 {
                     // Corresponde a un Alumno o a un Docente, y se le asigna el rol correpsondiente al Tipo_persona de la Persona asociada al Usuario
                     Persona persona = _context.Personas.Find(usuarioDTO.Id_persona);
 
-                    nuevoUsuario = new Usuario(usuarioDTO.Nombre_usuario, usuarioDTO.Clave, usuarioDTO.Habilitado, usuarioDTO.Cambia_clave, persona.Tipo_persona, persona.Id_persona);
+                    nuevoUsuario = new Usuario(usuarioDTO.Nombre_usuario, usuarioDTO.Clave, persona.Tipo_persona, persona.Id_persona);
                 }
 
                 _context.Usuarios.Add(nuevoUsuario);
@@ -108,8 +102,6 @@
 
                 Usuario.Nombre_usuario = usuarioDTO.Nombre_usuario;
                 Usuario.Clave = usuarioDTO.Clave;
-                Usuario.Habilitado = usuarioDTO.Habilitado;
-                Usuario.Cambia_clave = usuarioDTO.Cambia_clave;
 
                 if (usuarioDTO.Id_persona != 0 && usuarioDTO.Id_persona != null)
                 {

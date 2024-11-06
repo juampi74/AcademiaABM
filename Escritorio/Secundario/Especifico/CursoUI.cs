@@ -237,6 +237,11 @@
             {
                 materias_comision_plan = materias_comision_plan.OrderBy(mat => mat.Desc_materia).ToList();
             }
+            else
+            {
+                MessageBox.Show($"No hay materias registradas que coincidan con el plan de estudios de la comisión seleccionada!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.Cancel;
+            }
 
             return materias_comision_plan.Select(materia => (materia.Desc_materia)).ToList();
         }

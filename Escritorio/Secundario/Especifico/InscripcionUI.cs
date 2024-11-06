@@ -233,6 +233,11 @@
             {
                 cursos_alumno = cursos_alumno.OrderBy(cur => cur.Materia.Desc_materia).ThenBy(cur => cur.Comision.Desc_comision).ToList();
             }
+            else
+            {
+                MessageBox.Show($"No hay cursos registrados para el plan de estudios del alumno!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.Cancel;
+            }
 
             return cursos_alumno.Select(curso => (curso.Materia.Desc_materia + " - " + curso.Comision.Desc_comision)).ToList();
         }

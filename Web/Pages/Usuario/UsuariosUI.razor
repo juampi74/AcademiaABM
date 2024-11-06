@@ -36,7 +36,7 @@ else
                 </a>
             </div>
 
-            <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Nombre de Usuario o Persona..." class="form-control mt-2 mb-4 busqueda-input" />
+            <input @bind="busqueda" @bind:event="oninput" type="text" placeholder="Buscar por Nombre de Usuario, Rol o Persona..." class="form-control mt-2 mb-4 busqueda-input" />
 
             IEnumerable<Usuario> usuariosFilt = usuariosFiltrados();
 
@@ -53,8 +53,7 @@ else
                         <tr>
                             <th>Nombre de Usuario</th>
                             <th>Clave</th>
-                            <th>Habilitado</th>
-                            <th>Cambia Clave</th>
+                            <th>Rol</th>
                             <th>Persona</th>
                             <th></th>
                         </tr>
@@ -65,8 +64,9 @@ else
                             <tr>
                                 <td style="vertical-align: middle;">@usuario.Nombre_usuario</td>
                                 <td style="vertical-align: middle;">@usuario.Clave</td>
-                                <td style="vertical-align: middle;">@(usuario.Habilitado == 1 ? "Si" : "No")</td>
-                                <td style="vertical-align: middle;">@(usuario.Cambia_clave == 0 ? "No" : "Si")</td>
+                                <td style="vertical-align: middle;">
+                                    @(usuario.Rol == 0 ? "Alumno" : (usuario.Rol == 1 ? "Docente" : "Administrador"))
+                                </td>
                                 <td style="vertical-align: middle;">
                                     @(usuario.Persona == null ? "-" : (usuario.Persona.Apellido + ", " + usuario.Persona.Nombre))
                                 </td>
@@ -154,10 +154,13 @@ else
         }
 
         return usuarios?.Where(usu =>
-           usu.Nombre_usuario.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
-           (usu.Persona != null &&
-           (usu.Persona.Apellido + ", " + usu.Persona.Nombre).Contains(busqueda, StringComparison.OrdinalIgnoreCase)))
-        ?? new List<Usuario>();
+               usu.Nombre_usuario.Contains(busqueda, StringComparison.OrdinalIgnoreCase) ||
+               (busqueda.Equals("Alumno", StringComparison.OrdinalIgnoreCase) && usu.Rol == 0) ||
+               (busqueda.Equals("Docente", StringComparison.OrdinalIgnoreCase) && usu.Rol == 1) ||
+               (busqueda.Equals("Administrador", StringComparison.OrdinalIgnoreCase) && usu.Rol == 2) ||
+               (usu.Persona != null &&
+               (usu.Persona.Apellido + ", " + usu.Persona.Nombre).Contains(busqueda, StringComparison.OrdinalIgnoreCase)))
+            ?? new List<Usuario>();
     }
 
     private async Task EliminarUsuario(Usuario usuario)

@@ -24,54 +24,66 @@ else
     {
         @if (!errorFaltanEntidades)
         {
-            <EditForm Model="dictado" OnValidSubmit="GuardarDictado">
-                <DataAnnotationsValidator></DataAnnotationsValidator>
+            @if (!errorFaltaCurso)
+            {
+                <EditForm Model="dictado" OnValidSubmit="GuardarDictado">
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
 
-                <div class="mt-4">
-                    <label class="form-label fw-bold">Docente</label>
-                    <InputSelect class="form-select" @bind-Value="SelectedDocenteId" disabled="@camposDeshabilitados">
-                        @foreach (var docente in docentes)
-                        {
-                            <option value="@docente.Id_persona">@docente.Apellido, @docente.Nombre</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => dictado.Id_docente)"></ValidationMessage>
-                </div>
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Docente</label>
+                        <InputSelect class="form-select" @bind-Value="SelectedDocenteId" disabled="@camposDeshabilitados">
+                            @foreach (var docente in docentes)
+                            {
+                                <option value="@docente.Id_persona">@docente.Apellido, @docente.Nombre</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => dictado.Id_docente)"></ValidationMessage>
+                    </div>
                 
-                <div class="mt-4">
-                    <label class="form-label fw-bold">Curso</label>
-                    <InputSelect class="form-select" @bind-Value="dictado.Id_curso" disabled="@camposDeshabilitados">
-                        @foreach (var curso in cursos)
-                        {
-                            <option value="@curso.Id_curso">@curso.Materia.Desc_materia ➡️ @curso.Comision.Desc_comision</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => dictado.Id_curso)"></ValidationMessage>
-                </div>
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Curso</label>
+                        <InputSelect class="form-select" @bind-Value="dictado.Id_curso" disabled="@camposDeshabilitados">
+                            @foreach (var curso in cursos)
+                            {
+                                <option value="@curso.Id_curso">@curso.Materia.Desc_materia ➡️ @curso.Comision.Desc_comision</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => dictado.Id_curso)"></ValidationMessage>
+                    </div>
             
-                <div class="mt-4">
-                    <label class="form-label fw-bold">Cargo</label>
-                    <InputText class="form-control" @bind-Value="dictado.Cargo" @oninput="ValidarCargo"></InputText>
-                    @if (errorCargoInvalido)
-                    {
-                        <div class="text-danger mt-2">El cargo debe tener más de 10 caracteres.</div>
-                    }
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Cargo</label>
+                        <InputText class="form-control" @bind-Value="dictado.Cargo" @oninput="ValidarCargo"></InputText>
+                        @if (errorCargoInvalido)
+                        {
+                            <div class="text-danger mt-2">El cargo debe tener más de 10 caracteres.</div>
+                        }
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-end mt-3">
+                        <a class="btn btn-warning" href="dictados">Volver</a>
+
+                        <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
+                            @btnTexto
+                        </button>
+                    </div>
+
+                </EditForm>
+            }
+            else
+            {
+                <div class="alert alert-warning fw-bold my-3" role="alert">
+                    No hay cursos registrados para el plan de estudios al que está asociado el docente!
                 </div>
-
-                <div class="d-flex align-items-center justify-content-end mt-3">
-                    <a class="btn btn-warning" href="dictados">Volver</a>
-
-                    <button class="btn btn-primary ms-2" type="submit" disabled="@botonDeshabilitado">
-                        @btnTexto
-                    </button>
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-dark" href="cursos">Volver</a>
                 </div>
-
-            </EditForm>
+            }
         }
         else
         {
             <div class="alert alert-warning fw-bold my-3" role="alert">
-                Debe haber al menos un docente y un curso registrados previamente!
+                Debe haber al menos un docente registrado previamente!
             </div>
             <div class="d-flex justify-content-end">
                 <a class="btn btn-dark" href="dictados">Volver</a>
@@ -105,6 +117,7 @@ else
 
     bool errorBD = false;
     bool errorFaltanEntidades = false;
+    bool errorFaltaCurso = false;
 
     bool errorCargoInvalido = false;
 
@@ -185,6 +198,11 @@ else
 
                             cursos = await CargarCursos();
 
+                            if (!cursos.Any())
+                            {
+                                errorFaltaCurso = true;
+                            }
+
                         }
                         else
                         {
@@ -206,6 +224,12 @@ else
     {
         dictado.Id_docente = SelectedDocenteId;
         cursos = await CargarCursos();
+
+        if (!cursos.Any())
+        {
+            errorFaltaCurso = true;
+        }
+
         StateHasChanged();
     }
 

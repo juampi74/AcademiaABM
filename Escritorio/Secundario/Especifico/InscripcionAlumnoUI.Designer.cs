@@ -39,10 +39,10 @@
             // 
             TituloLabel.AutoSize = true;
             TituloLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            TituloLabel.Location = new Point(75, 9);
+            TituloLabel.Location = new Point(88, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(144, 37);
-            TituloLabel.TabIndex = 10;
+            TituloLabel.TabIndex = 4;
             TituloLabel.Text = "Inscripcion";
             // 
             // CursoLabel
@@ -51,7 +51,7 @@
             CursoLabel.Location = new Point(30, 66);
             CursoLabel.Name = "CursoLabel";
             CursoLabel.Size = new Size(41, 15);
-            CursoLabel.TabIndex = 9;
+            CursoLabel.TabIndex = 3;
             CursoLabel.Text = "Curso:";
             // 
             // CursoComboBox
@@ -71,7 +71,7 @@
             CancelarButton.Location = new Point(99, 105);
             CancelarButton.Name = "CancelarButton";
             CancelarButton.Size = new Size(75, 23);
-            CancelarButton.TabIndex = 5;
+            CancelarButton.TabIndex = 2;
             CancelarButton.Text = "Cancelar";
             CancelarButton.UseVisualStyleBackColor = false;
             CancelarButton.Click += CancelarButton_Click;
@@ -83,7 +83,7 @@
             GuardarButton.Location = new Point(240, 105);
             GuardarButton.Name = "GuardarButton";
             GuardarButton.Size = new Size(75, 23);
-            GuardarButton.TabIndex = 4;
+            GuardarButton.TabIndex = 1;
             GuardarButton.Text = "Guardar";
             GuardarButton.UseVisualStyleBackColor = false;
             GuardarButton.Click += GuardarButton_Click;

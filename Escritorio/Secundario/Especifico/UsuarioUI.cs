@@ -20,14 +20,17 @@
 
             this.Personas = personas;
 
-            PersonaComboBox.Visible = !AdministradorCheckBox.Checked;
-
-            List<string> listadoPersonas = ListadoNombresPersonas();
-
-            HabilitadoComboBox.DataSource = new List<string>() { "Si", "No" };
-            CambiaClaveComboBox.DataSource = new List<string>() { "No", "Si" };
-
-            PersonaComboBox.DataSource = listadoPersonas;
+            if(personas == null || personas.Count == 0)
+            {
+                PersonaComboBox.Visible = true;
+                AdministradorCheckBox.Checked = true;
+                AdministradorCheckBox.Enabled = false;
+            }
+            else
+            {
+                List<string> listadoPersonas = ListadoNombresPersonas();
+                PersonaComboBox.DataSource = listadoPersonas;
+            }
         }
 
         public UsuarioUI(List<(int Id, string ApellidoYNombre)> personas, Usuario usuarioAModificar)
@@ -64,28 +67,7 @@
             NombreUsuarioTextBox.Text = usuarioAModificar.Nombre_usuario;
             ClaveTextBox.Text = usuarioAModificar.Clave;
 
-            HabilitadoComboBox.DataSource = new List<string>() { "Si", "No" };
-            CambiaClaveComboBox.DataSource = new List<string>() { "No", "Si" };
-
             PersonaComboBox.DataSource = ListadoNombresPersonas();
-
-            if (usuarioAModificar.Habilitado == 1)
-            {
-                HabilitadoComboBox.SelectedIndex = 0;
-            }
-            else
-            {
-                HabilitadoComboBox.SelectedIndex = 1;
-            }
-
-            if (usuarioAModificar.Cambia_clave == 0)
-            {
-                CambiaClaveComboBox.SelectedIndex = 0;
-            }
-            else
-            {
-                CambiaClaveComboBox.SelectedIndex = 1;
-            }
 
             foreach (var persona in this.Personas)
             {
@@ -160,8 +142,6 @@
 
             usuario.Nombre_usuario = this.Usuario.Nombre_usuario;
             usuario.Clave = ClaveTextBox.Text;
-            usuario.Habilitado = HabilitadoComboBox.SelectedValue.ToString() == "Si" ? 1 : 0;
-            usuario.Cambia_clave = CambiaClaveComboBox.SelectedValue.ToString() == "Si" ? 1 : 0;
             usuario.Rol = this.Usuario.Rol;
             usuario.Id_persona = this.Usuario.Id_persona;
 
@@ -177,14 +157,13 @@
             {
                 idPersonaSeleccionada = ObtenerIdPersonaSeleccionada();
                 
-                usuario = new Usuario(NombreUsuarioTextBox.Text, ClaveTextBox.Text, HabilitadoComboBox.SelectedValue.ToString() == "Si" ? 1 : 0, CambiaClaveComboBox.SelectedValue.ToString() == "Si" ? 1 : 0, -1, idPersonaSeleccionada);
+                usuario = new Usuario(NombreUsuarioTextBox.Text, ClaveTextBox.Text, -1, idPersonaSeleccionada);
             
             }
             else
             {
-                usuario = new Usuario(NombreUsuarioTextBox.Text, ClaveTextBox.Text, HabilitadoComboBox.SelectedValue.ToString() == "Si" ? 1 : 0, CambiaClaveComboBox.SelectedValue.ToString() == "Si" ? 1 : 0, 0);
+                usuario = new Usuario(NombreUsuarioTextBox.Text, ClaveTextBox.Text, 0);
             }
-
 
             return usuario;
         }

@@ -57,7 +57,7 @@
             CursoLabel.Location = new Point(39, 103);
             CursoLabel.Name = "CursoLabel";
             CursoLabel.Size = new Size(41, 15);
-            CursoLabel.TabIndex = 9;
+            CursoLabel.TabIndex = 8;
             CursoLabel.Text = "Curso:";
             // 
             // CursoComboBox
@@ -68,7 +68,7 @@
             CursoComboBox.Location = new Point(93, 100);
             CursoComboBox.Name = "CursoComboBox";
             CursoComboBox.Size = new Size(320, 23);
-            CursoComboBox.TabIndex = 0;
+            CursoComboBox.TabIndex = 1;
             // 
             // AlumnoLabel
             // 
@@ -76,7 +76,7 @@
             AlumnoLabel.Location = new Point(27, 67);
             AlumnoLabel.Name = "AlumnoLabel";
             AlumnoLabel.Size = new Size(53, 15);
-            AlumnoLabel.TabIndex = 8;
+            AlumnoLabel.TabIndex = 9;
             AlumnoLabel.Text = "Alumno:";
             // 
             // AlumnoComboBox
@@ -87,7 +87,7 @@
             AlumnoComboBox.Location = new Point(93, 64);
             AlumnoComboBox.Name = "AlumnoComboBox";
             AlumnoComboBox.Size = new Size(320, 23);
-            AlumnoComboBox.TabIndex = 1;
+            AlumnoComboBox.TabIndex = 0;
             // 
             // CondicionLabel
             // 
@@ -95,7 +95,7 @@
             CondicionLabel.Location = new Point(16, 175);
             CondicionLabel.Name = "CondicionLabel";
             CondicionLabel.Size = new Size(65, 15);
-            CondicionLabel.TabIndex = 7;
+            CondicionLabel.TabIndex = 6;
             CondicionLabel.Text = "Condicion:";
             // 
             // CondicionTextBox
@@ -105,7 +105,7 @@
             CondicionTextBox.Location = new Point(93, 172);
             CondicionTextBox.Name = "CondicionTextBox";
             CondicionTextBox.Size = new Size(320, 23);
-            CondicionTextBox.TabIndex = 2;
+            CondicionTextBox.TabIndex = 3;
             // 
             // NotaLabel
             // 
@@ -113,7 +113,7 @@
             NotaLabel.Location = new Point(45, 139);
             NotaLabel.Name = "NotaLabel";
             NotaLabel.Size = new Size(36, 15);
-            NotaLabel.TabIndex = 6;
+            NotaLabel.TabIndex = 7;
             NotaLabel.Text = "Nota:";
             // 
             // NotaTextBox
@@ -123,7 +123,7 @@
             NotaTextBox.Location = new Point(93, 136);
             NotaTextBox.Name = "NotaTextBox";
             NotaTextBox.Size = new Size(320, 23);
-            NotaTextBox.TabIndex = 3;
+            NotaTextBox.TabIndex = 2;
             // 
             // CancelarButton
             // 
