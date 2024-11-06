@@ -60,11 +60,11 @@
             // ClaveLabel
             // 
             ClaveLabel.AutoSize = true;
-            ClaveLabel.Location = new Point(96, 117);
+            ClaveLabel.Location = new Point(66, 117);
             ClaveLabel.Name = "ClaveLabel";
-            ClaveLabel.Size = new Size(39, 15);
+            ClaveLabel.Size = new Size(70, 15);
             ClaveLabel.TabIndex = 3;
-            ClaveLabel.Text = "Clave:";
+            ClaveLabel.Text = "Contraseña:";
             // 
             // NombreDeUsuarioTextBox
             // 
