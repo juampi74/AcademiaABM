@@ -462,7 +462,7 @@ namespace Escritorio
                     {
                         if (nuevaInscripcion.Mensaje != "El curso no tiene más cupos disponibles")
                         {
-                            nuevaInscripcion.Mensaje = "Ya estás inscripto al curso";
+                            nuevaInscripcion.Mensaje = "Ya estás inscripto a la materia";
                         }
 
                         ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
@@ -1644,6 +1644,7 @@ namespace Escritorio
 
                 MessageBox.Show("No tenés inscripciones registradas!", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                tsbNuevo.Enabled = true;
                 tsbEliminar.Enabled = false;
             }
         }

@@ -66,14 +66,21 @@
             {
                 Alumno_Inscripcion nuevaInscripcion = new Alumno_Inscripcion(inscripcionDTO.Condicion, inscripcionDTO.Nota, inscripcionDTO.Id_alumno, inscripcionDTO.Id_curso);
 
+                var id_materia = _context.Cursos
+                    .Include(cur => cur.Materia)
+                    .FirstOrDefault(cur => cur.Id_curso == nuevaInscripcion.Id_curso)?.Materia.Id_materia;
+
                 var existeInscripcion = _context.Alumnos_Inscripciones
+                    .Include(ins => ins.Curso)
+                        .ThenInclude(curso => curso.Materia)
                     .Any(ins => ins.Id_alumno == nuevaInscripcion.Id_alumno
-                             && ins.Id_curso == nuevaInscripcion.Id_curso
+                             && ins.Curso.Materia.Id_materia == id_materia
                              && ins.Condicion != "Libre");
+
 
                 if (existeInscripcion)
                 {
-                    return StatusCode(StatusCodes.Status409Conflict, "El alumno ya se inscribió al curso");
+                    return StatusCode(StatusCodes.Status409Conflict, "El alumno ya se inscribió a la materia");
                 }
 
                 var Curso = _context.Cursos.Find(nuevaInscripcion.Id_curso);
