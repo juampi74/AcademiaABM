@@ -63,9 +63,18 @@ else
                                     <td style="vertical-align: middle;">@inscripcion.Alumno.Apellido, @inscripcion.Alumno.Nombre</td>
                                     <td style="vertical-align: middle;">@inscripcion.Curso.Materia.Desc_materia ➡️ @inscripcion.Curso.Comision.Desc_comision</td>
                                     <td class="d-flex justify-content-end">
-                                        <a class="btn btn-primary btn-sm" href="inscripcion-curso-docente/@inscripcion.Id_inscripcion">
-                                            <i class="bi bi-pencil-square fs-5"></i>
-                                        </a>
+                                        @if (inscripcion.Condicion != "Libre")
+                                        {
+                                            <a class="btn btn-primary btn-sm" href="inscripcion-curso-docente/@inscripcion.Id_inscripcion">
+                                                <i class="bi bi-pencil-square fs-5"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-primary btn-sm disabled-link" disabled>
+                                                <i class="bi bi-pencil-square fs-5"></i>
+                                            </a>
+                                        }
                                     </td>
                                 </tr>
                             }

@@ -45,7 +45,7 @@
             // CerrarButton
             // 
             CerrarButton.BackColor = SystemColors.ActiveBorder;
-            CerrarButton.Location = new Point(513, 53);
+            CerrarButton.Location = new Point(701, 60);
             CerrarButton.Name = "CerrarButton";
             CerrarButton.Size = new Size(75, 23);
             CerrarButton.TabIndex = 0;
@@ -53,15 +53,15 @@
             CerrarButton.UseVisualStyleBackColor = false;
             CerrarButton.Click += CerrarButton_Click;
             // 
-            // ErrorEliminacion
+            // ErrorBaseDeDatos
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(598, 87);
+            ClientSize = new Size(784, 92);
             Controls.Add(CerrarButton);
             Controls.Add(ErrorEliminacionLabel);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
-            Name = "ErrorEliminacion";
+            Name = "ErrorBaseDeDatos";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Error";
             TopMost = true;

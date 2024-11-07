@@ -634,14 +634,23 @@ namespace Escritorio
 
                         var inscripcionSeleccionada = listadoInscripciones.Result.FirstOrDefault(ins => ins.Id_inscripcion == idSeleccionado);
 
-                        InscripcionUI editarInscripcion = new InscripcionUI(opcionesAlumno, opcionesCurso, inscripcionSeleccionada);
-
-                        if (editarInscripcion.ShowDialog(this) == DialogResult.OK)
+                        if (inscripcionSeleccionada.Condicion == "Libre")
                         {
-                            OperacionExitosa operacionExitosa = new OperacionExitosa();
-                            operacionExitosa.ShowDialog(this);
+                            ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                            errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La inscripción no se puede modificar porque ya se le asignó la condición de 'Libre'");
+                            errorBD.ShowDialog(this);
                         }
-                        btnMostrarInscripciones_Click(sender, e);
+                        else
+                        {
+                            InscripcionUI editarInscripcion = new InscripcionUI(opcionesAlumno, opcionesCurso, inscripcionSeleccionada);
+
+                            if (editarInscripcion.ShowDialog(this) == DialogResult.OK)
+                            {
+                                OperacionExitosa operacionExitosa = new OperacionExitosa();
+                                operacionExitosa.ShowDialog(this);
+                            }
+                            btnMostrarInscripciones_Click(sender, e);
+                        }
                     }
                 }
             }
@@ -787,14 +796,24 @@ namespace Escritorio
 
                         var inscripcionSeleccionada = listadoInscripciones.Result.FirstOrDefault(ins => ins.Id_inscripcion == idSeleccionado);
 
-                        InscripcionCursoDocenteUI editarInscripcion = new InscripcionCursoDocenteUI(opcionesAlumno, opcionesCurso, inscripcionSeleccionada);
-
-                        if (editarInscripcion.ShowDialog(this) == DialogResult.OK)
+                        if (inscripcionSeleccionada.Condicion == "Libre")
                         {
-                            OperacionExitosa operacionExitosa = new OperacionExitosa();
-                            operacionExitosa.ShowDialog(this);
+                            ErrorBaseDeDatos errorBD = new ErrorBaseDeDatos();
+                            errorBD.ErrorEliminacionLabel.Text = errorBD.ErrorEliminacionLabel.Text.Replace("${error}", "La inscripción no se puede modificar porque ya se le asignó la condición de 'Libre'");
+                            errorBD.ShowDialog(this);
                         }
-                        btnMostrarInscripcionesATusCursos_Click(sender, e);
+                        else
+                        {
+
+                            InscripcionCursoDocenteUI editarInscripcion = new InscripcionCursoDocenteUI(opcionesAlumno, opcionesCurso, inscripcionSeleccionada);
+
+                            if (editarInscripcion.ShowDialog(this) == DialogResult.OK)
+                            {
+                                OperacionExitosa operacionExitosa = new OperacionExitosa();
+                                operacionExitosa.ShowDialog(this);
+                            }
+                            btnMostrarInscripcionesATusCursos_Click(sender, e);
+                        }
                     }
                 }
             }
@@ -1750,7 +1769,7 @@ namespace Escritorio
 
             Dictionary<string, int> rendimientoAlumno = inscripcionesAlumno
                                                            .GroupBy(inscripcion => inscripcion.Condicion)
-                                                           .ToDictionary(grupo => grupo.Key, grupo => grupo.Count());
+                                                              .ToDictionary(grupo => grupo.Key, grupo => grupo.Count());
 
             if (rendimientoAlumno == null || !rendimientoAlumno.Values.Any(valor => valor != 0))
             {
@@ -1768,9 +1787,9 @@ namespace Escritorio
         {
             IEnumerable<Alumno_Inscripcion> inscripcionesCursosDocente = await InscripcionNegocio.GetInscripcionesCursosDocente(usuarioAutenticado.Id_persona.ToString());
 
-            Dictionary<string, int> condicionAlumnos = condicionAlumnos = inscripcionesCursosDocente
+            Dictionary<string, int> condicionAlumnos = inscripcionesCursosDocente
                                                           .GroupBy(inscripcion => inscripcion.Condicion)
-                                                          .ToDictionary(grupo => grupo.Key, grupo => grupo.Count());
+                                                             .ToDictionary(grupo => grupo.Key, grupo => grupo.Count());
 
             if (condicionAlumnos == null || !condicionAlumnos.Values.Any(valor => valor != 0))
             {

@@ -50,7 +50,7 @@
                     if (string.IsNullOrEmpty(textBox.Text))
                     {
                         CampoRequerido campoRequerido = new CampoRequerido();
-                        campoRequerido.CampoRequeridoLabel.Text = campoRequerido.CampoRequeridoLabel.Text.Replace("${campo}", textBox.Name.Replace("TextBox", ""));
+                        campoRequerido.CampoRequeridoLabel.Text = textBox.Name.Replace("TextBox", "") != "Clave" ? campoRequerido.CampoRequeridoLabel.Text.Replace("${campo}", textBox.Name.Replace("TextBox", "")) : campoRequerido.CampoRequeridoLabel.Text.Replace("${campo}", "Contraseña");
                         campoRequerido.ShowDialog(this);
 
                         DialogResult = DialogResult.None;
